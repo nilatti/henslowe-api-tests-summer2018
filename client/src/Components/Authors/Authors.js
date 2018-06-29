@@ -20,7 +20,6 @@ class Authors extends Component {
   }
 
   addNewAuthor = (newAuthor) => {
-    console.log('checking this', this)
     this.setState({
       authors: [...this.state.authors, newAuthor]
     })
@@ -28,7 +27,6 @@ class Authors extends Component {
 
   createAuthor = (author) => {
     let body = JSON.stringify({ author })
-    console.log(body)
     axios.post(
       '/api/authors',
       {
@@ -37,11 +35,19 @@ class Authors extends Component {
     )
     .then(response => {
       this.addNewAuthor(response.data)
-      console.log('here is the state', this.state)
-
     })
     .catch(error => console.log(error))
 
+  }
+
+  deleteAuthor = (authorId) => {
+    axios.delete(`/api/authors/${authorId}`)
+    .then(response => {
+      this.setState({
+        authors: this.state.authors.filter(a => a.id !== authorId),
+      })
+    })
+    .catch(error => console.log(error))
   }
 
   loadAuthorsFromServer = () => {
@@ -50,6 +56,11 @@ class Authors extends Component {
       this.setState({ authors: response.data })
     })
     .catch(error => console.log(error))
+  }
+
+
+  handleCreateFormSubmit = (author) => {
+    this.createAuthor(author)
   }
 
   handleEditFormSubmit = (author) => {
@@ -65,9 +76,8 @@ class Authors extends Component {
     })
   }
 
-  handleCreateFormSubmit = (author) => {
-    console.log(author)
-    this.createAuthor(author)
+  handleDeleteClick = (authorId) => {
+    this.deleteAuthor(authorId)
   }
 
   updateAuthor = (author) => {
@@ -85,6 +95,7 @@ class Authors extends Component {
         <EditableAuthorsList
           authors={this.state.authors}
           onFormSubmit={this.handleEditFormSubmit}
+          onDeleteClick={this.handleDeleteClick}
         />
         <AuthorFormToggle
           onFormSubmit={this.handleCreateFormSubmit}
@@ -109,6 +120,7 @@ class EditableAuthorsList extends Component {
         gender={author.gender}
         plays={author.plays}
         onFormSubmit={this.props.onFormSubmit}
+        onDeleteClick={this.props.onDeleteClick}
       />
     ))
     return (

@@ -62,7 +62,8 @@ class AuthorForm extends Component {
       birthdate: this.props.birthdate || '',
       deathdate: this.props.deathdate || '',
       nationality: this.props.nationality || '',
-      gender: this.props.gender || ''
+      gender: this.props.gender || '',
+      plays: []
     }
 
     this.handleChange = this.handleChange.bind(this)

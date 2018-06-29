@@ -62,6 +62,7 @@ class EditableAuthor extends Component {
         gender={this.props.gender}
         plays={this.props.plays}
         onEditClick={this.handleEditClick}
+        onDeleteClick={this.props.onDeleteClick}
         />
       )
     }
@@ -69,16 +70,26 @@ class EditableAuthor extends Component {
 }
 
 class AuthorShow extends Component { //eventually make this a dumb component that just receives an author object
+  handleDeleteClick = () => {
+    this.props.onDeleteClick(this.props.id)
+  }
+
   render () {
     return (
       <div>
         {this.props.first_name} {this.props.last_name}
-        // <EditablePlaysList plays={this.props.plays} />
+        <EditablePlaysList plays={this.props.plays} />
         <span
           className='right floated edit icon'
           onClick={this.props.onEditClick}
         >
           <Glyphicon glyph="pencil" />
+        </span>
+        <span
+          className='right floated trash icon'
+          onClick={this.handleDeleteClick}
+        >
+          <Glyphicon glyph="glyphicon glyphicon-trash" />
         </span>
       </div>
     )

@@ -10,7 +10,7 @@ class AuthorsController < ApiController
 
   # GET /authors/1
   def show
-    render json: @author
+    render json: @author.to_json(include: :plays)
   end
 
   # POST /authors
@@ -18,7 +18,7 @@ class AuthorsController < ApiController
     @author = Author.new(author_params)
 
     if @author.save
-      render json: @author, status: :created, location: @author
+      render json: @author.to_json(include: :plays), status: :created, location: @author
     else
       render json: @author.errors, status: :unprocessable_entity
     end
@@ -28,7 +28,7 @@ class AuthorsController < ApiController
   def update
     puts "request to update received!"
     if @author.update(author_params)
-      render json: @author
+      render json: @author.to_json(include: :plays)
     else
       render json: @author.errors, status: :unprocessable_entity
     end
