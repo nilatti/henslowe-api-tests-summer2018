@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Client from '../../Client.js'
-import ApiUtils from '../../ApiUtils'
+import { Col } from 'react-bootstrap'
 
 import axios from 'axios'
 import update from 'immutability-helper'
@@ -26,7 +26,6 @@ class Authors extends Component {
   }
 
   createAuthor = (author) => {
-    let body = JSON.stringify({ author })
     axios.post(
       '/api/authors',
       {
@@ -64,15 +63,13 @@ class Authors extends Component {
   }
 
   handleEditFormSubmit = (author) => {
-    fetch(`/api/authors/${author.id}`,
-    {
-      method: 'PUT',
-      body: JSON.stringify({ author: author }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((response) => {
-      this.updateAuthor(author)
+    console.log('author object', author)
+    axios.put(`/api/authors/${author.id}`,
+      {
+        author: author
+      },
+    ).then((response) => {
+      this.updateAuthor(response.data)
     })
   }
 
@@ -81,26 +78,33 @@ class Authors extends Component {
   }
 
   updateAuthor = (author) => {
+    console.log('authors before update', this.state.authors)
+    console.log('object returned', author)
     let newAuthors = this.state.authors.filter((a) => a.id !== author.id)
+    console.log('authors after filter', newAuthors)
     newAuthors.push(author)
+    console.log('authors after push', newAuthors)
     this.setState({
       authors: newAuthors
     })
+    console.log('authors after update', this.state.authors)
   }
 
   render () {
     return (
-      <div>
-        This is the authors index page.
-        <EditableAuthorsList
-          authors={this.state.authors}
-          onFormSubmit={this.handleEditFormSubmit}
-          onDeleteClick={this.handleDeleteClick}
-        />
-        <AuthorFormToggle
-          onFormSubmit={this.handleCreateFormSubmit}
-        />
-      </div>
+      <Col md={8} mdoffset={8}>
+        <div>
+          <h2>Authors</h2>
+          <EditableAuthorsList
+            authors={this.state.authors}
+            onFormSubmit={this.handleEditFormSubmit}
+            onDeleteClick={this.handleDeleteClick}
+          />
+          <AuthorFormToggle
+            onFormSubmit={this.handleCreateFormSubmit}
+          />
+        </div>
+      </Col>
     )
   }
 }

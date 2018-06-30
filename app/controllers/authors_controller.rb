@@ -10,7 +10,7 @@ class AuthorsController < ApiController
 
   # GET /authors/1
   def show
-    render json: @author.to_json(include: :plays)
+    render json: @author.to_json(include: :plays), location: @author
   end
 
   # POST /authors
@@ -28,7 +28,7 @@ class AuthorsController < ApiController
   def update
     puts "request to update received!"
     if @author.update(author_params)
-      render json: @author.to_json(include: :plays)
+      render json: @author.to_json(include: :plays), location: @author
     else
       render json: @author.errors, status: :unprocessable_entity
     end
@@ -47,6 +47,6 @@ class AuthorsController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def author_params
-      params.require(:author).permit(:birthdate, :deathdate, :nationality, :first_name, :middle_name, :last_name, :gender)
+      params.require(:author).permit(:birthdate, :deathdate, :nationality, :first_name, :middle_name, :last_name, :gender, :id)
     end
 end

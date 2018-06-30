@@ -26,6 +26,7 @@ class AuthorFormToggle extends Component {
     if (this.state.isOpen) {
       return (
         <AuthorForm
+          id={this.props.id}
           first_name={this.props.first_name}
           middle_name={this.props.middle_name}
           last_name={this.props.last_name}
@@ -55,6 +56,7 @@ class AuthorFormToggle extends Component {
 class AuthorForm extends Component {
   constructor (props) {
     super (props)
+    console.log('props', this.props)
     this.state = {
       first_name: this.props.first_name || '',
       middle_name: this.props.middle_name || '',
@@ -63,7 +65,7 @@ class AuthorForm extends Component {
       deathdate: this.props.deathdate || '',
       nationality: this.props.nationality || '',
       gender: this.props.gender || '',
-      plays: []
+      plays: this.props.plays
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -86,6 +88,7 @@ class AuthorForm extends Component {
       deathdate: this.state.deathdate,
       nationality: this.state.nationality,
       gender: this.state.gender,
+      plays: this.state.plays
     })
   }
 
