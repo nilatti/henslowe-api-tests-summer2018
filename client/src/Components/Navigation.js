@@ -1,37 +1,18 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import { Col, Grid } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
-import Home from './Home'
-import Authors from './Authors/Authors'
-import Plays from './Plays/Plays'
-
+// The Header creates links that can be used to navigate
+// between routes.
 const Navigation = () => (
-  <Router>
-    <Grid>
-      <Col md={8} mdoffset={2}>
-        <div>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/authors">Authors</Link>
-            </li>
-            <li>
-              <Link to="/plays">Plays</Link>
-            </li>
-          </ul>
-
-          <hr />
-
-          <Route exact path="/" component={Home} />
-          <Route path="/authors" component={Authors} />
-          <Route path="/plays" component={Plays} />
-        </div>
-      </Col>
-    </Grid>
-  </Router>
+  <header>
+    <nav>
+      <ul>
+        <li><Link to='/'>Dashboard</Link></li>
+        <li><Link to='/authors'>Authors</Link></li>
+        <li><Link to='/plays'>Plays</Link></li>
+      </ul>
+    </nav>
+  </header>
 )
 
 export default Navigation

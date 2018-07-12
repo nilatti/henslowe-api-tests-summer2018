@@ -1,21 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Navigation from './Components/Navigation'
+import Main from './Components/Main'
+import { Grid } from 'react-bootstrap'
 import './App.css';
 
-class App extends Component {
+const App = () => (
+  <Grid fluid={true}>
+    <div className="App">
+      <Navigation />
+      <Main />
+    </div>
+  </Grid>
+)
 
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <div className="App-intro">
-          <Navigation />
-        </div>
-      </div>
-    );
-  }
-}
-
-export default App;
+export default App

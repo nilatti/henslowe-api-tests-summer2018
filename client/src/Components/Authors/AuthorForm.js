@@ -1,84 +1,50 @@
+import { Button, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import moment from 'moment'
+import PropTypes from 'prop-types';
 import React, { Component } from 'react'
-import { Button, Col, ControlLabel, Form, FormControl, FormGroup, Glyphicon } from 'react-bootstrap'
-
-class AuthorFormToggle extends Component {
-  constructor (props) {
-    super (props)
-    this.state = {
-      isOpen: this.props.isOpen,
-    }
-  }
-
-  handleFormOpen = () => {
-    this.setState({ isOpen: true })
-  }
-
-  handleFormClose = () => {
-    this.setState({ isOpen: false })
-  }
-
-  handleFormSubmit = (author) => {
-    this.handleFormClose()
-    this.props.onFormSubmit(author)
-  }
-
-  render() {
-    if (this.state.isOpen) {
-      return (
-        <AuthorForm
-          id={this.props.id}
-          first_name={this.props.first_name}
-          middle_name={this.props.middle_name}
-          last_name={this.props.last_name}
-          birthdate={this.props.birthdate}
-          deathdate={this.props.deathdate}
-          nationality={this.props.nationality}
-          gender={this.props.gender}
-          plays={this.props.plays}
-          onFormSubmit={this.handleFormSubmit}
-          onFormClose={this.handleFormClose}
-        />
-      );
-    } else {
-      return (
-        <div>
-          <button
-            onClick={this.handleFormOpen}
-          >
-            <Glyphicon glyph='glyphicon glyphicon-plus' />
-          </button>
-        </div>
-      );
-    }
-  }
-}
 
 class AuthorForm extends Component {
   constructor (props) {
     super (props)
-    console.log('props', this.props)
     this.state = {
       first_name: this.props.first_name || '',
       middle_name: this.props.middle_name || '',
       last_name: this.props.last_name || '',
-      birthdate: this.props.birthdate || '',
-      deathdate: this.props.deathdate || '',
+      birthdate: moment(this.props.birthdate),
+      deathdate: moment() || '',
       nationality: this.props.nationality || '',
       gender: this.props.gender || '',
-      plays: this.props.plays
+      plays: this.props.plays,
+      deathDateVisible: this.props.deathdate ? true : false
     }
-
-    this.handleChange = this.handleChange.bind(this)
   }
 
-  handleChange(event) {
+  addDeathDate = () => {
+    this.setState({
+      deathDateVisible: true
+    })
+  }
+
+  handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  handleSubmit = (event) => {
+  handleBirthdateChange = (date) => {
+    this.setState({
+     birthdate: date
+   })
+  }
 
+  handleDeathdateChange = (date) => {
+    this.setState({
+     deathdate: date
+   });
+  }
+
+  handleSubmit = (event) => {
     event.preventDefault()
-    console.log("running handle submit", arguments)
     this.props.onFormSubmit({
       id: this.props.id,
       first_name: this.state.first_name,
@@ -94,21 +60,119 @@ class AuthorForm extends Component {
 
   render () {
     return (
-      <div>
+      <Col md={12}>
         <Form horizontal>
-          <FormGroup controlId="formHorizontalFirstName">
-            <Col componentClass={ControlLabel} sm={2}>
+          <FormGroup controlId="firstName">
+            <Col componentClass={ControlLabel} md={2}>
               First Name
             </Col>
-            <Col sm={10}>
-              <FormControl type="text" placeholder="first name" name="first_name" value={this.state.first_name} onChange={this.handleChange} />
+            <Col md={5}>
+              <FormControl
+                type="text"
+                placeholder="first name"
+                name="first_name" value={this.state.first_name} onChange={this.handleChange} />
             </Col>
           </FormGroup>
-          <Button type="submit" onClick={this.handleSubmit}>Submit</Button>
+          <FormGroup controlId="middleName">
+            <Col componentClass={ControlLabel} md={2}>
+              Middle Name
+            </Col>
+            <Col md={5}>
+              <FormControl
+                type="text"
+                placeholder="middle name"
+                name="middle_name" value={this.state.middle_name} onChange={this.handleChange} />
+            </Col>
+          </FormGroup>
+          <FormGroup controlId="lastName">
+            <Col componentClass={ControlLabel}  md={2}>
+              Last Name
+            </Col>
+            <Col md={5}>
+              <FormControl
+                type="text"
+                placeholder="last name"
+                name="last_name" value={this.state.last_name} onChange={this.handleChange} />
+            </Col>
+          </FormGroup>
+          <FormGroup controlId="gender">
+            <Col componentClass={ControlLabel}  md={2}>
+              Gender
+            </Col>
+            <Col md={5}>
+              <FormControl componentClass="select" name="gender" value={this.state.gender} onChange={this.handleChange}>
+                <option value="female">female</option>
+                <option value="male">male</option>
+                <option value="nonbinary">nonbinary</option>
+              </FormControl>
+            </Col>
+          </FormGroup>
+          <FormGroup controlId="nationality">
+            <Col componentClass={ControlLabel} md={2}>
+              Nationality
+            </Col>
+            <Col md={5}>
+              <FormControl
+                type="text"
+                placeholder="nationality"
+                name="nationality" value={this.state.nationality} onChange={this.handleChange} />
+            </Col>
+          </FormGroup>
+          <FormGroup>
+            <Col componentClass={ControlLabel}  md={2}>
+              Birthdate
+            </Col>
+            <Col md={5}>
+              <DatePicker
+                name="birthdate"
+                selected={this.state.birthdate}
+                onChange={this.handleBirthdateChange}
+              />
+            </Col>
+          </FormGroup>
+          { this.state.deathDateVisible
+            ?
+            <FormGroup>
+              <Col componentClass={ControlLabel}  md={2}>
+                Deathdate
+              </Col>
+              <Col md={5}>
+                <DatePicker
+                  name="deathdate"
+                  selected={this.state.deathdate}
+                  onChange={this.handleDeatdateChange}
+                />
+              </Col>
+            </FormGroup>
+            :
+            <Col md={2}>
+              <Button type="button" bsStyle="primary" onClick={ () => this.addDeathDate() }>
+                Click to add Death date
+              </Button>
+            </Col>
+          }
+
+          <Button type="submit" bsStyle="primary" onClick={this.handleSubmit} block>Submit</Button>
+          <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
         </Form>
-      </div>
+        <hr />
+      </Col>
     )
   }
 }
 
-export default AuthorFormToggle
+AuthorForm.propTypes = {
+  onFormClose: PropTypes.func.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
+  first_name: PropTypes.string,
+  middle_name: PropTypes.string,
+  last_name: PropTypes.string,
+  birthdate: PropTypes.string,
+  deathdate: PropTypes.string,
+  nationality: PropTypes.string,
+  gender: PropTypes.string,
+  plays: PropTypes.array,
+  deathDateVisible: PropTypes.bool,
+}
+
+export default AuthorForm
