@@ -1,23 +1,23 @@
-import { Button, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import moment from 'moment'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react'
+import { Button, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 class AuthorForm extends Component {
   constructor (props) {
     super (props)
     this.state = {
-      first_name: this.props.first_name || '',
-      middle_name: this.props.middle_name || '',
-      last_name: this.props.last_name || '',
       birthdate: moment(this.props.birthdate),
       deathdate: moment() || '',
-      nationality: this.props.nationality || '',
+      deathDateVisible: this.props.deathdate ? true : false,
+      first_name: this.props.first_name || '',
       gender: this.props.gender || '',
+      last_name: this.props.last_name || '',
+      middle_name: this.props.middle_name || '',
+      nationality: this.props.nationality || '',
       plays: this.props.plays,
-      deathDateVisible: this.props.deathdate ? true : false
     }
   }
 
@@ -26,24 +26,20 @@ class AuthorForm extends Component {
       deathDateVisible: true
     })
   }
-
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-
   handleBirthdateChange = (date) => {
     this.setState({
      birthdate: date
    })
   }
-
+  handleChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
   handleDeathdateChange = (date) => {
     console.log("death date change", date)
     this.setState({
      deathdate: date
    });
   }
-
   handleSubmit = (event) => {
     event.preventDefault()
     this.props.onFormSubmit({
@@ -162,17 +158,17 @@ class AuthorForm extends Component {
 }
 
 AuthorForm.propTypes = {
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-  first_name: PropTypes.string,
-  middle_name: PropTypes.string,
-  last_name: PropTypes.string,
   birthdate: PropTypes.string,
   deathdate: PropTypes.string,
-  nationality: PropTypes.string,
-  gender: PropTypes.string,
-  plays: PropTypes.array,
   deathDateVisible: PropTypes.bool,
+  first_name: PropTypes.string,
+  gender: PropTypes.string,
+  last_name: PropTypes.string,
+  middle_name: PropTypes.string,
+  nationality: PropTypes.string,
+  onFormClose: PropTypes.func.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
+  plays: PropTypes.array,
 }
 
 export default AuthorForm

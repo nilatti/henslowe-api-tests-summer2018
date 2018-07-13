@@ -16,7 +16,6 @@ class Authors extends Component {
       authors: [...this.state.authors, newAuthor]
     })
   }
-
   componentDidMount () {
     this.loadAuthorsFromServer() //loads authors and sets state authors array
   }

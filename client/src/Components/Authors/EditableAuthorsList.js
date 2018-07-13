@@ -1,9 +1,8 @@
-import axios from 'axios'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
-import EditableAuthor from './AuthorShow'
+import EditableAuthor from './EditableAuthor'
 
 class EditableAuthorsList extends Component {
   render () {

@@ -29,7 +29,7 @@ class PlayFormToggle extends Component { //opens form for create action
     if (this.state.isOpen) {
       return (
         <PlayForm
-
+          author_id={this.props.author_id}
           onFormSubmit={this.handleFormSubmit}
           onFormClose={this.handleFormClose}
         />
@@ -49,6 +49,7 @@ class PlayFormToggle extends Component { //opens form for create action
 }
 
 PlayFormToggle.propTypes = {
+  author_id: PropTypes.number.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
 }

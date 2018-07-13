@@ -1,15 +1,48 @@
+import axios from 'axios'
 import React, { Component } from 'react'
+
 import EditablePlay from './PlayShow'
 
 class PlaysSubComponent extends Component {
 
+  state = {
+    plays: this.props.plays
+  }
+
+  componentWillMount () {
+    // this.loadPlaysFromServer()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) {
+      this.updatePlaysList()
+    }
+  }
+
+  loadPlaysFromServer () {
+    axios.get(`/api/authors/${this.props.author_id}/plays.json`)
+    .then(response => {
+      this.setState({ plays: response.data })
+    })
+    .catch(error => console.log(error))
+  }
+
+  updatePlaysList() {
+    axios.get(`/api/authors/${this.props.author_id}/plays.json`)
+    .then(response => {
+      this.setState({ plays: response.data })
+    })
+    .catch(error => console.log(error))
+  }
+
   render () {
-    const plays = this.props.plays.map((play) => (
+    const plays = this.state.plays.map((play) => (
       <li key={play.id}><EditablePlay
         id={play.id}
         title={play.title}
       /></li>
     ))
+
     return (
       <div id='plays'>
         <ul>

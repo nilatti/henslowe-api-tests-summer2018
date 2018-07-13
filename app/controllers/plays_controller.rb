@@ -1,11 +1,11 @@
 class PlaysController < ApiController
   before_action :set_play, only: [:show, :update, :destroy]
-
+  before_action :set_author
   # GET /plays
   def index
-    @plays = Play.all
+    @plays = Play.where(author_id: @author.id)
 
-    render json: @plays
+    render json: @plays.to_json
   end
 
   # GET /plays/1
@@ -40,6 +40,12 @@ class PlaysController < ApiController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def set_author
+      if params[:author_id]
+        @author = Author.find(params[:author_id])
+      end
+    end
+
     def set_play
       @play = Play.find(params[:id])
     end
@@ -48,4 +54,5 @@ class PlaysController < ApiController
     def play_params
       params.require(:play).permit(:title, :author_id, :date, :genre)
     end
+
 end
