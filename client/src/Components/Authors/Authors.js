@@ -45,6 +45,7 @@ class Authors extends Component {
       })
     })
     .catch(error => console.log(error))
+    this.props.history.push('/authors')
   }
 
   loadAuthorsFromServer = () => {
@@ -67,6 +68,7 @@ class Authors extends Component {
     ).then((response) => {
       this.updateAuthor(response.data)
     })
+
   }
 
   handleDeleteClick = (authorId) => {
@@ -109,26 +111,24 @@ class EditableAuthorsList extends Component {
       <li key={author.id}>
         <Link to={`/authors/${author.id}`}>{author.first_name} {author.middle_name} {author.last_name}</Link>
       </li>
-      // <EditableAuthor
-      //   key={author.id}
-      //   id={author.id}
-      //   first_name={author.first_name}
-      //   middle_name={author.middle_name}
-      //   last_name={author.last_name}
-      //   birthdate={author.birthdate}
-      //   deathdate={author.deathdate}
-      //   nationality={author.nationality}
-      //   gender={author.gender}
-      //   plays={author.plays}
-      //   onFormSubmit={this.props.onFormSubmit}
-      //   onDeleteClick={this.props.onDeleteClick}
-      // />
     ))
     return (
       <div id='authors'>
         <ul>
           {authors}
         </ul>
+        <hr />
+        <Route
+          path={`/authors/:authorId`}
+          render={
+            (props) =>
+              <EditableAuthor
+                {...props}
+                onFormSubmit={this.props.onFormSubmit}
+                onDeleteClick={this.props.onDeleteClick}
+              />
+              }
+          />
       </div>
     )
   }

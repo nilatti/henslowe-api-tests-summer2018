@@ -1,4 +1,4 @@
-import { Glyphicon } from 'react-bootstrap'
+import { Button, Glyphicon } from 'react-bootstrap'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react'
 
@@ -45,11 +45,11 @@ class AuthorFormToggle extends Component { //opens form for create action
     } else {
       return (
         <div>
-          <button
+          <Button bsStyle="info"
             onClick={this.handleFormOpen}
           >
-            <Glyphicon glyph='glyphicon glyphicon-plus' />
-          </button>
+            <Glyphicon glyph='glyphicon glyphicon-plus' /> Add New Author
+          </Button>
         </div>
       );
     }

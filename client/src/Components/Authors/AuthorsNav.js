@@ -5,10 +5,8 @@ import EditableAuthor from './AuthorShow'
 
 const AuthorsNav = () => (
   <Switch>
-    <Route exact path='/authors' component={Authors}/>
-    <Route path='/authors/:authorId' component={EditableAuthor}/>
+    <Route path='/authors' component={Authors}/>
   </Switch>
 )
-
 
 export default AuthorsNav

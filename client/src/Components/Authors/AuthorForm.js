@@ -38,6 +38,7 @@ class AuthorForm extends Component {
   }
 
   handleDeathdateChange = (date) => {
+    console.log("death date change", date)
     this.setState({
      deathdate: date
    });
@@ -140,7 +141,7 @@ class AuthorForm extends Component {
                 <DatePicker
                   name="deathdate"
                   selected={this.state.deathdate}
-                  onChange={this.handleDeatdateChange}
+                  onChange={this.handleDeathdateChange}
                 />
               </Col>
             </FormGroup>
