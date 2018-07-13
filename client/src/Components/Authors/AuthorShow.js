@@ -1,11 +1,11 @@
 import { Glyphicon, Row, Col } from 'react-bootstrap'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react'
 
 import axios from 'axios'
 
-import Plays from '../Plays/Plays'
+import PlaysSubComponent from '../Plays/PlaysSubComponent'
 import AuthorForm from './AuthorForm'
 
 class EditableAuthor extends Component {
@@ -33,7 +33,7 @@ class EditableAuthor extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props != prevProps) {
+    if (this.props !== prevProps) {
       this.loadAuthorFromServer(this.props.match.params.authorId)
     }
   }
@@ -130,7 +130,7 @@ class AuthorShow extends Component { //eventually make this a dumb component tha
           <h3>
             {this.props.first_name} {this.props.middle_name} {this.props.last_name}
           </h3>
-          <p>  
+          <p>
             {dates}<br />
             {this.props.nationality}
           </p>
@@ -148,7 +148,7 @@ class AuthorShow extends Component { //eventually make this a dumb component tha
           </span>
         </Col>
         <Col md={9}>
-          <Plays plays={this.props.plays} />
+          <PlaysSubComponent plays={this.props.plays} />
         </Col>
       </Row>
       <hr />

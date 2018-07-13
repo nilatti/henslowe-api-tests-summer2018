@@ -1,28 +1,25 @@
-import React, { Component } from 'react'
-import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
-import { Col, Row } from 'react-bootstrap'
-
 import axios from 'axios'
+import React, { Component } from 'react'
+import { Col, Row } from 'react-bootstrap'
+import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
-import EditableAuthor from './AuthorShow'
 import AuthorFormToggle from './AuthorFormToggle'
+import EditableAuthorsList from './EditableAuthorsList'
 
 class Authors extends Component {
 
   state = {
     authors: [],
   }
-
-  componentDidMount () {
-    this.loadAuthorsFromServer() //loads authors and sets state authors array
-  }
-
   addNewAuthor = (newAuthor) => {
     this.setState({
       authors: [...this.state.authors, newAuthor]
     })
   }
 
+  componentDidMount () {
+    this.loadAuthorsFromServer() //loads authors and sets state authors array
+  }
   createAuthor = (author) => {
     axios.post(
       '/api/authors',
@@ -36,7 +33,6 @@ class Authors extends Component {
     .catch(error => console.log(error))
 
   }
-
   deleteAuthor = (authorId) => {
     axios.delete(`/api/authors/${authorId}`)
     .then(response => {
@@ -47,19 +43,12 @@ class Authors extends Component {
     .catch(error => console.log(error))
     this.props.history.push('/authors')
   }
-
-  loadAuthorsFromServer = () => {
-    axios.get('/api/authors.json')
-    .then(response => {
-      this.setState({ authors: response.data })
-    })
-    .catch(error => console.log(error))
-  }
-
   handleCreateFormSubmit = (author) => {
     this.createAuthor(author)
   }
-
+  handleDeleteClick = (authorId) => {
+    this.deleteAuthor(authorId)
+  }
   handleEditFormSubmit = (author) => {
     axios.put(`/api/authors/${author.id}`,
       {
@@ -70,11 +59,13 @@ class Authors extends Component {
     })
 
   }
-
-  handleDeleteClick = (authorId) => {
-    this.deleteAuthor(authorId)
+  loadAuthorsFromServer = () => {
+    axios.get('/api/authors.json')
+    .then(response => {
+      this.setState({ authors: response.data })
+    })
+    .catch(error => console.log(error))
   }
-
   updateAuthor = (author) => {
     let newAuthors = this.state.authors.filter((a) => a.id !== author.id)
     newAuthors.push(author)
@@ -101,35 +92,6 @@ class Authors extends Component {
           </div>
         </Col>
       </Row>
-    )
-  }
-}
-
-class EditableAuthorsList extends Component {
-  render () {
-    const authors = this.props.authors.map((author) => (
-      <li key={author.id}>
-        <Link to={`/authors/${author.id}`}>{author.first_name} {author.middle_name} {author.last_name}</Link>
-      </li>
-    ))
-    return (
-      <div id='authors'>
-        <ul>
-          {authors}
-        </ul>
-        <hr />
-        <Route
-          path={`/authors/:authorId`}
-          render={
-            (props) =>
-              <EditableAuthor
-                {...props}
-                onFormSubmit={this.props.onFormSubmit}
-                onDeleteClick={this.props.onDeleteClick}
-              />
-              }
-          />
-      </div>
     )
   }
 }

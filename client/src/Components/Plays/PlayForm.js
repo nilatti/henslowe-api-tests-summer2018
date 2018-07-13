@@ -5,26 +5,12 @@ import moment from 'moment'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react'
 
-class AuthorForm extends Component {
+class PlayForm extends Component {
   constructor (props) {
     super (props)
     this.state = {
-      first_name: this.props.first_name || '',
-      middle_name: this.props.middle_name || '',
-      last_name: this.props.last_name || '',
-      birthdate: moment(this.props.birthdate),
-      deathdate: moment() || '',
-      nationality: this.props.nationality || '',
-      gender: this.props.gender || '',
-      plays: this.props.plays,
-      deathDateVisible: this.props.deathdate ? true : false
-    }
-  }
 
-  addDeathDate = () => {
-    this.setState({
-      deathDateVisible: true
-    })
+    }
   }
 
   handleChange = (event) => {
@@ -35,13 +21,6 @@ class AuthorForm extends Component {
     this.setState({
      birthdate: date
    })
-  }
-
-  handleDeathdateChange = (date) => {
-    console.log("death date change", date)
-    this.setState({
-     deathdate: date
-   });
   }
 
   handleSubmit = (event) => {
@@ -161,7 +140,7 @@ class AuthorForm extends Component {
   }
 }
 
-AuthorForm.propTypes = {
+PlayForm.propTypes = {
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   first_name: PropTypes.string,
@@ -175,4 +154,4 @@ AuthorForm.propTypes = {
   deathDateVisible: PropTypes.bool,
 }
 
-export default AuthorForm
+export default PlayForm
