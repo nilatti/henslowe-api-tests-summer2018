@@ -49,7 +49,6 @@ class PlayFormToggle extends Component { //opens form for create action
 }
 
 PlayFormToggle.propTypes = {
-  author_id: PropTypes.number.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
 }

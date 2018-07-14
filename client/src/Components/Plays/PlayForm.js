@@ -12,6 +12,7 @@ class PlayForm extends Component {
     this.state = {
       title: this.props.title || '',
       genre: this.props.genre || '',
+      author: this.props.author || {}
     }
   }
 
@@ -65,7 +66,7 @@ class PlayForm extends Component {
             </Col>
             <Col md={5}>
               <DatePicker
-                name="birthdate"
+                name="date"
                 selected={this.state.date}
                 onChange={this.handleDateChange}
               />

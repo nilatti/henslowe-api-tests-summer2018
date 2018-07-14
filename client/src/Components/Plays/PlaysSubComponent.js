@@ -1,16 +1,12 @@
 import axios from 'axios'
 import React, { Component } from 'react'
-
+import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 import EditablePlay from './PlayShow'
 
 class PlaysSubComponent extends Component {
 
   state = {
     plays: this.props.plays
-  }
-
-  componentWillMount () {
-    // this.loadPlaysFromServer()
   }
 
   componentDidUpdate(prevProps) {
@@ -37,10 +33,11 @@ class PlaysSubComponent extends Component {
 
   render () {
     const plays = this.state.plays.map((play) => (
-      <li key={play.id}><EditablePlay
-        id={play.id}
-        title={play.title}
-      /></li>
+      <li key={play.id}>
+        <Link to={`/plays/${play.id}`}>
+          {play.title}
+        </Link>
+      </li>
     ))
 
     return (

@@ -53,7 +53,7 @@ class AuthorShow extends Component {
       <Row>
         <Col md={3}>
           <h3>
-            {this.props.first_name} {this.props.middle_name} {this.props.last_name} {this.props.id}
+            {this.props.first_name} {this.props.middle_name} {this.props.last_name}
           </h3>
           <p>
             {dates}<br />
@@ -73,6 +73,7 @@ class AuthorShow extends Component {
           </span>
         </Col>
         <Col md={9}>
+          <h2>Plays by {this.props.last_name}</h2>
           <PlaysSubComponent
             author_id={this.props.id}
             plays={this.state.plays}

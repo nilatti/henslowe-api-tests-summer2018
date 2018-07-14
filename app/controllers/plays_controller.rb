@@ -3,14 +3,18 @@ class PlaysController < ApiController
   before_action :set_author
   # GET /plays
   def index
-    @plays = Play.where(author_id: @author.id)
+    if @author
+      @plays = Play.where(author_id: @author.id)
+    else
+      @plays = Play.all
+    end
 
     render json: @plays.to_json
   end
 
   # GET /plays/1
   def show
-    render json: @play
+    render json: @play.to_json(include: :author)
   end
 
   # POST /plays
