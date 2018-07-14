@@ -1,6 +1,6 @@
+import PropTypes from 'prop-types';
 import { Glyphicon, Row, Col } from 'react-bootstrap'
 import { BrowserRouter } from 'react-router-dom'
-import PropTypes from 'prop-types';
 import React, { Component } from 'react'
 
 import axios from 'axios'

@@ -59,6 +59,7 @@ class EditableAuthor extends Component {
   openForm = () => {
     this.setState({ editFormOpen: true })
   }
+
   render () {
     if (this.state.editFormOpen) {
       return (

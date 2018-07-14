@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
-import EditablePlay from './PlayShow'
+import EditablePlay from './EditablePlay'
 
 class EditablePlaysList extends Component {
   render () {
