@@ -21,7 +21,7 @@ class Play extends Component {
           by {this.props.author}
           <span
             className='right floated edit icon'
-            onClick={this.props.onEditClick}
+            onClick={this.props.handleEditClick}
           >
             <Glyphicon glyph="pencil" />
           </span>
@@ -40,6 +40,7 @@ class Play extends Component {
 Play.propTypes = {
   author: PropTypes.string,
   handleDeleteClick: PropTypes.func.isRequired,
+  handleEditClick: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
 }

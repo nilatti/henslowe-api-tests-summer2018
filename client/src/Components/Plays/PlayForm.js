@@ -1,10 +1,11 @@
 import { Button, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap'
-import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react'
-
+import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 class PlayForm extends Component {
   constructor (props) {
@@ -12,7 +13,7 @@ class PlayForm extends Component {
     this.state = {
       title: this.props.title || '',
       genre: this.props.genre || '',
-      author: this.props.author || {}
+      author_id: this.props.author_id || {}
     }
   }
 
@@ -22,8 +23,17 @@ class PlayForm extends Component {
 
   handleDateChange = (date) => {
     this.setState({
-     birthdate: date
+     birthdate: date,
+     author: '',
    })
+  }
+
+  handleSelectChange = (author) => {
+    this.setState({ author });
+    // selectedOption can be null when the `x` (close) button is clicked
+    if (author) {
+      console.log(`Selected: ${author.label}`);
+    }
   }
 
   handleSubmit = (event) => {
@@ -34,7 +44,10 @@ class PlayForm extends Component {
     })
   }
 
+
   render () {
+    const authors = ["author 1", "author 2"]
+    const author = this.state.author
     return (
       <Col md={12}>
         <Form horizontal>
@@ -49,6 +62,15 @@ class PlayForm extends Component {
                 name="title" value={this.state.title} onChange={this.handleChange} />
             </Col>
           </FormGroup>
+          <Select
+        name="form-field-name"
+        value={author}
+        onChange={this.handleChange}
+        options={[
+          { value: 'one', label: 'One' },
+          { value: 'two', label: 'Two' },
+        ]}
+      />
           <FormGroup controlId="genre">
             <Col componentClass={ControlLabel} md={2}>
               Genre
@@ -82,17 +104,10 @@ class PlayForm extends Component {
 }
 
 PlayForm.propTypes = {
+  author_id: PropTypes.number.isRequired,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  first_name: PropTypes.string,
-  middle_name: PropTypes.string,
-  last_name: PropTypes.string,
-  birthdate: PropTypes.string,
-  deathdate: PropTypes.string,
-  nationality: PropTypes.string,
-  gender: PropTypes.string,
-  plays: PropTypes.array,
-  deathDateVisible: PropTypes.bool,
+  title: PropTypes.string.isRequired
 }
 
 export default PlayForm
