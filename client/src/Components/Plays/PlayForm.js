@@ -1,7 +1,8 @@
-import { Button, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap'
+import axios from 'axios'
 import moment from 'moment'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react'
+import { Button, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select';
@@ -13,8 +14,13 @@ class PlayForm extends Component {
     this.state = {
       title: this.props.title || '',
       genre: this.props.genre || '',
-      author_id: this.props.author_id || {}
+      author_id: this.props.author_id || {},
+      authors: [],
     }
+  }
+
+  componentDidMount = () => {
+    this.loadAuthorsFromServer()
   }
 
   handleChange = (event) => {
@@ -23,16 +29,14 @@ class PlayForm extends Component {
 
   handleDateChange = (date) => {
     this.setState({
-     birthdate: date,
-     author: '',
+     date: date,
    })
   }
 
-  handleSelectChange = (author) => {
-    this.setState({ author });
-    // selectedOption can be null when the `x` (close) button is clicked
-    if (author) {
-      console.log(`Selected: ${author.label}`);
+  handleSelectChange = (authorId) => {
+    this.setState({ author_id: authorId.value });
+    if (authorId) {
+      console.log(`Selected: ${authorId.value}`);
     }
   }
 
@@ -44,10 +48,20 @@ class PlayForm extends Component {
     })
   }
 
+  loadAuthorsFromServer = () => {
+    axios.get('/api/authors.json')
+    .then(response => {
+      this.setState({ authors: response.data })
+    })
+    .catch(error => console.log(error))
+  }
 
   render () {
-    const authors = ["author 1", "author 2"]
-    const author = this.state.author
+    const authors = this.state.authors.reduce(function(map, author) {
+      map["value: " + author.id] = "label: " + author.first_name + " " + author.last_name
+      return map
+    }, {})
+    console.log(authors)
     return (
       <Col md={12}>
         <Form horizontal>
@@ -63,13 +77,12 @@ class PlayForm extends Component {
             </Col>
           </FormGroup>
           <Select
-        name="form-field-name"
-        value={author}
-        onChange={this.handleChange}
-        options={[
-          { value: 'one', label: 'One' },
-          { value: 'two', label: 'Two' },
-        ]}
+            name="author_id"
+            value={this.state.author_id}
+            onChange={this.handleSelectChange}
+            options={[
+              {authors}
+            ]}
       />
           <FormGroup controlId="genre">
             <Col componentClass={ControlLabel} md={2}>

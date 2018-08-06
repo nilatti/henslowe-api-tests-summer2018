@@ -16,7 +16,8 @@
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
-    "react-select": "^1.2.1"
+    "react-select": "^1.2.1",
+    "rest": "^2.0.0"
   },
   "proxy": "http://localhost:3001",
   "scripts": {
@@ -24,5 +25,14 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest-mock-axios": "^2.1.11",
+    "react-addons-test-utils": "^15.6.2",
+    "react-mock-router": "^1.0.15",
+    "react-test-renderer": "^16.4.1",
+    "react-testing-library": "^4.1.3"
   }
 }

@@ -1,9 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import renderer from 'react-test-renderer'
+import React from 'react'
 import App from './App';
+import MockRouter from 'react-mock-router';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
-});
+it('should render correctly', () => {
+  const component = renderer.create(
+    <MockRouter>
+      <App />
+    </MockRouter>
+  )
+  expect(component.toJSON()).toMatchSnapshot()
+})

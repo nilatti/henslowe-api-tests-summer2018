@@ -11,6 +11,7 @@ class EditableAuthorsList extends Component {
         <Link to={`/authors/${author.id}`}>{author.first_name} {author.middle_name} {author.last_name}</Link>
       </li>
     ))
+    console.log("inside render", this.props)
     return (
       <div id='authors'>
         <ul>
@@ -19,15 +20,10 @@ class EditableAuthorsList extends Component {
         <hr />
         <Route
           path={`/authors/:authorId`}
-          render={
-            (props) =>
-              <EditableAuthor
-                {...props}
-                onFormSubmit={this.props.onFormSubmit}
-                onDeleteClick={this.props.onDeleteClick}
-              />
-              }
-          />
+          render={(props) => (
+            <EditableAuthor {...props} onDeleteClick={this.props.onDeleteClick} onFormSubmit={this.props.onFormSubmit}/>
+          )}
+        />
       </div>
     )
   }

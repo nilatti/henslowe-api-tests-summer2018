@@ -1,7 +1,7 @@
-import axios from 'axios'
+import API from '../../api/api'
+import { createAuthor, deleteAuthor, getAuthors } from '../../api/authors'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
 import AuthorFormToggle from './AuthorFormToggle'
 import EditableAuthorsList from './EditableAuthorsList'
@@ -10,37 +10,37 @@ class Authors extends Component {
 
   state = {
     authors: [],
+    errorStatus: ''
   }
+
   addNewAuthor = (newAuthor) => {
     this.setState({
       authors: [...this.state.authors, newAuthor]
     })
   }
+
   componentDidMount () {
     this.loadAuthorsFromServer() //loads authors and sets state authors array
   }
-  createAuthor = (author) => {
-    axios.post(
-      '/api/authors',
-      {
-        author
-      }
-    )
-    .then(response => {
-      this.addNewAuthor(response.data)
-    })
-    .catch(error => console.log(error))
 
+  async createAuthor (author) {
+    const response = await createAuthor(author)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error creating author' })
+    } else {
+      this.addNewAuthor(response.data)
+    }
   }
-  deleteAuthor = (authorId) => {
-    axios.delete(`/api/authors/${authorId}`)
-    .then(response => {
-      this.setState({
-        authors: this.state.authors.filter(a => a.id !== authorId),
-      })
-    })
-    .catch(error => console.log(error))
-    this.props.history.push('/authors')
+
+  async deleteAuthor (authorId) {
+    const response = await deleteAuthor(authorId)
+    API.delete(`authors/${authorId}`)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error creating author' })
+    } else {
+      this.props.history.push('/authors')
+    }
+
   }
   handleCreateFormSubmit = (author) => {
     this.createAuthor(author)
@@ -49,7 +49,7 @@ class Authors extends Component {
     this.deleteAuthor(authorId)
   }
   handleEditFormSubmit = (author) => {
-    axios.put(`/api/authors/${author.id}`,
+    API.put(`authors/${author.id}`,
       {
         author: author
       },
@@ -58,13 +58,15 @@ class Authors extends Component {
     })
 
   }
-  loadAuthorsFromServer = () => {
-    axios.get('/api/authors.json')
-    .then(response => {
+  async loadAuthorsFromServer () {
+    const response = await getAuthors()
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error fetching authors' })
+    } else {
       this.setState({ authors: response.data })
-    })
-    .catch(error => console.log(error))
+    }
   }
+
   updateAuthor = (author) => {
     let newAuthors = this.state.authors.filter((a) => a.id !== author.id)
     newAuthors.push(author)
@@ -77,7 +79,7 @@ class Authors extends Component {
     return (
       <Row>
         <Col md={12} >
-          <div>
+          <div id="authors">
             <h2>Authors</h2>
             <EditableAuthorsList
               authors={this.state.authors}

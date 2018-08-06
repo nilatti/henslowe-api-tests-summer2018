@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Glyphicon, Row, Col } from 'react-bootstrap'
 import { BrowserRouter } from 'react-router-dom'
 
-import axios from 'axios'
+import { getAuthor } from '../../api/authors'
 
 import AuthorForm from './AuthorForm'
 import AuthorShow from './AuthorShow'
@@ -32,6 +32,7 @@ class EditableAuthor extends Component {
     this.setState({ editFormOpen: false })
   }
   componentDidMount = () => {
+    console.log("inside componentDidMount", this.props.match.params.authorId)
     this.loadAuthorFromServer(this.props.match.params.authorId)
   }
   componentDidUpdate(prevProps) {
@@ -49,13 +50,16 @@ class EditableAuthor extends Component {
     this.props.onFormSubmit(author)
     this.closeForm()
   }
-  loadAuthorFromServer = (authorId) => {
-    axios.get(`/api/authors/${authorId}.json`)
-    .then(response => {
+  async loadAuthorFromServer (authorId) {
+    console.log("getting author from server", authorId)
+    const response = await getAuthor(authorId)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error fetching author' })
+    } else {
       this.setState({ author: response.data })
-    })
-    .catch(error => console.log(error))
+    }
   }
+
   openForm = () => {
     this.setState({ editFormOpen: true })
   }

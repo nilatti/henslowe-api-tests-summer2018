@@ -1,7 +1,4 @@
-import axios from 'axios'
+const rest = require('rest')
+const mime = require('rest/interceptor/mime')
 
-export default async term => {
-  const response = await axios.get('/api/authors.json')
-
-  return response.data.results
-}
+export default rest.wrap(mime)

@@ -13,7 +13,6 @@ class Play extends Component {
   }
 
   render () {
-    console.log('inside play render', this.props)
     return (
       <div>
         <Col>
