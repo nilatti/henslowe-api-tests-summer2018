@@ -11,7 +11,6 @@ class EditableAuthorsList extends Component {
         <Link to={`/authors/${author.id}`}>{author.first_name} {author.middle_name} {author.last_name}</Link>
       </li>
     ))
-    console.log("inside render", this.props)
     return (
       <div id='authors'>
         <ul>

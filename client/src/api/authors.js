@@ -22,6 +22,13 @@ async function getAuthors() {
     return API.request(`http://localhost:3001/api/authors`)
 }
 
+async function updateServerAuthor(author) {
+  return API.put(`authors/${author.id}`,
+    {
+      author: author
+    }
+  )
+}
 
 
-export { createAuthor, deleteAuthor, getAuthor, getAuthors }
+export { createAuthor, deleteAuthor, getAuthor, getAuthors, updateServerAuthor }

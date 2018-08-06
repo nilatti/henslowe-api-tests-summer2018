@@ -1,5 +1,5 @@
 import API from '../../api/api'
-import { createAuthor, deleteAuthor, getAuthors } from '../../api/authors'
+import { createAuthor, deleteAuthor, getAuthors, updateServerAuthor } from '../../api/authors'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-bootstrap'
 
@@ -40,24 +40,8 @@ class Authors extends Component {
     } else {
       this.props.history.push('/authors')
     }
+  }
 
-  }
-  handleCreateFormSubmit = (author) => {
-    this.createAuthor(author)
-  }
-  handleDeleteClick = (authorId) => {
-    this.deleteAuthor(authorId)
-  }
-  handleEditFormSubmit = (author) => {
-    API.put(`authors/${author.id}`,
-      {
-        author: author
-      },
-    ).then((response) => {
-      this.updateAuthor(response.data)
-    })
-
-  }
   async loadAuthorsFromServer () {
     const response = await getAuthors()
     if (response.status >= 400) {
@@ -65,6 +49,27 @@ class Authors extends Component {
     } else {
       this.setState({ authors: response.data })
     }
+  }
+
+  async updateAuthorOnServer (author) {
+    const response = await updateServerAuthor(author)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error updating author'})
+    } else {
+      this.updateAuthor(response.data)
+    }
+  }
+
+  handleCreateFormSubmit = (author) => {
+    this.createAuthor(author)
+  }
+  handleDeleteClick = (authorId) => {
+    this.deleteAuthor(authorId)
+  }
+
+  handleEditFormSubmit = (author) => {
+    this.updateAuthorOnServer(author)
+    this.updateAuthor(author)
   }
 
   updateAuthor = (author) => {

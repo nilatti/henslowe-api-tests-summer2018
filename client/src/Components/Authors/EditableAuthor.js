@@ -32,7 +32,6 @@ class EditableAuthor extends Component {
     this.setState({ editFormOpen: false })
   }
   componentDidMount = () => {
-    console.log("inside componentDidMount", this.props.match.params.authorId)
     this.loadAuthorFromServer(this.props.match.params.authorId)
   }
   componentDidUpdate(prevProps) {
@@ -51,7 +50,6 @@ class EditableAuthor extends Component {
     this.closeForm()
   }
   async loadAuthorFromServer (authorId) {
-    console.log("getting author from server", authorId)
     const response = await getAuthor(authorId)
     if (response.status >= 400) {
       this.setState({ errorStatus: 'Error fetching author' })
