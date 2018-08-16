@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180623001340) do
+ActiveRecord::Schema.define(version: 20180816020751) do
 
   create_table "active_admin_comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "namespace"
@@ -24,6 +24,17 @@ ActiveRecord::Schema.define(version: 20180623001340) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+  end
+
+  create_table "acts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "act_number"
+    t.bigint "play_id"
+    t.text "summary"
+    t.integer "start_page"
+    t.integer "end_page"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["play_id"], name: "index_acts_on_play_id"
   end
 
   create_table "admin_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -65,5 +76,6 @@ ActiveRecord::Schema.define(version: 20180623001340) do
     t.index ["author_id"], name: "index_plays_on_author_id"
   end
 
+  add_foreign_key "acts", "plays"
   add_foreign_key "plays", "authors"
 end

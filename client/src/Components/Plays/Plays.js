@@ -1,6 +1,8 @@
-import axios from 'axios'
-import { Col, Row } from 'react-bootstrap'
+import { createPlay, deletePlay, getPlays, updateServerPlay } from '../../api/plays'
+
 import React, { Component } from 'react'
+import { Col, Row } from 'react-bootstrap'
+import { withRouter } from 'react-router-dom'
 
 import EditablePlaysList from './EditablePlaysList'
 import PlayFormToggle from './PlayFormToggle'
@@ -8,10 +10,7 @@ import PlayFormToggle from './PlayFormToggle'
 class Plays extends Component {
   state = {
     plays: [],
-  }
-
-  componentDidMount () {
-    this.loadPlaysFromServer() //loads authors and sets state authors array
+    errorStatus: ''
   }
 
   addNewPlay = (newPlay) => {
@@ -20,56 +19,58 @@ class Plays extends Component {
     })
   }
 
-  createPlay = (play) => {
-    axios.post(
-      '/api/plays',
-      {
-        play
-      }
-    )
-    .then(response => {
+  componentDidMount () {
+    this.loadPlaysFromServer()
+  }
+
+  async createPlay (play) {
+    const response = await createPlay(play)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error creating play' })
+    } else {
       this.addNewPlay(response.data)
-    })
-    .catch(error => console.log(error))
-
+    }
   }
 
-  deletePlay = (playId) => {
-    axios.delete(`/api/plays/${playId}`)
-    .then(response => {
-      this.setState({
-        plays: this.state.plays.filter(p => p.id !== playId),
-      })
-    })
-    .catch(error => console.log(error))
-    this.props.history.push('/plays')
+  async deletePlay (playId) {
+    const response = await deletePlay(playId)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error deleting play' })
+    } else {
+      this.loadPlaysFromServer()
+      this.props.history.push('/plays')
+    }
   }
 
-  loadPlaysFromServer = () => {
-    axios.get('/api/plays.json')
-    .then(response => {
+  async loadPlaysFromServer () {
+    const response = await getPlays()
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error fetching plays' })
+    } else {
       this.setState({ plays: response.data })
-    })
-    .catch(error => console.log(error))
+    }
+  }
+
+  async updatePlayOnServer (play) {
+    const response = await updateServerPlay(play)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error updating play'})
+    } else {
+      this.updatePlay(response.data)
+    }
   }
 
   handleCreateFormSubmit = (play) => {
     this.createPlay(play)
   }
 
-  handleEditFormSubmit = (play) => {
-    axios.put(`/api/plays/${play.id}`,
-      {
-        play: play
-      },
-    ).then((response) => {
-      this.updatePlay(response.data)
-    })
-
-  }
-
   handleDeleteClick = (playId) => {
     this.deletePlay(playId)
+  }
+
+  handleEditFormSubmit = (play) => {
+    this.updatePlayOnServer(play)
+    this.updatePlay(play)
   }
 
   updatePlay = (play) => {
@@ -79,6 +80,7 @@ class Plays extends Component {
       plays: newPlays
     })
   }
+
   render () {
     return (
       <Row>

@@ -1,7 +1,7 @@
-import API from '../../api/api'
 import { createAuthor, deleteAuthor, getAuthors, updateServerAuthor } from '../../api/authors'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-bootstrap'
+import { withRouter } from 'react-router-dom'
 
 import AuthorFormToggle from './AuthorFormToggle'
 import EditableAuthorsList from './EditableAuthorsList'
@@ -34,10 +34,10 @@ class Authors extends Component {
 
   async deleteAuthor (authorId) {
     const response = await deleteAuthor(authorId)
-    API.delete(`authors/${authorId}`)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error creating author' })
+      this.setState({ errorStatus: 'Error deleting author' })
     } else {
+      this.loadAuthorsFromServer()
       this.props.history.push('/authors')
     }
   }

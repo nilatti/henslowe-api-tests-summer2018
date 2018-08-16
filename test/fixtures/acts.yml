@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  act_number: 1
+  play: one
+  summary: MyText
+  start_page: 1
+  end_page: 1
+
+two:
+  act_number: 1
+  play: two
+  summary: MyText
+  start_page: 1
+  end_page: 1

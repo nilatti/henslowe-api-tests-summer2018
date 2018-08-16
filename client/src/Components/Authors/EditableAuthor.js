@@ -1,13 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react'
-import { Glyphicon, Row, Col } from 'react-bootstrap'
-import { BrowserRouter } from 'react-router-dom'
 
 import { getAuthor } from '../../api/authors'
 
 import AuthorForm from './AuthorForm'
 import AuthorShow from './AuthorShow'
-import PlaysSubComponent from '../Plays/PlaysSubComponent'
 
 class EditableAuthor extends Component {
   constructor(props) {

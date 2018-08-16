@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Col, Row } from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
 import EditableAuthor from './EditableAuthor'
 
 class EditableAuthorsList extends Component {
+
   render () {
     const authors = this.props.authors.map((author) => (
       <li key={author.id}>
@@ -20,7 +20,7 @@ class EditableAuthorsList extends Component {
         <Route
           path={`/authors/:authorId`}
           render={(props) => (
-            <EditableAuthor {...props} onDeleteClick={this.props.onDeleteClick} onFormSubmit={this.props.onFormSubmit}/>
+            <EditableAuthor {...props} onDeleteClick={this.props.onDeleteClick} onFormSubmit={this.props.onFormSubmit} />
           )}
         />
       </div>

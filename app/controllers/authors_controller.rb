@@ -37,6 +37,7 @@ class AuthorsController < ApiController
   # DELETE /authors/1
   def destroy
     @author.destroy
+
   end
 
   private

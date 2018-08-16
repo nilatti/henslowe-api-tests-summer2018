@@ -8,7 +8,6 @@ import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 class Play extends Component {
 
   handleDeleteClick = () => {
-    console.log('inside play handle delete click', this.props.id)
     this.props.handleDeleteClick(this.props.id)
   }
 

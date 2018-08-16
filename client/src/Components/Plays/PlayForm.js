@@ -23,6 +23,20 @@ class PlayForm extends Component {
     this.loadAuthorsFromServer()
   }
 
+  generateAuthorSelectItems = () => {
+    let authors = this.state.authors
+    let items = []
+    authors.forEach(function(author){
+      var item = {}
+      item['value'] = author.id
+      item['label'] = author.first_name + " " + author.last_name
+      items.push(item)
+    })
+    // var result = new Map(authors.map(author => [author.id, author.first_name]))
+    // var result = new Map(authors.map(author => {"value": author.id, "label": author.first_name}))
+    return items
+    }
+
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
@@ -57,11 +71,8 @@ class PlayForm extends Component {
   }
 
   render () {
-    const authors = this.state.authors.reduce(function(map, author) {
-      map["value: " + author.id] = "label: " + author.first_name + " " + author.last_name
-      return map
-    }, {})
-    console.log(authors)
+    const authors = this.generateAuthorSelectItems()
+
     return (
       <Col md={12}>
         <Form horizontal>
@@ -80,9 +91,7 @@ class PlayForm extends Component {
             name="author_id"
             value={this.state.author_id}
             onChange={this.handleSelectChange}
-            options={[
-              {authors}
-            ]}
+            options={authors}
       />
           <FormGroup controlId="genre">
             <Col componentClass={ControlLabel} md={2}>
@@ -117,10 +126,8 @@ class PlayForm extends Component {
 }
 
 PlayForm.propTypes = {
-  author_id: PropTypes.number.isRequired,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
 }
 
 export default PlayForm

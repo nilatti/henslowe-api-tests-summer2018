@@ -1,4 +1,3 @@
-import request from './request'
 import API from './api'
 
 async function createAuthor(author) {
@@ -11,7 +10,7 @@ async function createAuthor(author) {
 }
 
 async function deleteAuthor(authorId) {
-  API.delete(`authors/${authorId}`)
+  return API.delete(`authors/${authorId}`)
 }
 
 async function getAuthor(authorId) {
@@ -19,7 +18,7 @@ async function getAuthor(authorId) {
 }
 
 async function getAuthors() {
-    return API.request(`http://localhost:3001/api/authors`)
+    return API.request(`authors`)
 }
 
 async function updateServerAuthor(author) {
