@@ -1,5 +1,14 @@
 import API from './api'
 
+async function createAct(playId, act) {
+  return API.post(
+    `plays/${playId}/acts`,
+      {
+        act
+      }
+    )
+}
+
 async function createPlay(play) {
   return API.post(
     'plays',
@@ -17,6 +26,10 @@ async function getPlay(playId) {
   return API.request(`plays/${playId}`)
 }
 
+async function getActs(playId) {
+  return API.request(`plays/${playId}/acts`)
+}
+
 async function getPlays() {
     return API.request(`plays`)
 }
@@ -29,5 +42,4 @@ async function updateServerPlay(play) {
   )
 }
 
-
-export { createPlay, deletePlay, getPlay, getPlays, updateServerPlay }
+export { createAct, createPlay, deletePlay, getActs, getPlay, getPlays, updateServerPlay }

@@ -1,5 +1,3 @@
-import axios from 'axios'
-import moment from 'moment'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react'
 import { Button, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap'
@@ -8,6 +6,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
+import { getAuthors } from '../../api/authors'
+
 class PlayForm extends Component {
   constructor (props) {
     super (props)
@@ -15,12 +15,18 @@ class PlayForm extends Component {
       title: this.props.title || '',
       genre: this.props.genre || '',
       author_id: this.props.author_id || {},
-      authors: [],
+      authors: null,
     }
   }
 
   componentDidMount = () => {
     this.loadAuthorsFromServer()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.authors === null) {
+      this.loadAuthorsFromServer()
+    }
   }
 
   generateAuthorSelectItems = () => {
@@ -32,10 +38,8 @@ class PlayForm extends Component {
       item['label'] = author.first_name + " " + author.last_name
       items.push(item)
     })
-    // var result = new Map(authors.map(author => [author.id, author.first_name]))
-    // var result = new Map(authors.map(author => {"value": author.id, "label": author.first_name}))
     return items
-    }
+  }
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
@@ -49,30 +53,48 @@ class PlayForm extends Component {
 
   handleSelectChange = (authorId) => {
     this.setState({ author_id: authorId.value });
-    if (authorId) {
-      console.log(`Selected: ${authorId.value}`);
-    }
   }
 
   handleSubmit = (event) => {
     event.preventDefault()
     this.props.onFormSubmit({
-      author_id: this.props.author_id,
+      author_id: this.state.author_id,
       title: this.state.title,
     })
   }
 
-  loadAuthorsFromServer = () => {
-    axios.get('/api/authors.json')
-    .then(response => {
+  async loadAuthorsFromServer () {
+    const response = await getAuthors()
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error fetching authors' })
+    } else {
       this.setState({ authors: response.data })
-    })
-    .catch(error => console.log(error))
+    }
   }
 
-  render () {
-    const authors = this.generateAuthorSelectItems()
+  static getDerivedStateFromProps(props, state) {
+    // Store prevId in state so we can compare when props change.
+    // Clear out previously-loaded data (so we don't render stale stuff).
+    if (props.id !== state.prevId) {
+      return {
+        authors: null,
+        prevId: props.id,
+      };
+    }
+    // No state update necessary
+    return null;
+  }
 
+
+  render () {
+    console.log("now I'm rendering the play form")
+    if (this.state.authors === null) {
+      return (
+        <div>Loading!</div>
+      )
+    }
+    const authors = this.generateAuthorSelectItems()
+    console.log("the current author is ", this.state.author_id)
     return (
       <Col md={12}>
         <Form horizontal>

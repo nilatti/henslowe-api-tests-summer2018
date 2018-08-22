@@ -10,6 +10,7 @@ const Navigation = () => (
         <li><Link to='/'>Dashboard</Link></li>
         <li><Link to='/authors'>Authors</Link></li>
         <li><Link to='/plays'>Plays</Link></li>
+        <li><Link to='/theaters'>Theaters</Link></li>
       </ul>
     </nav>
   </header>

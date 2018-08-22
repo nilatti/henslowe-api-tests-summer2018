@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Glyphicon, Row, Col } from 'react-bootstrap'
 import React, { Component } from 'react'
 
-import axios from 'axios'
+import { createPlay } from '../../api/plays'
 
 import PlayFormToggle from '../Plays/PlayFormToggle'
 import PlaysSubComponent from '../Plays/PlaysSubComponent'
@@ -15,28 +15,25 @@ class AuthorShow extends Component {
     }
   }
 
+  async createPlay (play) {
+    const response = await createPlay(play)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error creating play' })
+    } else {
+      this.addNewPlay(response.data)
+    }
+  }
+
   addNewPlay = (newPlay) => {
     this.setState({
       plays: [...this.state.plays, newPlay]
     })
   }
 
-  createPlay = (play) => {
-    axios.post(
-      `/api/plays`,
-      {
-        play
-      }
-    )
-    .then(response => {
-      this.addNewPlay(response.data)
-    })
-    .catch(error => console.log(error))
-  }
-
   handleCreateFormSubmit = (play) => {
     this.createPlay(play)
   }
+  
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.id)
   }

@@ -2,26 +2,26 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
-import EditableAuthor from './EditableAuthor'
+import EditableTheater from './EditableTheater'
 
-class EditableAuthorsList extends Component {
+class EditableTheatersList extends Component {
 
   render () {
-    const authors = this.props.authors.map((author) => (
-      <li key={author.id}>
-        <Link to={`/authors/${author.id}`}>{author.first_name} {author.middle_name} {author.last_name}</Link>
+    const theaters = this.props.theaters.map((theater) => (
+      <li key={theater.id}>
+        <Link to={`/theaters/${theater.id}`}>{theater.name}</Link>
       </li>
     ))
     return (
-      <div id='authors'>
+      <div id='theaters'>
         <ul>
-          {authors}
+          {theaters}
         </ul>
         <hr />
         <Route
-          path={`/authors/:authorId`}
+          path={`/theaters/:theaterId`}
           render={(props) => (
-            <EditableAuthor
+            <EditableTheater
               {...props}
               onDeleteClick={this.props.onDeleteClick} onFormSubmit={this.props.onFormSubmit}
               thisIsATestProp={true}
@@ -33,8 +33,8 @@ class EditableAuthorsList extends Component {
   }
 }
 
-EditableAuthorsList.propTypes = {
-  authors: PropTypes.array.isRequired,
+EditableTheatersList.propTypes = {
+  theaters: PropTypes.array.isRequired,
 }
 
-export default EditableAuthorsList
+export default EditableTheatersList

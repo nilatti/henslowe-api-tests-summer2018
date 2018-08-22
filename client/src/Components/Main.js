@@ -4,15 +4,15 @@ import { Switch, Route } from 'react-router-dom'
 import Authors from './Authors/Authors'
 import Dashboard from './Dashboard/Dashboard'
 import Plays from './Plays/Plays'
-import EditablePlay from './Plays/EditablePlay'
+import Theaters from './Theaters/Theaters'
 
 const Main = () => (
   <main>
     <Switch>
       <Route exact path='/' component={Dashboard}/>
       <Route path='/authors' component={Authors}/>
-      <Route exact path='/plays' component={Plays}/>
-      <Route path='/plays/:playId' component={EditablePlay} />
+      <Route path='/plays' component={Plays}/>
+      <Route path='/theaters' component={Theaters} />
     </Switch>
   </main>
 )

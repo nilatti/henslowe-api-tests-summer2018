@@ -2,29 +2,30 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
-import EditablePlay from './EditablePlay'
+import EditableAct from './EditableAct'
 
-class EditablePlaysList extends Component {
+class EditableActsList extends Component {
 
   render () {
-    console.log("props in EditablePlaysList", this.props)
-
-    const plays = this.props.plays.map((play) => (
-      <li key={play.id}>
-        <Link to={`/plays/${play.id}`}>{play.title}</Link>
+    const play_id = this.props.play_id
+    const acts = this.props.acts.map((act) => (
+      <li key={act.id}>
+        <Link to={`acts/${act.id}`}>{act.act_number}</Link>
       </li>
     ))
+    //
     return (
-      <div id='plays'>
+      <div id='acts'>
         <ul>
-          {plays}
+          {acts}
         </ul>
         <hr />
         <Route
-          path={`/plays/:playId`}
+          path={`acts/:actId`}
           render={(props) => (
-            <EditablePlay
+            <EditableAct
               {...props}
+              play_id={this.props.play_id}
               onDeleteClick={this.props.onDeleteClick}
               onFormSubmit={this.props.onFormSubmit}
             />
@@ -35,9 +36,11 @@ class EditablePlaysList extends Component {
   }
 }
 
-EditablePlaysList.propTypes = {
+EditableActsList.propTypes = {
+  acts: PropTypes.array.isRequired,
+  play_id: PropTypes.number.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired
 }
 
-export default EditablePlaysList
+export default EditableActsList

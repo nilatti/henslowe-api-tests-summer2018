@@ -12,17 +12,7 @@ class EditableAuthor extends Component {
     this.state = {
       editFormOpen: false,
       test: true,
-      author: {
-        birthdate: '',
-        deathdate: '',
-        first_name: '',
-        gender: '',
-        id: 0,
-        last_name: '',
-        middle_name: '',
-        nationality: '',
-        plays: []
-      }
+      author: null,
     }
   }
   closeForm = () => {
@@ -32,8 +22,8 @@ class EditableAuthor extends Component {
     this.loadAuthorFromServer(this.props.match.params.authorId)
   }
   componentDidUpdate(prevProps) {
-    if (this.props !== prevProps) {
-      this.loadAuthorFromServer(this.props.match.params.authorId)
+    if (this.state.author === null || prevProps.match.params.authorId !== this.props.match.params.authorId) {
+      this.loadAuthorFromServer(this.props.match.params.authorId);
     }
   }
   handleEditClick = () => {
@@ -55,11 +45,29 @@ class EditableAuthor extends Component {
     }
   }
 
+  static getDerivedStateFromProps(props, state) {
+    // Store prevId in state so we can compare when props change.
+    // Clear out previously-loaded data (so we don't render stale stuff).
+    if (props.id !== state.prevId) {
+      return {
+        author: null,
+        prevId: props.id,
+      };
+    }
+    // No state update necessary
+    return null;
+  }
+
   openForm = () => {
     this.setState({ editFormOpen: true })
   }
 
   render () {
+    if (this.state.author === null) {
+      return (
+        <div>Loading!</div>
+      )
+    }
     if (this.state.editFormOpen) {
       return (
         <AuthorForm
