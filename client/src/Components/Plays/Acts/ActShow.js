@@ -4,42 +4,20 @@ import { Glyphicon, Row, Col } from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
 class ActShow extends Component {
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //     acts: this.props.acts
-  //   }
-  // }
-  //
-  // async createAct (playId, act) {
-  //   const response = await createAct(playId, act)
-  //   if (response.status >= 400) {
-  //     this.setState({ errorStatus: 'Error creating play' })
-  //   } else {
-  //     this.addNewAct(response.data)
-  //   }
-  // }
-  //
-  // addNewAct = (newAct) => {
-  //   this.setState({
-  //     acts: [...this.state.acts, newAct]
-  //   })
-  // }
-  //
-  // handleCreateFormSubmit = (act) => {
-  //   this.createAct(this.props.id, act)
-  // }
-
   handleDeleteClick = () => {
     this.props.handleDeleteClick(this.props.id)
   }
 
   render () {
+    console.log('act show called', this.props)
     return (
       <div>
         <Row>
           <Col>
-            <h2>{this.props.act_number}</h2>
+            <h2>{this.props.act.id}</h2>
+            <p>
+              {this.props.act.summary}
+            </p>
             <span
               className='right floated edit icon'
               onClick={this.props.handleEditClick}

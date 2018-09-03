@@ -7,8 +7,6 @@ import EditablePlay from './EditablePlay'
 class EditablePlaysList extends Component {
 
   render () {
-    console.log("props in EditablePlaysList", this.props)
-
     const plays = this.props.plays.map((play) => (
       <li key={play.id}>
         <Link to={`/plays/${play.id}`}>{play.title}</Link>

@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import { Glyphicon, Row, Col } from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route, Link, Redirect } from 'react-router-dom'
 
-import { deletePlay, getPlay } from '../../api/plays'
+import { deleteItem, getItem } from '../../api/crud'
+import { createAct, getActs  } from '../../api/plays'
 
 import PlayShow from './PlayShow'
 import PlayForm from './PlayForm'
@@ -15,25 +16,20 @@ class EditablePlay extends Component {
       editFormOpen: false,
       play: null,
       toPlaysList: false,
-      test: this.props.thisIsATestProp
     }
   }
-  closeForm = () => {
-    this.setState({ editFormOpen: false })
-  }
 
-  componentDidMount = () => {
-      this.loadPlayFromServer(this.props.match.params.playId)
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.play === null || prevProps.match.params.playId !== this.props.match.params.playId) {
-      this.loadPlayFromServer(this.props.match.params.playId);
+  async createAct (playId, act) {
+    const response = await createAct(playId, act)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error creating play' })
+    } else {
+      this.addNewAct(response.data)
     }
   }
 
   async deletePlay (playId) {
-    const response = await deletePlay(playId)
+    const response = await deleteItem(playId, 'play')
     if (response.status >= 400) {
       this.setState({ errorStatus: 'Error deleting play'})
     } else {
@@ -42,7 +38,7 @@ class EditablePlay extends Component {
   }
 
   async loadPlayFromServer (playId) {
-    const response = await getPlay(playId)
+    const response = await getItem(playId, "play")
     if (response.status >= 400) {
       this.setState({ errorStatus: 'Error fetching play' })
     } else {
@@ -63,6 +59,30 @@ class EditablePlay extends Component {
     return null;
   }
 
+  addNewAct = (newAct) => {
+    this.setState((prevState) => ({
+      play: {
+          ...prevState.play,
+          acts: [...prevState.play.acts, newAct]
+        }
+      })
+    )
+  }
+
+  closeForm = () => {
+    this.setState({ editFormOpen: false })
+  }
+
+  componentDidMount = () => {
+      this.loadPlayFromServer(this.props.match.params.playId)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.play === null || prevProps.match.params.playId !== this.props.match.params.playId) {
+      this.loadPlayFromServer(this.props.match.params.playId);
+    }
+  }
+
   onEditClick = () => {
     this.openForm()
   }
@@ -74,6 +94,10 @@ class EditablePlay extends Component {
   handleSubmit = (play) => {
     this.props.onFormSubmit(play)
     this.closeForm()
+  }
+
+  onCreateFormSubmit = (act) => {
+    this.createAct(this.state.play.id, act)
   }
 
   onDeleteClick = (playId) => {
@@ -112,6 +136,7 @@ class EditablePlay extends Component {
         id={this.state.play.id}
         handleDeleteClick={this.onDeleteClick}
         handleEditClick={this.onEditClick}
+        handleCreateFormSubmit={this.onCreateFormSubmit}
         title={this.state.play.title}
         acts={this.state.play.acts}
       />

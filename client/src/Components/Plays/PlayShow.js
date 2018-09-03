@@ -5,35 +5,7 @@ import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
 import Acts from './Acts/Acts'
 
-import { createAct, getActs  } from '../../api/plays'
-// import { createAct } from '../../api/acts'
-
 class PlayShow extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      acts: this.props.acts
-    }
-  }
-
-  async createAct (playId, act) {
-    const response = await createAct(playId, act)
-    if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error creating play' })
-    } else {
-      this.addNewAct(response.data)
-    }
-  }
-
-  addNewAct = (newAct) => {
-    this.setState({
-      acts: [...this.state.acts, newAct]
-    })
-  }
-
-  handleCreateFormSubmit = (act) => {
-    this.createAct(this.props.id, act)
-  }
 
   handleDeleteClick = () => {
     this.props.handleDeleteClick(this.props.id)
@@ -62,9 +34,9 @@ class PlayShow extends Component {
         </Row>
         <Row>
           <Acts
-            acts={this.state.acts}
+            acts={this.props.acts}
             play_id={this.props.id}
-            onFormSubmit={this.handleCreateFormSubmit}
+            onFormSubmit={this.props.handleCreateFormSubmit}
             onDeleteClick={this.handleDeleteClick}
           />
         </Row>
@@ -76,6 +48,7 @@ class PlayShow extends Component {
 PlayShow.propTypes = {
   acts: PropTypes.array.isRequired,
   author: PropTypes.string,
+  handleCreateFormSubmit: PropTypes.func.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,

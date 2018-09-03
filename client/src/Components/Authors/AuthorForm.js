@@ -41,6 +41,7 @@ class AuthorForm extends Component {
    });
   }
   handleSubmit = (event) => {
+    console.log("in handle submit authorform")
     event.preventDefault()
     this.props.onFormSubmit({
       id: this.props.id,
@@ -52,7 +53,7 @@ class AuthorForm extends Component {
       nationality: this.state.nationality,
       gender: this.state.gender,
       plays: this.state.plays
-    })
+    }, "author")
   }
 
   render () {
@@ -158,6 +159,8 @@ class AuthorForm extends Component {
 }
 
 AuthorForm.propTypes = {
+  onFormClose: PropTypes.func.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
   birthdate: PropTypes.string,
   deathdate: PropTypes.string,
   deathDateVisible: PropTypes.bool,
@@ -166,8 +169,6 @@ AuthorForm.propTypes = {
   last_name: PropTypes.string,
   middle_name: PropTypes.string,
   nationality: PropTypes.string,
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
   plays: PropTypes.array,
 }
 

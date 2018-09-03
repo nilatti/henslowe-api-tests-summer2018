@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Glyphicon, Row, Col } from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route, Link, Redirect } from 'react-router-dom'
 
-import { deleteAct, getAct } from '../../../api/acts'
+import { deleteItem, getItem } from '../../../api/crud'
 
 import ActShow from './ActShow'
 import ActForm from './ActForm'
@@ -31,7 +31,7 @@ class EditableAct extends Component {
   }
 
   async deleteAct (actId) {
-    const response = await deleteAct(actId)
+    const response = await deleteItem(actId)
     if (response.status >= 400) {
       this.setState({ errorStatus: 'Error deleting play'})
     } else {
@@ -40,7 +40,7 @@ class EditableAct extends Component {
   }
 
   async loadActFromServer (actId) {
-    const response = await getAct(actId)
+    const response = await getItem(actId, "act")
     if (response.status >= 400) {
       this.setState({ errorStatus: 'Error fetching act' })
     } else {
@@ -83,7 +83,6 @@ class EditableAct extends Component {
   }
 
   render () {
-
     if (this.state.editFormOpen) {
       return(
         <ActForm
@@ -99,6 +98,7 @@ class EditableAct extends Component {
     }
     return (
       <ActShow
+        act={this.state.act}
         handleDeleteClick={this.onDeleteClick}
         handleEditClick={this.onEditClick}
       />

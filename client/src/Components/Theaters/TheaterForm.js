@@ -139,15 +139,17 @@ class TheaterForm extends Component {
 }
 
 TheaterForm.propTypes = {
-  city: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired,
-  mission_statement: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  phone_number: PropTypes.string.isRequired,
-  state: PropTypes.string.isRequired,
-  street_address: PropTypes.string.isRequired,
-  website: PropTypes.string.isRequired,
-  zip: PropTypes.string.isRequired,
+  onFormClose: PropTypes.func.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
+  city: PropTypes.string,
+  id: PropTypes.number,
+  mission_statement: PropTypes.string,
+  name: PropTypes.string,
+  phone_number: PropTypes.string,
+  state: PropTypes.string,
+  street_address: PropTypes.string,
+  website: PropTypes.string,
+  zip: PropTypes.string,
 }
 
 export default TheaterForm

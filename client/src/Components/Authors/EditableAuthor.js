@@ -32,10 +32,12 @@ class EditableAuthor extends Component {
   handleFormClose = () => {
     this.closeForm()
   }
+  
   handleSubmit = (author) => {
     this.props.onFormSubmit(author)
     this.closeForm()
   }
+
   async loadAuthorFromServer (authorId) {
     const response = await getAuthor(authorId)
     if (response.status >= 400) {
