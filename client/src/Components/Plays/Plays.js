@@ -10,7 +10,8 @@ import PlayFormToggle from './PlayFormToggle'
 class Plays extends Component {
   state = {
     plays: [],
-    errorStatus: ''
+    errorStatus: '',
+    isVisible: true, //sets visibility for sidebar list
   }
 
   addNewPlay = (newPlay) => {
@@ -21,6 +22,11 @@ class Plays extends Component {
 
   componentDidMount () {
     this.loadPlaysFromServer()
+  }
+
+  updateModal(isVisible) {
+    this.state.isVisible = isVisible;
+    this.forceUpdate();
   }
 
   async createPlay (play) {
@@ -84,20 +90,20 @@ class Plays extends Component {
 
   render () {
     return (
-      <Row>
-        <Col md={12} >
-          <div>
-            <h2>Plays</h2>
-            <EditablePlaysList
-              plays={this.state.plays}
-              onFormSubmit={this.handleEditFormSubmit}
-              onDeleteClick={this.handleDeleteClick}
-            />
-            <PlayFormToggle
-              onFormSubmit={this.handleCreateFormSubmit}
-              isOpen={false}
-            />
-          </div>
+    <Row>
+      <Col md={10} >
+          <h2>Plays</h2>
+          <EditablePlaysList
+            plays={this.state.plays}
+            onFormSubmit={this.handleEditFormSubmit}
+            onDeleteClick={this.handleDeleteClick}
+          />
+        </Col>
+        <Col md={1}>
+          <PlayFormToggle
+            onFormSubmit={this.handleCreateFormSubmit}
+            isOpen={false}
+          />
         </Col>
       </Row>
     )

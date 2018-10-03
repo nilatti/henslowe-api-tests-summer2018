@@ -1,4 +1,5 @@
 import React from 'react'
+import { Col } from 'react-bootstrap'
 import { BrowserRouter } from 'react-router-dom'
 import Navigation from './Components/Navigation'
 import Main from './Components/Main'
@@ -10,7 +11,9 @@ const App = () => (
     <Grid fluid={true}>
       <div className="App">
         <Navigation />
-        <Main />
+        <Col xs={12}>
+          <Main />
+        </Col>
       </div>
     </Grid>
   </BrowserRouter>

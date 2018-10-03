@@ -9,6 +9,16 @@ async function createAct(playId, act) {
     )
 }
 
+
+async function createCharacter(playId, character) {
+  return API.post(
+    `plays/${playId}/characters`,
+      {
+        character
+      }
+    )
+}
+
 async function createPlay(play) {
   return API.post(
     'plays',
@@ -42,4 +52,4 @@ async function updateServerPlay(play) {
   )
 }
 
-export { createAct, createPlay, deletePlay, getActs, getPlay, getPlays, updateServerPlay }
+export { createAct, createCharacter, createPlay, deletePlay, getActs, getPlay, getPlays, updateServerPlay }

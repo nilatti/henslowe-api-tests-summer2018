@@ -14,7 +14,7 @@ class PlaysController < ApiController
 
   # GET /plays/1
   def show
-    render json: @play.to_json(include: [:author, :acts])
+    render json: @play.to_json(include: [:author, :acts, :characters])
   end
 
   # POST /plays

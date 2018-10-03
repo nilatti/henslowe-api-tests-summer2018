@@ -10,7 +10,9 @@ Rails.application.routes.draw do
     end
     resources :plays do
       resources :acts
+      resources :characters
     end
     resources :acts
+    resources :characters
   end
 end

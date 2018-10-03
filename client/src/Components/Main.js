@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
-
 import Authors from './Authors/Authors'
 import EditableAuthor from './Authors/EditableAuthor'
 import EditablePlay from './Plays/EditablePlay'

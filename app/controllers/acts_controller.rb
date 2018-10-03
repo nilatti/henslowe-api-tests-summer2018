@@ -4,7 +4,7 @@ class ActsController < ApiController
   # GET /acts
   def index
     if @play
-      @acts = Act.where(play_id: @play.id)
+      @acts = Act.where(play_id: @play.id).order('act_number')
     else
       @acts = Act.all
     end

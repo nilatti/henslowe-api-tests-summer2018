@@ -3,9 +3,9 @@ import React, { Component } from 'react'
 import { Glyphicon, Row, Col } from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
-class ActShow extends Component {
+class CharacterShow extends Component {
   handleDeleteClick = () => {
-    this.props.handleDeleteClick(this.props.act.id)
+    this.props.handleDeleteClick(this.props.character.id)
   }
 
   render () {
@@ -13,9 +13,9 @@ class ActShow extends Component {
       <div>
         <Row>
           <Col>
-            <h2>{this.props.act.act_number}</h2>
+            <h2>{this.props.character.name}</h2>
             <p>
-              {this.props.act.summary}
+              {this.props.character.description}
             </p>
             <span
               className='right floated edit icon'
@@ -41,10 +41,10 @@ class ActShow extends Component {
   }
 }
 
-ActShow.propTypes = {
-  act: PropTypes.object.isRequired,
+CharacterShow.propTypes = {
+  character: PropTypes.object.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
 }
 
-export default ActShow
+export default CharacterShow

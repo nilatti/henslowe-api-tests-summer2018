@@ -3,8 +3,10 @@ import React, { Component } from 'react'
 import { Glyphicon, Row, Col } from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route, Link, Redirect } from 'react-router-dom'
 
+import { deleteAct } from '../../api/acts'
+import { deleteCharacter } from '../../api/characters'
 import { deleteItem, getItem } from '../../api/crud'
-import { createAct, getActs  } from '../../api/plays'
+import { createAct, createCharacter, getActs  } from '../../api/plays'
 
 import PlayShow from './PlayShow'
 import PlayForm from './PlayForm'
@@ -22,9 +24,38 @@ class EditablePlay extends Component {
   async createAct (playId, act) {
     const response = await createAct(playId, act)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error creating play' })
+      this.setState({ errorStatus: 'Error creating act' })
     } else {
       this.addNewAct(response.data)
+    }
+  }
+
+  async createCharacter(playId, character) {
+    const response = await createCharacter(playId, character)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error creating character' })
+    } else {
+      this.addNewCharacter(response.data)
+    }
+  }
+
+  async deleteAct (actId) {
+    const response = await deleteAct(actId)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error deleting act'})
+    } else {
+      this.removeAct(actId)
+      this.props.history.push(`/plays/${this.state.play.id}`)
+    }
+  }
+
+  async deleteCharacter (characterId) {
+    const response = await deleteCharacter(characterId)
+    if (response.status >= 400) {
+      this.setState({ errorStatus: 'Error deleting character'})
+    } else {
+      this.removeCharacter(characterId)
+      this.props.history.push(`/plays/${this.state.play.id}`)
     }
   }
 
@@ -60,10 +91,22 @@ class EditablePlay extends Component {
   }
 
   addNewAct = (newAct) => {
+    let newActs = [...this.state.play.acts, newAct]
+    let sortedNewActs = this.sortActs(newActs)
     this.setState((prevState) => ({
       play: {
           ...prevState.play,
-          acts: [...prevState.play.acts, newAct]
+          acts: sortedNewActs,
+        }
+      })
+    )
+  }
+
+  addNewCharacter = (newCharacter) => {
+    this.setState((prevState) => ({
+      play: {
+          ...prevState.play,
+          characters: [...prevState.play.characters, newCharacter]
         }
       })
     )
@@ -83,10 +126,6 @@ class EditablePlay extends Component {
     }
   }
 
-  onEditClick = () => {
-    this.openForm()
-  }
-
   handleFormClose = () => {
     this.closeForm()
   }
@@ -96,16 +135,58 @@ class EditablePlay extends Component {
     this.closeForm()
   }
 
-  onCreateFormSubmit = (act) => {
+  onActCreateFormSubmit = (act) => {
     this.createAct(this.state.play.id, act)
+  }
+
+  onActDeleteClick = (actId) => {
+    this.deleteAct(actId)
+  }
+
+  onCharacterCreateFormSubmit = (character) => {
+    this.createCharacter(this.state.play.id, character)
+  }
+
+  onCharacterDeleteClick = (characterId) => {
+    this.deleteCharacter(characterId)
   }
 
   onDeleteClick = (playId) => {
     this.deletePlay(playId)
   }
 
+  onEditClick = () => {
+    this.openForm()
+  }
+
   openForm = () => {
     this.setState({ editFormOpen: true })
+  }
+
+  removeAct = (actId) => {
+    let newActs = this.state.play.acts.filter(act => act.id !== actId)
+    let sortedNewActs = this.sortActs(newActs)
+    this.setState((prevState) => ({
+      play: {
+          ...prevState.play,
+          acts: sortedNewActs,
+        }
+      })
+    )
+  }
+
+  removeCharacter = (characterId) => {
+    this.setState((prevState) => ({
+      play: {
+          ...prevState.play,
+          characters: this.state.play.characters.filter(character => character.id !== characterId)
+        }
+      })
+    )
+  }
+
+  sortActs = (acts) => {
+    return acts.sort(function(a,b) {return (a.act_number > b.act_number) ? 1 : ((b.act_number > a.act_number) ? -1 : 0);} );
   }
 
   render () {
@@ -115,13 +196,13 @@ class EditablePlay extends Component {
     if (this.state.editFormOpen) {
       return(
         <PlayForm
-          id={this.state.play.id}
-          title={this.state.play.title}
+          acts={this.sortActs(this.state.play.acts)}
           author_id={this.state.play.author.id}
           genre={this.state.play.genre}
-          acts={this.state.play.acts}
+          id={this.state.play.id}
           onFormClose={this.handleFormClose()}
           onFormSubmit={this.handleSubmit()}
+          title={this.state.play.title}
         />
       )
     }
@@ -130,15 +211,20 @@ class EditablePlay extends Component {
         <div>Loading!</div>
       )
     }
+
     return (
       <PlayShow
+        acts={this.state.play.acts}
         author={`${this.state.play.author.first_name} ${this.state.play.author.last_name}`}
+        characters={this.state.play.characters}
         id={this.state.play.id}
+        handleActCreateFormSubmit={this.onActCreateFormSubmit}
+        handleActDeleteClick={this.onActDeleteClick}
+        handleCharacterCreateFormSubmit={this.onCharacterCreateFormSubmit}
+        handleCharacterDeleteClick={this.onCharacterDeleteClick}
         handleDeleteClick={this.onDeleteClick}
         handleEditClick={this.onEditClick}
-        handleCreateFormSubmit={this.onCreateFormSubmit}
         title={this.state.play.title}
-        acts={this.state.play.acts}
       />
     )
   }

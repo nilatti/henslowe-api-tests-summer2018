@@ -114,7 +114,7 @@ class PlayForm extends Component {
             value={this.state.author_id}
             onChange={this.handleSelectChange}
             options={authors}
-      />
+          />
           <FormGroup controlId="genre">
             <Col componentClass={ControlLabel} md={2}>
               Genre

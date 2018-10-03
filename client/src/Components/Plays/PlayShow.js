@@ -4,6 +4,7 @@ import { Glyphicon, Row, Col } from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
 import Acts from './Acts/Acts'
+import Characters from './Characters/Characters'
 
 class PlayShow extends Component {
 
@@ -33,12 +34,24 @@ class PlayShow extends Component {
           </Col>
         </Row>
         <Row>
-          <Acts
-            acts={this.props.acts}
-            play_id={this.props.id}
-            onFormSubmit={this.props.handleCreateFormSubmit}
-            onDeleteClick={this.handleDeleteClick}
-          />
+          <Col md={12}>
+            <Acts
+              acts={this.props.acts}
+              play_id={this.props.id}
+              onDeleteClick={this.props.handleActDeleteClick}
+              onFormSubmit={this.props.handleActCreateFormSubmit}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
+            <Characters
+              characters={this.props.characters}
+              onDeleteClick={this.props.handleCharacterDeleteClick}
+              onFormSubmit={this.props.handleCharacterCreateFormSubmit}
+              play_id={this.props.id}
+            />
+          </Col>
         </Row>
       </div>
     )
@@ -48,7 +61,12 @@ class PlayShow extends Component {
 PlayShow.propTypes = {
   acts: PropTypes.array.isRequired,
   author: PropTypes.string,
-  handleCreateFormSubmit: PropTypes.func.isRequired,
+  characters: PropTypes.array.isRequired,
+  handleCharacterDeleteClick: PropTypes.func.isRequired,
+  handleActCreateFormSubmit: PropTypes.func.isRequired,
+  handleActDeleteClick: PropTypes.func.isRequired,
+  handleCharacterCreateFormSubmit: PropTypes.func.isRequired,
+  handleCharacterDeleteClick: PropTypes.func.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,

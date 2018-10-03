@@ -10,6 +10,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
+    "react-bootstrap-sidebar": "0.0.1",
     "react-datepicker": "^1.5.0",
     "react-dom": "^16.4.1",
     "react-moment": "^0.7.7",

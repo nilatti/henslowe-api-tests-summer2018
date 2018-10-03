@@ -5,37 +5,24 @@ import { BrowserRouter as Switch, Router, Route, Link, Redirect } from 'react-ro
 
 import { deleteItem, getItem } from '../../../api/crud'
 
-import ActShow from './ActShow'
-import ActForm from './ActForm'
+import CharacterShow from './CharacterShow'
+import CharacterForm from './CharacterForm'
 
-class EditableAct extends Component {
+class EditableCharacter extends Component {
   constructor(props){
     super(props)
     this.state = {
       editFormOpen: false,
-      act: null,
-    }
-  }
-  closeForm = () => {
-    this.setState({ editFormOpen: false })
-  }
-
-  componentDidMount = () => {
-      this.loadActFromServer(this.props.match.params.actId)
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.act === null || prevProps.match.params.actId !== this.props.match.params.actId) {
-      this.loadActFromServer(this.props.match.params.actId);
+      character: null,
     }
   }
 
-  async loadActFromServer (actId) {
-    const response = await getItem(actId, "act")
+  async loadCharacterFromServer (characterId) {
+    const response = await getItem(characterId, "character")
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error fetching act' })
+      this.setState({ errorStatus: 'Error fetching character' })
     } else {
-      this.setState({ act: response.data })
+      this.setState({ character: response.data })
     }
   }
 
@@ -44,12 +31,27 @@ class EditableAct extends Component {
     // Clear out previously-loaded data (so we don't render stale stuff).
     if (props.id !== state.prevId) {
       return {
-        act: null,
+        character: null,
         prevId: props.id,
       };
     }
     // No state update necessary
     return null;
+  }
+
+  closeForm = () => {
+    console.log('inside close form');
+    this.setState({ editFormOpen: false });
+  }
+
+  componentDidMount = () => {
+      this.loadCharacterFromServer(this.props.match.params.characterId)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.character === null || prevProps.match.params.characterId !== this.props.match.params.characterId) {
+      this.loadCharacterFromServer(this.props.match.params.characterId);
+    }
   }
 
   onEditClick = () => {
@@ -60,8 +62,8 @@ class EditableAct extends Component {
     this.closeForm()
   }
 
-  handleSubmit = (act) => {
-    this.props.onFormSubmit(act)
+  handleSubmit = (character) => {
+    this.props.onFormSubmit(character)
     this.closeForm()
   }
 
@@ -72,20 +74,21 @@ class EditableAct extends Component {
   render () {
     if (this.state.editFormOpen) {
       return(
-        <ActForm
+        <CharacterForm
           onFormClose={this.handleFormClose}
           onFormSubmit={this.handleSubmit}
+          play_id={this.props.play_id}
         />
       )
     }
-    if (this.state.act === null) {
+    if (this.state.character === null) {
       return (
         <div>Loading!</div>
       )
     }
     return (
-      <ActShow
-        act={this.state.act}
+      <CharacterShow
+        character={this.state.character}
         handleDeleteClick={this.props.onDeleteClick}
         handleEditClick={this.onEditClick}
       />
@@ -93,9 +96,10 @@ class EditableAct extends Component {
   }
 }
 
-EditableAct.propTypes = {
+EditableCharacter.propTypes = {
   onDeleteClick: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired
+  onFormSubmit: PropTypes.func.isRequired,
+  play_id: PropTypes.number.isRequired,
 }
 
-export default EditableAct
+export default EditableCharacter

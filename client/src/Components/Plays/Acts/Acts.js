@@ -18,31 +18,12 @@ class Acts extends Component {
         <Col md={12} >
           <div>
             <h2>Acts</h2>
-            <Switch>
-              <Route
-                path='/plays/:playId'
-                render={(props) => (
-                  <EditableActsList
-                    {...props}
-                    acts={this.props.acts}
-                    play_id={this.props.play_id}
-                    onFormSubmit={this.props.onFormSubmit}
-                    onDeleteClick={this.props.onDeleteClick}
-                  />
-                )}
-              />
-              <Route
-                path='/acts/:actId'
-                render={(props) => (
-                  <EditableAct
-                    {...props}
-                    play_id={this.props.play_id}
-                    onFormSubmit={this.props.onFormSubmit}
-                    onDeleteClick={this.props.onDeleteClick}
-                  />
-            )}
-          />
-          </Switch>
+            <EditableActsList
+              acts={this.props.acts}
+              play_id={this.props.play_id}
+              onFormSubmit={this.props.onFormSubmit}
+              onDeleteClick={this.props.onDeleteClick}
+            />
           <ActFormToggle
             isOpen={false}
             onFormSubmit={this.props.onFormSubmit}
@@ -60,6 +41,7 @@ Acts.propTypes = {
   acts: PropTypes.array.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
+  play_id: PropTypes.number.isRequired,
 }
 
 export default Acts

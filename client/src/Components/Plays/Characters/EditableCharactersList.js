@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import {Col, Row} from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route } from 'react-router-dom'
 import { Link } from "react-router-relative-link"
 
-import EditableAct from './EditableAct'
+import EditableCharacter from './EditableCharacter'
 
-class EditableActsList extends Component {
+class EditableCharactersList extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      acts: this.props.acts
+      characters: this.props.characters
     }
   }
 
@@ -30,25 +29,22 @@ class EditableActsList extends Component {
 
   render () {
     const play_id = this.props.play_id
-    const acts = this.props.acts.map((act) => (
-      <li key={act.id}>
-        <Link to={`../${play_id}/acts/${act.id}`}>{act.act_number}</Link>
+    const characters = this.props.characters.map((character) => (
+      <li key={character.id}>
+        <Link to={`../${play_id}/characters/${character.id}`}>{character.name}</Link>
       </li>
     ))
     //
     return (
-      <div id='acts'>
-        <Row>
-        <Col md={2}>
+      <div id='characters'>
         <ul>
-          {acts}
+          {characters}
         </ul>
-        </Col>
-        <Col md={10}>
+        <hr />
         <Route
-          path={`/plays/:playId/acts/:actId`}
+          path={`/plays/:playId/characters/:characterId`}
           render={(props) => (
-            <EditableAct
+            <EditableCharacter
               {...props}
               play_id={this.props.play_id}
               onDeleteClick={this.props.onDeleteClick}
@@ -56,18 +52,16 @@ class EditableActsList extends Component {
             />
           )}
         />
-        </Col>
-        </Row>
       </div>
     )
   }
 }
 
-EditableActsList.propTypes = {
-  acts: PropTypes.array.isRequired,
+EditableCharactersList.propTypes = {
+  characters: PropTypes.array.isRequired,
   play_id: PropTypes.number.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired
 }
 
-export default EditableActsList
+export default EditableCharactersList
