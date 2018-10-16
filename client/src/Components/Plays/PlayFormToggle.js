@@ -36,13 +36,11 @@ class PlayFormToggle extends Component { //opens form for create action
       );
     } else {
       return (
-        <div>
-          <Button bsStyle="info"
+        <Button bsStyle="info" className="button-new-item"
             onClick={this.handleFormOpen}
           >
             <Glyphicon glyph='glyphicon glyphicon-plus' /> Add New Play
-          </Button>
-        </div>
+        </Button>
       );
     }
   }

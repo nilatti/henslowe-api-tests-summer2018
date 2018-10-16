@@ -91,19 +91,20 @@ class Plays extends Component {
   render () {
     return (
     <Row>
-      <Col md={10} >
-          <h2>Plays</h2>
+      <Col md={12} >
+        <div className='section-header'>
+          <h2 className='internal-heading'>Plays</h2>
+          <PlayFormToggle
+            onFormSubmit={this.handleCreateFormSubmit}
+            isOpen={false}
+          />
+        </div>
           <EditablePlaysList
             plays={this.state.plays}
             onFormSubmit={this.handleEditFormSubmit}
             onDeleteClick={this.handleDeleteClick}
           />
-        </Col>
-        <Col md={1}>
-          <PlayFormToggle
-            onFormSubmit={this.handleCreateFormSubmit}
-            isOpen={false}
-          />
+
         </Col>
       </Row>
     )

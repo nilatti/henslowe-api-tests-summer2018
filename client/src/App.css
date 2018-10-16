@@ -26,6 +26,22 @@ ul {
   font-size: large;
 }
 
+.button-new-item {
+  float: right;
+}
+
+.internal-heading {
+  display: inline-block;
+}
+
+.section-header {
+  border-bottom: 1px solid #c2c2d6;
+}
+
+.sidebar {
+  border-right: 1px solid #c2c2d6;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

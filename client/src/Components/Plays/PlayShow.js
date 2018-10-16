@@ -5,6 +5,7 @@ import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
 import Acts from './Acts/Acts'
 import Characters from './Characters/Characters'
+import PlayInfo from './PlayInfo'
 
 class PlayShow extends Component {
 
@@ -16,7 +17,7 @@ class PlayShow extends Component {
     return (
       <div>
         <Row>
-          <Col>
+          <Col md={3}>
             <h2>{this.props.title}</h2>
             by {this.props.author}
             <span
@@ -32,25 +33,24 @@ class PlayShow extends Component {
               <Glyphicon glyph="glyphicon glyphicon-trash" />
             </span>
           </Col>
+          // <Col md={9}>
+          //   <Acts
+          //     acts={this.props.acts}
+          //     play_id={this.props.id}
+          //     onDeleteClick={this.props.handleActDeleteClick}
+          //     onFormSubmit={this.props.handleActCreateFormSubmit}
+          //   />
+          // </Col>
         </Row>
         <Row>
-          <Col md={12}>
-            <Acts
-              acts={this.props.acts}
-              play_id={this.props.id}
-              onDeleteClick={this.props.handleActDeleteClick}
-              onFormSubmit={this.props.handleActCreateFormSubmit}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col md={12}>
-            <Characters
-              characters={this.props.characters}
-              onDeleteClick={this.props.handleCharacterDeleteClick}
-              onFormSubmit={this.props.handleCharacterCreateFormSubmit}
-              play_id={this.props.id}
-            />
+          <hr />
+          // <Col md={9} mdOffset={3}>
+          //   <Characters
+          //     characters={this.props.characters}
+          //     onDeleteClick={this.props.handleCharacterDeleteClick}
+          //     onFormSubmit={this.props.handleCharacterCreateFormSubmit}
+          //     play_id={this.props.id}
+          //   />
           </Col>
         </Row>
       </div>

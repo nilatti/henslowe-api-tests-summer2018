@@ -16,7 +16,7 @@ class EditablePlaysList extends Component {
     return (
       <div id='plays'>
         <Row>
-          <Col md={3}>
+          <Col md={3} className='sidebar'>
           <ul>
             {plays}
           </ul>
