@@ -144,6 +144,7 @@ class PlayForm extends Component {
           <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
         </Form>
         <hr />
+        <TextEditor />
       </Col>
     )
   }

@@ -1,35 +1,43 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react'
-import { Editor } from 'react-draft-wysiwyg';
-import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { EditorState } from 'draft-js';
+import React, { Component } from 'react';
+import { EditorState, Editor, convertFromRaw, convertToRaw } from 'draft-js';
 
 class TextEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      editorState: EditorState.createEmpty(),
-    };
-  }
+    this.state = { };
 
-  onEditorStateChange: Function = (editorState) => {
+    const content = window.localStorage.getItem('content');
+
+    if (content) {
+      this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(content)));
+    } else {
+      this.state.editorState = EditorState.createEmpty();
+    }
+}
+
+  onChange = (editorState) => {
+    const contentState = editorState.getCurrentContent();
+    console.log('content state', convertToRaw(contentState));
+    this.saveContent(contentState);
     this.setState({
       editorState,
     });
-  };
+  }
+
+  saveContent = (content) => {
+    window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
+  }
 
   render() {
-    const { editorState } = this.state;
     return (
-      <Editor
-        editorState={editorState}
-        wrapperClassName="demo-wrapper"
-        editorClassName="demo-editor"
-        onEditorStateChange={this.onEditorStateChange}
-      />
-    )
+      <div>
+        <Editor
+          editorState={this.state.editorState}
+          onChange={this.onChange}
+        />
+      </div>
+    );
   }
 }
-const Text = () => <Editor />
 
-export default Text
+export default TextEditor;
