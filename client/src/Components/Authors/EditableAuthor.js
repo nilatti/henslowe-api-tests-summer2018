@@ -32,7 +32,7 @@ class EditableAuthor extends Component {
   handleFormClose = () => {
     this.closeForm()
   }
-  
+
   handleSubmit = (author) => {
     this.props.onFormSubmit(author)
     this.closeForm()
@@ -81,9 +81,8 @@ class EditableAuthor extends Component {
           deathdate={this.state.author.deathdate}
           nationality={this.state.author.nationality}
           gender={this.state.author.gender}
-          plays={this.state.author.plays}
-          onFormSubmit={this.handleSubmit}
           onFormClose={this.handleFormClose}
+          onFormSubmit={this.handleSubmit}
           isOpen={true}
         />
       )

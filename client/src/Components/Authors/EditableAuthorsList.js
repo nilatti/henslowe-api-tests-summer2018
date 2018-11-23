@@ -23,8 +23,8 @@ class EditableAuthorsList extends Component {
           render={(props) => (
             <EditableAuthor
               {...props}
-              onDeleteClick={this.props.onDeleteClick} onFormSubmit={this.props.onFormSubmit}
-              thisIsATestProp={true}
+              onDeleteClick={this.props.onDeleteClick}
+              onFormSubmit={this.props.onFormSubmit}
             />
           )}
         />
@@ -35,6 +35,8 @@ class EditableAuthorsList extends Component {
 
 EditableAuthorsList.propTypes = {
   authors: PropTypes.array.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
+  onDeleteClick: PropTypes.func.isRequired
 }
 
 export default EditableAuthorsList

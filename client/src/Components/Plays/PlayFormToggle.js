@@ -16,12 +16,8 @@ class PlayFormToggle extends Component { //opens form for create action
     this.setState({ isOpen: true })
   }
 
-  handleFormClose = () => {
-    this.setState({ isOpen: false })
-  }
-
   handleFormSubmit = (play) => {
-    this.handleFormClose()
+    this.props.handleFormClose()
     this.props.onFormSubmit(play)
   }
 
@@ -29,9 +25,9 @@ class PlayFormToggle extends Component { //opens form for create action
     if (this.state.isOpen) {
       return (
         <PlayForm
-          author_id={this.props.author_id}
+          play={this.props.play}
           onFormSubmit={this.handleFormSubmit}
-          onFormClose={this.handleFormClose}
+          onFormClose={this.props.handleFormClose}
         />
       );
     } else {

@@ -41,7 +41,8 @@ class EditablePlaysList extends Component {
 
 EditablePlaysList.propTypes = {
   onFormSubmit: PropTypes.func.isRequired,
-  onDeleteClick: PropTypes.func.isRequired
+  onDeleteClick: PropTypes.func.isRequired,
+  plays: PropTypes.array.isRequired,
 }
 
 export default EditablePlaysList

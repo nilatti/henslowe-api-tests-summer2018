@@ -34,7 +34,6 @@ class Plays extends Component {
     if (response.status >= 400) {
       this.setState({ errorStatus: 'Error creating play' })
     } else {
-      console.log('play created')
       this.addNewPlay(response.data)
     }
   }

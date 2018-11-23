@@ -7,14 +7,16 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
 import { getAuthors } from '../../api/authors'
+import TextEditor from './TextEditor'
 
 class PlayForm extends Component {
   constructor (props) {
     super (props)
     this.state = {
-      title: this.props.title || '',
-      genre: this.props.genre || '',
-      author_id: this.props.author_id || {},
+      play: this.props.play || {},
+      title: this.props.play.title || '',
+      genre: this.props.play.genre || '',
+      author_id: this.props.play.author_id || {},
       authors: null,
     }
   }
@@ -56,10 +58,10 @@ class PlayForm extends Component {
   }
 
   handleSubmit = (event) => {
+    console.log(this.state.play)
     event.preventDefault()
     this.props.onFormSubmit({
-      author_id: this.state.author_id,
-      title: this.state.title,
+      play: this.state.play,
     })
   }
 

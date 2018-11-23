@@ -18,31 +18,7 @@ class Characters extends Component {
         <Col md={12} >
           <div>
             <h2>Characters</h2>
-            <Switch>
-              <Route
-                path='/plays/:playId'
-                render={(props) => (
-                  <EditableCharactersList
-                    {...props}
-                    characters={this.props.characters}
-                    play_id={this.props.play_id}
-                    onFormSubmit={this.props.onFormSubmit}
-                    onDeleteClick={this.props.onDeleteClick}
-                  />
-                )}
-              />
-              <Route
-                path='/characters/:characterId'
-                render={(props) => (
-                  <EditableCharacter
-                    {...props}
-                    play_id={this.props.play_id}
-                    onFormSubmit={this.props.onFormSubmit}
-                    onDeleteClick={this.props.onDeleteClick}
-                  />
-            )}
-          />
-          </Switch>
+            
           <CharacterFormToggle
             isOpen={false}
             onFormSubmit={this.props.onFormSubmit}

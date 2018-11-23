@@ -18,39 +18,32 @@ class PlayShow extends Component {
       <div>
         <Row>
           <Col md={3}>
-            <h2>{this.props.title}</h2>
-            by {this.props.author}
-            <span
-              className='right floated edit icon'
-              onClick={this.props.handleEditClick}
-            >
-              <Glyphicon glyph="pencil" />
-            </span>
-            <span
-              className='right floated trash icon'
-              onClick={this.handleDeleteClick}
-            >
-              <Glyphicon glyph="glyphicon glyphicon-trash" />
-            </span>
+            <h2>{this.props.play.title}</h2>
+            <div>
+              by {this.props.author}
+            </div>
+            <div>
+              <span
+                className='right floated edit icon'
+                onClick={this.props.handleEditClick}
+              >
+                <Glyphicon glyph="pencil" />
+              </span>
+              <span
+                className='right floated trash icon'
+                onClick={this.handleDeleteClick}
+              >
+                <Glyphicon glyph="glyphicon glyphicon-trash" />
+              </span>
+            </div>
+            <div>
+              <Link to={{ pathname: `/plays/${this.props.play.id}/characters/`, state: { characters: this.props.play.characters } }}>Characters</Link>
+              <Link to={{ pathname: `/plays/${this.props.play.id}/acts/`, state: { acts: this.props.play.acts } }}>Acts</Link>
+            </div>
           </Col>
-          // <Col md={9}>
-          //   <Acts
-          //     acts={this.props.acts}
-          //     play_id={this.props.id}
-          //     onDeleteClick={this.props.handleActDeleteClick}
-          //     onFormSubmit={this.props.handleActCreateFormSubmit}
-          //   />
-          // </Col>
-        </Row>
-        <Row>
-          <hr />
-          // <Col md={9} mdOffset={3}>
-          //   <Characters
-          //     characters={this.props.characters}
-          //     onDeleteClick={this.props.handleCharacterDeleteClick}
-          //     onFormSubmit={this.props.handleCharacterCreateFormSubmit}
-          //     play_id={this.props.id}
-          //   />
+
+          <Col md={9}>
+            <PlayInfo characters={this.props.play.characters}/>
           </Col>
         </Row>
       </div>
@@ -59,9 +52,8 @@ class PlayShow extends Component {
 }
 
 PlayShow.propTypes = {
-  acts: PropTypes.array.isRequired,
-  author: PropTypes.string,
-  characters: PropTypes.array.isRequired,
+  author: PropTypes.string.isRequired,
+  play: PropTypes.object.isRequired,
   handleCharacterDeleteClick: PropTypes.func.isRequired,
   handleActCreateFormSubmit: PropTypes.func.isRequired,
   handleActDeleteClick: PropTypes.func.isRequired,
@@ -69,8 +61,6 @@ PlayShow.propTypes = {
   handleCharacterDeleteClick: PropTypes.func.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
-  id: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
 }
 
 export default PlayShow

@@ -45,17 +45,6 @@ class EditableActsList extends Component {
         </ul>
         </Col>
         <Col md={10}>
-        <Route
-          path={`/plays/:playId/acts/:actId`}
-          render={(props) => (
-            <EditableAct
-              {...props}
-              play_id={this.props.play_id}
-              onDeleteClick={this.props.onDeleteClick}
-              onFormSubmit={this.props.onFormSubmit}
-            />
-          )}
-        />
         </Col>
         </Row>
       </div>

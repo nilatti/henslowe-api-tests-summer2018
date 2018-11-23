@@ -41,6 +41,7 @@ class EditableCharactersList extends Component {
           {characters}
         </ul>
         <hr />
+        <Switch>
         <Route
           path={`/plays/:playId/characters/:characterId`}
           render={(props) => (
@@ -52,6 +53,7 @@ class EditableCharactersList extends Component {
             />
           )}
         />
+        </Switch>
       </div>
     )
   }

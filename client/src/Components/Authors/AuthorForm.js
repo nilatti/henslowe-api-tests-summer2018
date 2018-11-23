@@ -17,7 +17,6 @@ class AuthorForm extends Component {
       last_name: this.props.last_name || '',
       middle_name: this.props.middle_name || '',
       nationality: this.props.nationality || '',
-      plays: this.props.plays,
     }
   }
 
@@ -52,7 +51,6 @@ class AuthorForm extends Component {
       deathdate: this.state.deathdate,
       nationality: this.state.nationality,
       gender: this.state.gender,
-      plays: this.state.plays
     }, "author")
   }
 
@@ -169,7 +167,6 @@ AuthorForm.propTypes = {
   last_name: PropTypes.string,
   middle_name: PropTypes.string,
   nationality: PropTypes.string,
-  plays: PropTypes.array,
 }
 
 export default AuthorForm

@@ -125,7 +125,9 @@ class EditablePlay extends Component {
       this.loadPlayFromServer(this.props.match.params.playId);
     }
   }
-
+  handleEditClick = () => {
+    this.openForm()
+  }
   handleFormClose = () => {
     this.closeForm()
   }
@@ -155,9 +157,6 @@ class EditablePlay extends Component {
     this.deletePlay(playId)
   }
 
-  onEditClick = () => {
-    this.openForm()
-  }
 
   openForm = () => {
     this.setState({ editFormOpen: true })
@@ -193,38 +192,33 @@ class EditablePlay extends Component {
     if (this.state.toPlaysList === true) {
       return <Redirect to='/plays' />
     }
-    if (this.state.editFormOpen) {
-      return(
-        <PlayForm
-          acts={this.sortActs(this.state.play.acts)}
-          author_id={this.state.play.author.id}
-          genre={this.state.play.genre}
-          id={this.state.play.id}
-          onFormClose={this.handleFormClose()}
-          onFormSubmit={this.handleSubmit()}
-          title={this.state.play.title}
-        />
-      )
-    }
     if (this.state.play === null) {
       return (
         <div>Loading!</div>
       )
     }
-
+    if (this.state.editFormOpen) {
+      return(
+        <PlayForm
+          acts={this.sortActs(this.state.play.acts)}
+          play={this.state.play}
+          onFormClose={this.handleFormClose}
+          onFormSubmit={this.handleSubmit}
+        />
+      )
+    }
     return (
       <PlayShow
-        acts={this.state.play.acts}
+        play={this.state.play}
         author={`${this.state.play.author.first_name} ${this.state.play.author.last_name}`}
-        characters={this.state.play.characters}
-        id={this.state.play.id}
         handleActCreateFormSubmit={this.onActCreateFormSubmit}
         handleActDeleteClick={this.onActDeleteClick}
         handleCharacterCreateFormSubmit={this.onCharacterCreateFormSubmit}
         handleCharacterDeleteClick={this.onCharacterDeleteClick}
         handleDeleteClick={this.onDeleteClick}
-        handleEditClick={this.onEditClick}
-        title={this.state.play.title}
+        handleEditClick={this.handleEditClick}
+        onFormClose={this.handleFormClose}
+        onFormSubmit={this.handleSubmit}
       />
     )
   }
