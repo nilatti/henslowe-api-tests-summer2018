@@ -1,19 +1,19 @@
 require 'rails_helper'
 
-RSpec.describe 'Authors API', type: :request do
+RSpec.describe 'theaters API', type: :request do
   # initialize test data
-  let!(:authors) { create_list(:author, 4) }
-  let(:author_id) { authors.first.id }
+  let!(:theaters) { create_list(:theater, 10) }
+  let(:theater_id) { theaters.first.id }
 
-  # Test suite for GET /authors
-  describe 'GET /authors' do
+  # Test suite for GET /theaters
+  describe 'GET /theaters' do
     # make HTTP get request before each example
-    before { get '/api/authors' }
+    before { get '/api/theaters' }
 
-    it 'returns authors' do
+    it 'returns theaters' do
       # Note `json` is a custom helper to parse JSON responses
       expect(json).not_to be_empty
-      expect(json.size).to eq(4)
+      expect(json.size).to eq(10)
     end
 
     it 'returns status code 200' do
@@ -21,14 +21,13 @@ RSpec.describe 'Authors API', type: :request do
     end
   end
 
-  # Test suite for GET /authors/:id
-  describe 'GET api/authors/:id' do
-    before { get "/api/authors/#{author_id}" }
+  # Test suite for GET /theaters/:id
+  describe 'GET api/theaters/:id' do
+    before { get "/api/theaters/#{theater_id}" }
     context 'when the record exists' do
-      it 'returns the author' do
+      it 'returns the theater' do
         expect(json).not_to be_empty
-        expect(json['id']).to eq(author_id)
-        expect(json['plays'].size).to eq(3)
+        expect(json['id']).to eq(theater_id)
       end
 
       it 'returns status code 200' do
@@ -37,28 +36,28 @@ RSpec.describe 'Authors API', type: :request do
     end
 
     context 'when the record does not exist' do
-      let(:author_id) { 100 }
+      let(:theater_id) { 100 }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
 
       it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find Author/)
+        expect(response.body).to match(/Couldn't find Theater/)
       end
     end
   end
 
-  # Test suite for POST /authors
-  describe 'POST /authors' do
+  # Test suite for POST /theaters
+  describe 'POST /theaters' do
     # valid payload
-    let(:valid_attributes) { { first_name: 'Pam', last_name: 'Mandigo' } }
+    let(:valid_attributes) { { name: 'The Great American Theater Company' } }
 
     context 'when the request is valid' do
-      before { post '/api/authors', params: valid_attributes }
+      before { post '/api/theaters', params: valid_attributes }
 
-      it 'creates a author' do
-        expect(json['last_name']).to eq('Mandigo')
+      it 'creates a theater' do
+        expect(json['name']).to eq('The Great American Theater Company')
       end
 
       it 'returns status code 201' do
@@ -67,7 +66,7 @@ RSpec.describe 'Authors API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/authors', params: { first_name: 'Failure' } }
+      before { post '/api/theaters', params: { address: 'Failure' } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -75,17 +74,17 @@ RSpec.describe 'Authors API', type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match(/Validation failed: Last name can't be blank/)
+          .to match(/Validation failed: Name can't be blank/)
       end
     end
   end
 
-  # Test suite for PUT /authors/:id
-  describe 'PUT /api/authors/:id' do
-    let(:valid_attributes) { { first_name: 'Pam', last_name: 'Mandigo' } }
+  # Test suite for PUT /theaters/:id
+  describe 'PUT /api/theaters/:id' do
+    let(:valid_attributes) { { name: 'The Great American Theater Company' } }
 
     context 'when the record exists' do
-      before { put "/api/authors/#{author_id}", params: valid_attributes }
+      before { put "/api/theaters/#{theater_id}", params: valid_attributes }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -97,25 +96,25 @@ RSpec.describe 'Authors API', type: :request do
     end
   end
 
-  # Test suite for DELETE /authors/:id
-  describe 'DELETE /authors/:id' do
-    before { delete "/api/authors/#{author_id}" }
+  # Test suite for DELETE /theaters/:id
+  describe 'DELETE /theaters/:id' do
+    before { delete "/api/theaters/#{theater_id}" }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
     end
   end
 
-  # Test suite for author_names
-  describe 'GET /api/authors/author_names' do
-    before { get '/api/authors/author_names' }
+  # Test suite for theater_names
+  describe 'GET /api/theaters/theater_names' do
+    before { get '/api/theaters/theater_names' }
 
-    it 'returns authors ONLY NAMES' do
+    it 'returns theaters ONLY NAMES' do
       # Note `json` is a custom helper to parse JSON responses
-      expect(json.first['first_name']).not_to be_empty
-      expect(json.first['birthdate']).to be_nil
+      expect(json.first['name']).not_to be_empty
+      expect(json.first['address']).to be_nil
       expect(json).not_to be_empty
-      expect(json.size).to eq(4)
+      expect(json.size).to eq(10)
     end
 
     it 'returns status code 200' do

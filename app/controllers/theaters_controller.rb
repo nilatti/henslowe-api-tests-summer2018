@@ -1,53 +1,52 @@
 class TheatersController < ApiController
-  before_action :set_theater, only: [:show, :update, :destroy]
+  before_action :set_theater, only: %i[show update destroy]
 
   # GET /theaters
   def index
     @theaters = Theater.all
 
-    render json: @theaters.to_json
+    json_response(@theaters)
   end
 
   # GET /theaters/1
   def show
-    render json: @theater.to_json, location: @theater
+    # @theater.as_json(include: [:plays])
+    json_response(@theater) # how to include plays?
+    # render json: @theater.to_json(include: :plays), location: @theater
   end
 
   # POST /theaters
   def create
-    @theater = Theater.new(theater_params)
-
-    if @theater.save
-      render json: @theater.to_json, status: :created, location: @theater
-    else
-      render json: @theater.errors, status: :unprocessable_entity
-    end
+    @theater = Theater.create!(theater_params)
+    json_response(@theater, :created)
   end
 
   # PATCH/PUT /theaters/1
   def update
-    puts "request to update received!"
-    if @theater.update(theater_params)
-      render json: @theater.to_json, location: @theater
-    else
-      render json: @theater.errors, status: :unprocessable_entity
-    end
+    @theater.update(theater_params)
+    head :no_content
   end
 
   # DELETE /theaters/1
   def destroy
     @theater.destroy
+    head :no_content
+  end
 
+  def theater_names
+    @theaters = Theater.all
+    render json: @theaters.to_json(only: %i[id name])
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_theater
-      @theater = Theater.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def theater_params
-      params.require(:theater).permit(:city, :mission_statement, :name, :phone_number, :state, :street_address, :zip, :website, :calendar_url)
-    end
+  # Only allow a trusted parameter "white list" through.
+  def theater_params
+    params.permit(:calendar_url, :city, :mission_statement, :name, :phone_number, :state, :street_address, :website, :zip)
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_theater
+    @theater = Theater.find(params[:id])
+  end
 end

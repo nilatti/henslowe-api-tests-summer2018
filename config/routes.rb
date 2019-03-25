@@ -2,7 +2,11 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   scope 'api' do
-    resources :theaters
+    resources :theaters do
+      collection do
+        get :theater_names
+      end
+    end
     resources :authors do
       collection do
         get :author_names
