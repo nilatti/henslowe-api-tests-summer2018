@@ -40,6 +40,7 @@ end
 RSpec.configure do |config|
   config.include RequestSpecHelper, type: :request
   config.include FactoryBot::Syntax::Methods
+  config.include DefaultFormat, type: :request
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.strategy = :transaction

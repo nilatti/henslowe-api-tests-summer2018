@@ -24,11 +24,11 @@ RSpec.describe 'Authors API', type: :request do
   # Test suite for GET /authors/:id
   describe 'GET api/authors/:id' do
     before { get "/api/authors/#{author_id}" }
-
     context 'when the record exists' do
       it 'returns the author' do
         expect(json).not_to be_empty
         expect(json['id']).to eq(author_id)
+        expect(json['plays'].size).to eq(10)
       end
 
       it 'returns status code 200' do
@@ -44,7 +44,7 @@ RSpec.describe 'Authors API', type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find author/)
+        expect(response.body).to match(/Couldn't find Author/)
       end
     end
   end
@@ -75,7 +75,7 @@ RSpec.describe 'Authors API', type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-          .to match(/Validation failed: Last Name can't be blank/)
+          .to match(/Validation failed: Last name can't be blank/)
       end
     end
   end
@@ -103,6 +103,23 @@ RSpec.describe 'Authors API', type: :request do
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
+    end
+  end
+
+  # Test suite for author_names
+  describe 'GET /api/authors/author_names' do
+    before { get '/api/authors/author_names' }
+
+    it 'returns authors ONLY NAMES' do
+      # Note `json` is a custom helper to parse JSON responses
+      expect(json.first['first_name']).not_to be_empty
+      expect(json.first['birthdate']).to be_nil
+      expect(json).not_to be_empty
+      expect(json.size).to eq(10)
+    end
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
     end
   end
 end
