@@ -1,16 +1,25 @@
 import moment from 'moment'
 import PropTypes from 'prop-types';
-import React, { Component } from 'react'
-import { Button, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap'
+import React, {
+  Component
+} from 'react'
+import {
+  Button,
+  Col,
+  ControlLabel,
+  Form,
+  FormControl,
+  FormGroup
+} from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
 class AuthorForm extends Component {
-  constructor (props) {
-    super (props)
+  constructor(props) {
+    super(props)
     this.state = {
       birthdate: moment(this.props.birthdate),
-      deathdate: moment() || '',
+      deathdate: '',
       deathDateVisible: this.props.deathdate ? true : false,
       first_name: this.props.first_name || '',
       gender: this.props.gender || '',
@@ -28,20 +37,21 @@ class AuthorForm extends Component {
   }
   handleBirthdateChange = (date) => {
     this.setState({
-     birthdate: date
-   })
+      birthdate: date
+    })
   }
   handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
+    this.setState({
+      [event.target.name]: event.target.value
+    })
   }
   handleDeathdateChange = (date) => {
     console.log("death date change", date)
     this.setState({
-     deathdate: date
-   });
+      deathdate: date
+    });
   }
   handleSubmit = (event) => {
-    console.log("in handle submit authorform")
     event.preventDefault()
     this.props.onFormSubmit({
       id: this.props.id,
@@ -56,7 +66,7 @@ class AuthorForm extends Component {
     }, "author")
   }
 
-  render () {
+  render() {
     return (
       <Col md={12}>
         <Form horizontal>

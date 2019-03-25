@@ -1,62 +1,47 @@
-import { createAuthor, deleteAuthor, getAuthors, updateServerAuthor } from '../../api/authors'
-import React, { Component } from 'react'
-import { Col, Row } from 'react-bootstrap'
-import { withRouter } from 'react-router-dom'
+import React, {
+  Component
+} from 'react'
+import {
+  Col,
+  Row
+} from 'react-bootstrap'
+import {
+  Link,
+  Route,
+  Switch
+} from 'react-router-dom'
 
-import AuthorFormToggle from './AuthorFormToggle'
-import EditableAuthorsList from './EditableAuthorsList'
+import {
+  createAuthor,
+  deleteAuthor
+} from '../../api/authors'
+import AuthorsList from './AuthorsList'
+import EditableAuthor from './EditableAuthor'
+import NewAuthor from './NewAuthor'
 
 class Authors extends Component {
 
-  state = {
-    authors: [],
-    errorStatus: ''
-  }
-
-  addNewAuthor = (newAuthor) => {
-    this.setState({
-      authors: [...this.state.authors, newAuthor]
-    })
-  }
-
-  componentDidMount () {
-    this.loadAuthorsFromServer() //loads authors and sets state authors array
-  }
-
-  async createAuthor (author) {
+  async createAuthor(author) {
     const response = await createAuthor(author)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error creating author' })
+      this.setState({
+        errorStatus: 'Error creating author'
+      })
     } else {
-      this.addNewAuthor(response.data)
+      this.props.history.push(`/authors/${response.data.id}`)
+      window.location.reload();
     }
   }
 
-  async deleteAuthor (authorId) {
+  async deleteAuthor(authorId) {
     const response = await deleteAuthor(authorId)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error deleting author' })
+      this.setState({
+        errorStatus: 'Error deleting author'
+      })
     } else {
-      this.loadAuthorsFromServer()
       this.props.history.push('/authors')
-    }
-  }
-
-  async loadAuthorsFromServer () {
-    const response = await getAuthors()
-    if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error fetching authors' })
-    } else {
-      this.setState({ authors: response.data })
-    }
-  }
-
-  async updateAuthorOnServer (author) {
-    const response = await updateServerAuthor(author)
-    if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error updating author'})
-    } else {
-      this.updateAuthor(response.data)
+      window.location.reload();
     }
   }
 
@@ -67,34 +52,26 @@ class Authors extends Component {
     this.deleteAuthor(authorId)
   }
 
-  handleEditFormSubmit = (author) => {
-    this.updateAuthorOnServer(author)
-    this.updateAuthor(author)
-  }
-
-  updateAuthor = (author) => {
-    let newAuthors = this.state.authors.filter((a) => a.id !== author.id)
-    newAuthors.push(author)
-    this.setState({
-      authors: newAuthors
-    })
-  }
-
-  render () {
+  render() {
     return (
       <Row>
         <Col md={12} >
           <div id="authors">
-            <h2>Authors</h2>
-            <EditableAuthorsList
-              authors={this.state.authors}
-              onFormSubmit={this.handleEditFormSubmit}
-              onDeleteClick={this.handleDeleteClick}
-            />
-            <AuthorFormToggle
-              onFormSubmit={this.handleCreateFormSubmit}
-              isOpen={false}
-            />
+            <h2><Link to='/authors'>Authors</Link></h2>
+            <hr />
+              <Switch>
+              <Route path='/authors/new' render={(props) => <NewAuthor {...props} onFormSubmit={this.handleCreateFormSubmit}/> } />
+              <Route
+                path={`/authors/:authorId`}
+                render={(props) => (
+                  <EditableAuthor
+                    {...props}
+                    onDeleteClick={this.handleDeleteClick}
+                  />
+                )}
+              />
+              <Route path='/authors/' component={AuthorsList} />
+              </Switch>
           </div>
         </Col>
       </Row>

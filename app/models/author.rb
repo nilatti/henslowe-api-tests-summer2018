@@ -1,5 +1,6 @@
 class Author < ApplicationRecord
   has_many :plays, dependent: :destroy
 
-  # validates :last_name, presence: true
+  default_scope { order('last_name ASC') }
+  validates :last_name, presence: true
 end

@@ -1,8 +1,16 @@
 import PropTypes from 'prop-types';
-import { Glyphicon, Row, Col } from 'react-bootstrap'
-import React, { Component } from 'react'
+import {
+  Glyphicon,
+  Row,
+  Col
+} from 'react-bootstrap'
+import React, {
+  Component
+} from 'react'
 
-import { createPlay } from '../../api/plays'
+import {
+  createPlay
+} from '../../api/plays'
 
 import PlayFormToggle from '../Plays/PlayFormToggle'
 import PlaysSubComponent from '../Plays/PlaysSubComponent'
@@ -11,14 +19,17 @@ class AuthorShow extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      plays: this.props.plays
+      plays: this.props.plays,
+      playFormOpen: false,
     }
   }
 
-  async createPlay (play) {
+  async createPlay(play) {
     const response = await createPlay(play)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error creating play' })
+      this.setState({
+        errorStatus: 'Error creating play'
+      })
     } else {
       this.addNewPlay(response.data)
     }
@@ -33,21 +44,21 @@ class AuthorShow extends Component {
   handleCreateFormSubmit = (play) => {
     this.createPlay(play)
   }
-  
+
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.id)
   }
 
-  render () {
+  render() {
     let dates = this.props.birthdate //tk
-    if (this.props.deathdate != null ) {
+    if (this.props.deathdate != null) {
       dates = dates.concat(" to " + this.props.deathdate)
     }
 
     return (
       <Col md={12}>
       <Row>
-        <Col md={3}>
+        <Col md={3} className="author-profile">
           <h3>
             {this.props.first_name} {this.props.middle_name} {this.props.last_name}
           </h3>
@@ -77,7 +88,8 @@ class AuthorShow extends Component {
           <PlayFormToggle
             author_id={this.props.id}
             onFormSubmit={this.handleCreateFormSubmit}
-            isOpen={false}
+            isOnAuthorPage={true}
+            isOpen={this.state.playFormOpen}
           />
         </Col>
       </Row>

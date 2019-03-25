@@ -1,21 +1,35 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react'
-import { Button, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap'
+import React, {
+  Component
+} from 'react'
+import {
+  Button,
+  Col,
+  ControlLabel,
+  Form,
+  FormControl,
+  FormGroup
+} from 'react-bootstrap'
+import {
+  Typeahead
+} from 'react-bootstrap-typeahead';
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-import { getAuthors } from '../../api/authors'
+import {
+  getAuthors
+} from '../../api/authors'
 
 class PlayForm extends Component {
-  constructor (props) {
-    super (props)
+  constructor(props) {
+    super(props)
     this.state = {
-      title: this.props.title || '',
-      genre: this.props.genre || '',
       author_id: this.props.author_id || {},
       authors: null,
+      genre: this.props.genre || '',
+      title: this.props.title || '',
     }
   }
 
@@ -29,46 +43,44 @@ class PlayForm extends Component {
     }
   }
 
-  generateAuthorSelectItems = () => {
-    let authors = this.state.authors
-    let items = []
-    authors.forEach(function(author){
-      var item = {}
-      item['value'] = author.id
-      item['label'] = author.first_name + " " + author.last_name
-      items.push(item)
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
     })
-    return items
   }
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
+  handleAuthorChange = (author) => {
+    this.setState({
+      author_id: author[0].id
+    })
   }
 
   handleDateChange = (date) => {
     this.setState({
-     date: date,
-   })
-  }
-
-  handleSelectChange = (authorId) => {
-    this.setState({ author_id: authorId.value });
+      date: date
+    })
   }
 
   handleSubmit = (event) => {
     event.preventDefault()
     this.props.onFormSubmit({
       author_id: this.state.author_id,
+      date: this.state.date,
+      genre: this.state.genre,
       title: this.state.title,
     })
   }
 
-  async loadAuthorsFromServer () {
+  async loadAuthorsFromServer() {
     const response = await getAuthors()
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error fetching authors' })
+      this.setState({
+        errorStatus: 'Error fetching authors'
+      })
     } else {
-      this.setState({ authors: response.data })
+      this.setState({
+        authors: response.data
+      })
     }
   }
 
@@ -78,78 +90,111 @@ class PlayForm extends Component {
     if (props.id !== state.prevId) {
       return {
         authors: null,
-        prevId: props.id,
+        prevId: props.id
       };
     }
     // No state update necessary
     return null;
   }
 
-
-  render () {
-    console.log("now I'm rendering the play form")
-    if (this.state.authors === null) {
-      return (
-        <div>Loading!</div>
-      )
+  render() {
+    if (!this.state.authors) {
+      return <div>Loading</div>
     }
-    const authors = this.generateAuthorSelectItems()
-    console.log("the current author is ", this.state.author_id)
+    var selected = {
+      label: "Arthur Miller",
+      id: 21,
+    }
+    var authors = this.state.authors.map((author) => ({
+      label: `${author.first_name} ${author.last_name}`,
+      id: author.id
+    }))
     return (
-      <Col md={12}>
-        <Form horizontal>
-          <FormGroup controlId="title">
-            <Col componentClass={ControlLabel} md={2}>
-              Title
-            </Col>
-            <Col md={5}>
-              <FormControl
-                type="text"
-                placeholder="title"
-                name="title" value={this.state.title} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <Select
-            name="author_id"
-            value={this.state.author_id}
-            onChange={this.handleSelectChange}
-            options={authors}
-          />
-          <FormGroup controlId="genre">
-            <Col componentClass={ControlLabel} md={2}>
-              Genre
-            </Col>
-            <Col md={5}>
-              <FormControl
-                type="text"
-                placeholder="genre"
-                name="genre" value={this.state.genre} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup>
-            <Col componentClass={ControlLabel}  md={2}>
-              Publication or first performance date
-            </Col>
-            <Col md={5}>
-              <DatePicker
-                name="date"
-                selected={this.state.date}
-                onChange={this.handleDateChange}
-              />
-            </Col>
-          </FormGroup>
-          <Button type="submit" bsStyle="primary" onClick={this.handleSubmit} block>Submit</Button>
-          <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
-        </Form>
-        <hr />
-      </Col>
+      <Col md={12} >
+          <Form horizontal>
+				    <FormGroup controlId="title">
+      				<Col componentClass={ControlLabel} md={2}>
+                Title
+              </Col>
+              <Col md={5}>
+      				    <FormControl
+                    type="text"
+      				      placeholder="title"
+      				      name="title"
+      				      value={this.state.title}
+      				      onChange={this.handleChange}
+      				    />
+              </Col>
+            </FormGroup>
+            { !this.props.isOnAuthorPage
+              ?
+              <FormGroup>
+                <ControlLabel>
+  								Author:
+  							</ControlLabel>
+  							<Typeahead
+                  id="author"
+                  onChange={(selected) => {
+                    this.setState({author_id: selected})
+                  }}
+                  options={authors}
+  							/>
+  						</FormGroup>
+              :
+              <br/>
+            }
+
+						<FormGroup controlId="genre">
+							<Col componentClass={ControlLabel} md={2}>
+								Genre
+							</Col>
+							<Col md={5}>
+								<FormControl
+									type="text"
+									placeholder="genre"
+									name="genre"
+									value={this.state.genre}
+									onChange={this.handleChange}
+								/>
+							</Col>
+						</FormGroup>
+						<FormGroup>
+							<Col componentClass={ControlLabel}
+								md={2}>
+								Publication or first performance date
+							</Col>
+							<Col md={5}>
+								<DatePicker
+									name="date"
+									selected={this.state.date}
+									onChange={this.handleDateChange}
+								/>
+							</Col>
+						</FormGroup>
+						<Button
+							type="submit"
+							bsStyle="primary"
+							onClick={this.handleSubmit}
+						>
+							Submit
+						</Button>
+						<Button
+							type="button"
+							onClick={this.props.onFormClose}
+						>
+							Cancel
+						</Button>
+					</Form>
+					<hr />
+				</Col>
     )
   }
 }
 
 PlayForm.propTypes = {
+  isOnAuthorPage: PropTypes.bool.isRequired,
   onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
+  onFormSubmit: PropTypes.func.isRequired
 }
 
 export default PlayForm

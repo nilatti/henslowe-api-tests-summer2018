@@ -2,11 +2,10 @@ import API from './api'
 
 async function createAuthor(author) {
   return API.post(
-    'authors',
-      {
-        author
-      }
-    )
+    'authors', {
+      author
+    }
+  )
 }
 
 async function deleteAuthor(authorId) {
@@ -18,16 +17,25 @@ async function getAuthor(authorId) {
 }
 
 async function getAuthors() {
-    return API.request(`authors`)
+  return API.request(`authors`)
+}
+
+async function getAuthorNames() {
+  return API.request(`authors/author_names`)
 }
 
 async function updateServerAuthor(author) {
-  return API.put(`authors/${author.id}`,
-    {
-      author: author
-    }
-  )
+  return API.put(`authors/${author.id}`, {
+    author: author
+  })
 }
 
 
-export { createAuthor, deleteAuthor, getAuthor, getAuthors, updateServerAuthor }
+export {
+  createAuthor,
+  deleteAuthor,
+  getAuthor,
+  getAuthorNames,
+  getAuthors,
+  updateServerAuthor
+}

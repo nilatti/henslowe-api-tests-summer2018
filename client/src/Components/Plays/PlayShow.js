@@ -3,9 +3,6 @@ import React, { Component } from 'react'
 import { Glyphicon, Row, Col } from 'react-bootstrap'
 import { BrowserRouter as Switch, Router, Route, Link } from 'react-router-dom'
 
-import Acts from './Acts/Acts'
-import Characters from './Characters/Characters'
-
 class PlayShow extends Component {
 
   handleDeleteClick = () => {
@@ -33,26 +30,7 @@ class PlayShow extends Component {
             </span>
           </Col>
         </Row>
-        <Row>
-          <Col md={12}>
-            <Acts
-              acts={this.props.acts}
-              play_id={this.props.id}
-              onDeleteClick={this.props.handleActDeleteClick}
-              onFormSubmit={this.props.handleActCreateFormSubmit}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col md={12}>
-            <Characters
-              characters={this.props.characters}
-              onDeleteClick={this.props.handleCharacterDeleteClick}
-              onFormSubmit={this.props.handleCharacterCreateFormSubmit}
-              play_id={this.props.id}
-            />
-          </Col>
-        </Row>
+
       </div>
     )
   }

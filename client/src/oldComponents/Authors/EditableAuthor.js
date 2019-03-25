@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react'
 
-import { getAuthor, updateServerAuthor } from '../../api/authors'
+import { getAuthor } from '../../api/authors'
 
 import AuthorForm from './AuthorForm'
 import AuthorShow from './AuthorShow'
@@ -15,13 +15,9 @@ class EditableAuthor extends Component {
       author: null,
     }
   }
-
   closeForm = () => {
-    this.setState({
-      editFormOpen: false,
-    })
+    this.setState({ editFormOpen: false })
   }
-
   componentDidMount = () => {
     this.loadAuthorFromServer(this.props.match.params.authorId)
   }
@@ -30,16 +26,15 @@ class EditableAuthor extends Component {
       this.loadAuthorFromServer(this.props.match.params.authorId);
     }
   }
-
   handleEditClick = () => {
     this.openForm()
   }
   handleFormClose = () => {
     this.closeForm()
   }
-
+  
   handleSubmit = (author) => {
-    this.updateAuthorOnServer(author)
+    this.props.onFormSubmit(author)
     this.closeForm()
   }
 
@@ -49,17 +44,6 @@ class EditableAuthor extends Component {
       this.setState({ errorStatus: 'Error fetching author' })
     } else {
       this.setState({ author: response.data })
-    }
-  }
-
-  async updateAuthorOnServer (author) {
-    const response = await updateServerAuthor(author)
-    if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error updating author'})
-    } else {
-      this.setState({
-        author: response.data
-      })
     }
   }
 
@@ -127,6 +111,7 @@ class EditableAuthor extends Component {
 EditableAuthor.propTypes = {
   match: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
 }
 
 export default EditableAuthor
