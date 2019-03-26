@@ -52,7 +52,7 @@ RSpec.describe 'Authors API', type: :request do
   # Test suite for POST /authors
   describe 'POST /authors' do
     # valid payload
-    let(:valid_attributes) { { first_name: 'Pam', last_name: 'Mandigo' } }
+    let(:valid_attributes) { { author: { first_name: 'Pam', last_name: 'Mandigo' } } }
 
     context 'when the request is valid' do
       before { post '/api/authors', params: valid_attributes }
@@ -67,7 +67,7 @@ RSpec.describe 'Authors API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/authors', params: { first_name: 'Failure' } }
+      before { post '/api/authors', params: { author: { first_name: 'Failure' } } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -82,17 +82,13 @@ RSpec.describe 'Authors API', type: :request do
 
   # Test suite for PUT /authors/:id
   describe 'PUT /api/authors/:id' do
-    let(:valid_attributes) { { first_name: 'Pam', last_name: 'Mandigo' } }
+    let(:valid_attributes) { { author: { first_name: 'Pam', last_name: 'Mandigo' } } }
 
     context 'when the record exists' do
       before { put "/api/authors/#{author_id}", params: valid_attributes }
 
-      it 'updates the record' do
-        expect(response.body).to be_empty
-      end
-
-      it 'returns status code 204' do
-        expect(response).to have_http_status(204)
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
       end
     end
   end

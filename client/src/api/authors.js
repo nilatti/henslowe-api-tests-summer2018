@@ -15,14 +15,14 @@ async function deleteAuthor(authorId) {
 async function getAuthor(authorId) {
   return API.request(`authors/${authorId}`)
 }
+async function getAuthorNames() {
+  return API.request(`authors/author_names`)
+}
 
 async function getAuthors() {
   return API.request(`authors`)
 }
 
-async function getAuthorNames() {
-  return API.request(`authors/author_names`)
-}
 
 async function updateServerAuthor(author) {
   return API.put(`authors/${author.id}`, {

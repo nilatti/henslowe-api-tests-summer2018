@@ -24,7 +24,7 @@ class AuthorsController < ApiController
   # PATCH/PUT /authors/1
   def update
     @author.update(author_params)
-    head :no_content
+    json_response(@author.as_json(include: [:plays]))
   end
 
   # DELETE /authors/1
@@ -42,7 +42,7 @@ class AuthorsController < ApiController
 
   # Only allow a trusted parameter "white list" through.
   def author_params
-    params.permit(:birthdate, :deathdate, :nationality, :first_name, :middle_name, :last_name, :gender, :id)
+    params.require(:author).permit(:birthdate, :deathdate, :nationality, :first_name, :middle_name, :last_name, :gender, :id)
   end
 
   # Use callbacks to share common setup or constraints between actions.

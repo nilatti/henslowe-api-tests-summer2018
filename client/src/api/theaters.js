@@ -2,11 +2,10 @@ import API from './api'
 
 async function createTheater(theater) {
   return API.post(
-    'theaters',
-      {
-        theater
-      }
-    )
+    'theaters', {
+      theater
+    }
+  )
 }
 
 async function deleteTheater(theaterId) {
@@ -17,17 +16,27 @@ async function getTheater(theaterId) {
   return API.request(`theaters/${theaterId}`)
 }
 
+async function getTheaterNames() {
+  return API.request(`theaters/theater_names`)
+}
+
+
 async function getTheaters() {
-    return API.request(`theaters`)
+  return API.request(`theaters`)
 }
 
 async function updateServerTheater(theater) {
-  return API.put(`theaters/${theater.id}`,
-    {
-      theater: theater
-    }
-  )
+  return API.put(`theaters/${theater.id}`, {
+    theater: theater
+  })
 }
 
 
-export { createTheater, deleteTheater, getTheater, getTheaters, updateServerTheater }
+export {
+  createTheater,
+  deleteTheater,
+  getTheater,
+  getTheaterNames,
+  getTheaters,
+  updateServerTheater
+}

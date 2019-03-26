@@ -24,7 +24,7 @@ class TheatersController < ApiController
   # PATCH/PUT /theaters/1
   def update
     @theater.update(theater_params)
-    head :no_content
+    json_response(@theater)
   end
 
   # DELETE /theaters/1
@@ -42,7 +42,7 @@ class TheatersController < ApiController
 
   # Only allow a trusted parameter "white list" through.
   def theater_params
-    params.permit(:calendar_url, :city, :mission_statement, :name, :phone_number, :state, :street_address, :website, :zip)
+    params.require(:theater).permit(:calendar_url, :city, :id, :mission_statement, :name, :phone_number, :state, :street_address, :website, :zip)
   end
 
   # Use callbacks to share common setup or constraints between actions.

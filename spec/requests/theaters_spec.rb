@@ -51,7 +51,7 @@ RSpec.describe 'theaters API', type: :request do
   # Test suite for POST /theaters
   describe 'POST /theaters' do
     # valid payload
-    let(:valid_attributes) { { name: 'The Great American Theater Company' } }
+    let(:valid_attributes) { { theater: { name: 'The Great American Theater Company' } } }
 
     context 'when the request is valid' do
       before { post '/api/theaters', params: valid_attributes }
@@ -66,7 +66,7 @@ RSpec.describe 'theaters API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/theaters', params: { address: 'Failure' } }
+      before { post '/api/theaters', params: { theater: { address: 'Failure' } } }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -81,17 +81,13 @@ RSpec.describe 'theaters API', type: :request do
 
   # Test suite for PUT /theaters/:id
   describe 'PUT /api/theaters/:id' do
-    let(:valid_attributes) { { name: 'The Great American Theater Company' } }
+    let(:valid_attributes) { { theater: { name: 'The Great American Theater Company' } } }
 
     context 'when the record exists' do
       before { put "/api/theaters/#{theater_id}", params: valid_attributes }
 
-      it 'updates the record' do
-        expect(response.body).to be_empty
-      end
-
-      it 'returns status code 204' do
-        expect(response).to have_http_status(204)
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
       end
     end
   end

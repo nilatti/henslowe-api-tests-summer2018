@@ -16,7 +16,7 @@ import {
   getPlays
 } from '../api/plays'
 import {
-  getTheaters
+  getTheaterNames
 } from '../api/theaters'
 
 
@@ -62,10 +62,10 @@ class Navigation extends Component {
   }
 
   async loadTheatersFromServer() {
-    const response = await getTheaters()
+    const response = await getTheaterNames()
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error fetching authors'
+        errorStatus: 'Error fetching theaters'
       })
     } else {
       this.setState({
