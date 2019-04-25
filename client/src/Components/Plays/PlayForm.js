@@ -27,6 +27,7 @@ class PlayForm extends Component {
     super(props)
     this.state = {
       author_id: this.props.author_id || {},
+      author_name: this.props.author_first_name + ' ' + this.props.author_last_name,
       authors: null,
       genre: this.props.genre || '',
       title: this.props.title || '',
@@ -49,10 +50,14 @@ class PlayForm extends Component {
     })
   }
 
-  handleAuthorChange = (author) => {
-    this.setState({
-      author_id: author[0].id
-    })
+  handleAuthorChange = (e) => {
+    if (e.length > 0) {
+      this.setState({
+        author_id: e[0].id,
+        author_name: e[0].label
+      })
+    }
+
   }
 
   handleDateChange = (date) => {
@@ -68,6 +73,7 @@ class PlayForm extends Component {
       date: this.state.date,
       genre: this.state.genre,
       title: this.state.title,
+      id: this.props.id
     })
   }
 
@@ -101,13 +107,10 @@ class PlayForm extends Component {
     if (!this.state.authors) {
       return <div>Loading</div>
     }
-    var selected = {
-      label: "Arthur Miller",
-      id: 21,
-    }
+
     var authors = this.state.authors.map((author) => ({
-      label: `${author.first_name} ${author.last_name}`,
-      id: author.id
+      id: author.id,
+      label: `${author.first_name} ${author.last_name}`
     }))
     return (
       <Col md={12} >
@@ -132,13 +135,17 @@ class PlayForm extends Component {
                 <ControlLabel>
   								Author:
   							</ControlLabel>
-  							<Typeahead
+                <Typeahead
+                  allowNew
+                  newSelectionPrefix="Add a new item: "
                   id="author"
-                  onChange={(selected) => {
-                    this.setState({author_id: selected})
+                  onChange={selected => {
+                    this.handleAuthorChange(selected)
                   }}
                   options={authors}
-  							/>
+                  placeholder="Choose author..."
+                  defaultSelected={[this.state.author_name]}
+                  />
   						</FormGroup>
               :
               <br/>

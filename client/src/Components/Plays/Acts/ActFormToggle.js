@@ -1,28 +1,37 @@
-import { Button, Glyphicon } from 'react-bootstrap'
+import {
+  Button,
+  Glyphicon
+} from 'react-bootstrap'
 import PropTypes from 'prop-types';
-import React, { Component } from 'react'
+import React, {
+  Component
+} from 'react'
 
 import ActForm from './ActForm.js'
 
 class ActFormToggle extends Component { //opens form for create action
-  constructor (props) {
-    super (props)
+  constructor(props) {
+    super(props)
     this.state = {
       isOpen: this.props.isOpen,
     }
   }
 
   handleFormOpen = () => {
-    this.setState({ isOpen: true })
+    this.setState({
+      isOpen: true
+    })
   }
 
   handleFormClose = () => {
-    this.setState({ isOpen: false })
+    this.setState({
+      isOpen: false
+    })
   }
 
-  handleFormSubmit = (play) => {
+  handleFormSubmit = (act) => {
     this.handleFormClose()
-    this.props.onFormSubmit(play)
+    this.props.onFormSubmit(act)
   }
 
   render() {

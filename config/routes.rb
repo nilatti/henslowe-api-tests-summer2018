@@ -14,6 +14,9 @@ Rails.application.routes.draw do
       resources :plays
     end
     resources :plays do
+      collection do
+        get :play_titles
+      end
       resources :acts
       resources :characters
     end

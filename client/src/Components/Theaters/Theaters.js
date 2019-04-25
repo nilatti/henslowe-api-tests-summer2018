@@ -21,35 +21,35 @@ import NewTheater from './NewTheater'
 
 class Theaters extends Component {
 
-  async createTheater(Theater) {
-    const response = await createTheater(Theater)
+  async createTheater(theater) {
+    const response = await createTheater(theater)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error creating Theater'
       })
     } else {
-      this.props.history.push(`/Theaters/${response.data.id}`)
+      this.props.history.push(`/theaters/${response.data.id}`)
       window.location.reload();
     }
   }
 
-  async deleteTheater(TheaterId) {
-    const response = await deleteTheater(TheaterId)
+  async deleteTheater(theaterId) {
+    const response = await deleteTheater(theaterId)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error deleting Theater'
       })
     } else {
-      this.props.history.push('/Theaters')
+      this.props.history.push('/theaters')
       window.location.reload();
     }
   }
 
-  handleCreateFormSubmit = (Theater) => {
-    this.createTheater(Theater)
+  handleCreateFormSubmit = (theater) => {
+    this.createTheater(theater)
   }
-  handleDeleteClick = (TheaterId) => {
-    this.deleteTheater(TheaterId)
+  handleDeleteClick = (theaterId) => {
+    this.deleteTheater(theaterId)
   }
 
   render() {

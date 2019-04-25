@@ -25,6 +25,8 @@ class AuthorsController < ApiController
   def update
     @author.update(author_params)
     json_response(@author.as_json(include: [:plays]))
+
+    # in example returned no content, but I don't think this is the desired behavior so I changed it.
   end
 
   # DELETE /authors/1

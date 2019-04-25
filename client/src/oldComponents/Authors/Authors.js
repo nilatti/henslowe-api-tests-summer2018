@@ -1,7 +1,20 @@
-import { createAuthor, deleteAuthor, getAuthors, updateServerAuthor } from '../../api/authors'
-import React, { Component } from 'react'
-import { Col, Row } from 'react-bootstrap'
-import { withRouter, Route } from 'react-router-dom'
+import {
+  createAuthor,
+  deleteAuthor,
+  getAuthors,
+  updateServerAuthor
+} from '../../api/authors'
+import React, {
+  Component
+} from 'react'
+import {
+  Col,
+  Row
+} from 'react-bootstrap'
+import {
+  withRouter,
+  Route
+} from 'react-router-dom'
 
 import AuthorFormToggle from './AuthorFormToggle'
 // import EditableAuthorsList from './EditableAuthorsList'
@@ -20,42 +33,55 @@ class Authors extends Component {
     })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.loadAuthorsFromServer() //loads authors and sets state authors array
   }
 
-  async createAuthor (author) {
+  async createAuthor(author) {
     const response = await createAuthor(author)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error creating author' })
+      this.setState({
+        errorStatus: 'Error creating author'
+      })
     } else {
       this.addNewAuthor(response.data)
     }
   }
 
-  async deleteAuthor (authorId) {
+  async deleteAuthor(authorId) {
     const response = await deleteAuthor(authorId)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error deleting author' })
+      this.setState({
+        errorStatus: 'Error deleting author'
+      })
     } else {
-      this.loadAuthorsFromServer()
-      this.props.history.push('/authors')
+      this.setState({
+        authors: this.state.authors.filter(author =>
+          author.id != authorId
+        )
+      })
     }
   }
 
-  async loadAuthorsFromServer () {
+  async loadAuthorsFromServer() {
     const response = await getAuthors()
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error fetching authors' })
+      this.setState({
+        errorStatus: 'Error fetching authors'
+      })
     } else {
-      this.setState({ authors: response.data })
+      this.setState({
+        authors: response.data
+      })
     }
   }
 
-  async updateAuthorOnServer (author) {
+  async updateAuthorOnServer(author) {
     const response = await updateServerAuthor(author)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error updating author'})
+      this.setState({
+        errorStatus: 'Error updating author'
+      })
     } else {
       this.updateAuthor(response.data)
     }
@@ -81,7 +107,7 @@ class Authors extends Component {
     })
   }
 
-  render () {
+  render() {
     return (
       <Row>
         <Col md={12} >

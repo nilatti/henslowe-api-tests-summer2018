@@ -1,7 +1,19 @@
-import { createTheater, deleteTheater, getTheaters, updateServerTheater } from '../../api/theaters'
-import React, { Component } from 'react'
-import { Col, Row } from 'react-bootstrap'
-import { withRouter } from 'react-router-dom'
+import {
+  createTheater,
+  deleteTheater,
+  getTheaters,
+  updateServerTheater
+} from '../../api/theaters'
+import React, {
+  Component
+} from 'react'
+import {
+  Col,
+  Row
+} from 'react-bootstrap'
+import {
+  withRouter
+} from 'react-router-dom'
 
 import TheaterFormToggle from './TheaterFormToggle'
 import EditableTheatersList from './EditableTheatersList'
@@ -19,42 +31,55 @@ class Theaters extends Component {
     })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.loadTheatersFromServer() //loads theaters and sets state theaters array
   }
 
-  async createTheater (theater) {
+  async createTheater(theater) {
     const response = await createTheater(theater)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error creating theater' })
+      this.setState({
+        errorStatus: 'Error creating theater'
+      })
     } else {
       this.addNewTheater(response.data)
     }
   }
 
-  async deleteTheater (theaterId) {
+  async deleteTheater(theaterId) {
     const response = await deleteTheater(theaterId)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error deleting theater' })
+      this.setState({
+        errorStatus: 'Error deleting theater'
+      })
     } else {
-      this.loadTheatersFromServer()
-      this.props.history.push('/theaters')
+      this.setState({
+        theaters: this.state.theaters.filter(theater =>
+          theater.id != theaterId
+        )
+      })
     }
   }
 
-  async loadTheatersFromServer () {
+  async loadTheatersFromServer() {
     const response = await getTheaters()
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error fetching theaters' })
+      this.setState({
+        errorStatus: 'Error fetching theaters'
+      })
     } else {
-      this.setState({ theaters: response.data })
+      this.setState({
+        theaters: response.data
+      })
     }
   }
 
-  async updateTheaterOnServer (theater) {
+  async updateTheaterOnServer(theater) {
     const response = await updateServerTheater(theater)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error updating theater'})
+      this.setState({
+        errorStatus: 'Error updating theater'
+      })
     } else {
       this.updateTheater(response.data)
     }
@@ -80,7 +105,7 @@ class Theaters extends Component {
     })
   }
 
-  render () {
+  render() {
     return (
       <Row>
         <Col md={12} >

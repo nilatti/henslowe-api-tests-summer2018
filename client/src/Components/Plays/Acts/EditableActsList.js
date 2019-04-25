@@ -1,8 +1,20 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import {Col, Row} from 'react-bootstrap'
-import { BrowserRouter as Switch, Router, Route } from 'react-router-dom'
-import { Link } from "react-router-relative-link"
+import React, {
+  Component
+} from 'react'
+import {
+  Col,
+  Glyphicon,
+  Row
+} from 'react-bootstrap'
+import {
+  BrowserRouter as Switch,
+  Router,
+  Route
+} from 'react-router-dom'
+import {
+  Link
+} from "react-router-relative-link"
 
 import EditableAct from './EditableAct'
 
@@ -28,11 +40,27 @@ class EditableActsList extends Component {
     return null;
   }
 
-  render () {
+  handleDeleteClick = (actId) => {
+    this.props.onDeleteClick(actId)
+  }
+
+  render() {
     const play_id = this.props.play_id
     const acts = this.props.acts.map((act) => (
       <li key={act.id}>
-        <Link to={`../${play_id}/acts/${act.id}`}>{act.act_number}</Link>
+        <Link to={`../${play_id}/acts/${act.id}`}>{act.act_number}</Link> <span
+          className='right floated edit icon'
+          onClick={this.props.handleEditClick}
+        >
+          <Glyphicon glyph="pencil" />
+        </span>
+        <span
+          className='right floated trash icon'
+          actId="a string of things"
+          onClick={() => this.handleDeleteClick(act.id)}
+        >
+          <Glyphicon glyph="glyphicon glyphicon-trash" />
+        </span>
       </li>
     ))
     //
@@ -43,19 +71,6 @@ class EditableActsList extends Component {
         <ul>
           {acts}
         </ul>
-        </Col>
-        <Col md={10}>
-        <Route
-          path={`/plays/:playId/acts/:actId`}
-          render={(props) => (
-            <EditableAct
-              {...props}
-              play_id={this.props.play_id}
-              onDeleteClick={this.props.onDeleteClick}
-              onFormSubmit={this.props.onFormSubmit}
-            />
-          )}
-        />
         </Col>
         </Row>
       </div>
