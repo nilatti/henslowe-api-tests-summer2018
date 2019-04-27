@@ -2,10 +2,8 @@ import React, {
   Component
 } from 'react'
 import {
-  MenuItem,
   Nav,
   Navbar,
-  NavDropdown,
   NavItem
 } from 'react-bootstrap'
 

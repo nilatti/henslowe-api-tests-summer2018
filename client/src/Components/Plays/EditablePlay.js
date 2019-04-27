@@ -2,16 +2,8 @@ import PropTypes from 'prop-types';
 import React, {
   Component
 } from 'react'
+
 import {
-  Glyphicon,
-  Row,
-  Col
-} from 'react-bootstrap'
-import {
-  BrowserRouter as Switch,
-  Router,
-  Route,
-  Link,
   Redirect
 } from 'react-router-dom'
 
@@ -28,7 +20,6 @@ import {
 import {
   createAct,
   createCharacter,
-  getActs,
   updateServerPlay
 } from '../../api/plays'
 
@@ -112,12 +103,10 @@ class EditablePlay extends Component {
       this.setState({
         play: response.data
       })
-      console.log('play is', this.state.play)
     }
   }
 
   async updatePlayOnServer(play) {
-    console.log('play from form is', play)
     const response = await updateServerPlay(play)
     if (response.status >= 400) {
       this.setState({
@@ -240,7 +229,7 @@ class EditablePlay extends Component {
 
   sortActs = (acts) => {
     return acts.sort(function (a, b) {
-      return (a.act_number > b.act_number) ? 1 : ((b.act_number > a.act_number) ? -1 : 0);
+      return (a.number > b.number) ? 1 : ((b.number > a.number) ? -1 : 0);
     });
   }
 
@@ -251,16 +240,10 @@ class EditablePlay extends Component {
     if (this.state.editFormOpen) {
       return (
         <PlayForm
-          acts={this.sortActs(this.state.play.acts)}
-          author_id={this.state.play.author.id}
-          author_first_name={this.state.play.author.first_name}
-          author_last_name={this.state.play.author.last_name}
-          genre={this.state.play.genre}
-          id={this.state.play.id}
           isOnAuthorPage={false}
           onFormClose={this.handleFormClose}
           onFormSubmit={this.handleSubmit}
-          title={this.state.play.title}
+          play={this.state.play}
         />
       )
     }
@@ -272,22 +255,20 @@ class EditablePlay extends Component {
 
     return (
       <PlayShow
-        acts={this.state.play.acts}
-        author={`${this.state.play.author.first_name} ${this.state.play.author.last_name}`}
-        characters={this.state.play.characters}
-        id={this.state.play.id}
         handleActCreateFormSubmit={this.onActCreateFormSubmit}
         handleActDeleteClick={this.onActDeleteClick}
         handleCharacterCreateFormSubmit={this.onCharacterCreateFormSubmit}
         handleCharacterDeleteClick={this.onCharacterDeleteClick}
         handleDeleteClick={this.onDeleteClick}
         handleEditClick={this.onEditClick}
-        title={this.state.play.title}
+        play={this.state.play}
       />
     )
   }
 }
 
-EditablePlay.propTypes = {}
+EditablePlay.propTypes = {
+
+}
 
 export default EditablePlay

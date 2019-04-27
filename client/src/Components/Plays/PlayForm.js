@@ -1,3 +1,4 @@
+import moment from 'moment'
 import PropTypes from 'prop-types';
 import React, {
   Component
@@ -15,7 +16,6 @@ import {
 } from 'react-bootstrap-typeahead';
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
 import {
@@ -26,11 +26,12 @@ class PlayForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      author_id: this.props.author_id || {},
-      author_name: this.props.author_first_name + ' ' + this.props.author_last_name,
+      author_id: this.props.play.author.id || this.props.author_id,
+      author_name: this.props.play.author.first_name + ' ' + this.props.play.author.last_name,
       authors: null,
-      genre: this.props.genre || '',
-      title: this.props.title || '',
+      date: moment(this.props.play.date) || '',
+      genre: this.props.play.genre || '',
+      title: this.props.play.title || '',
     }
   }
 
@@ -73,7 +74,7 @@ class PlayForm extends Component {
       date: this.state.date,
       genre: this.state.genre,
       title: this.state.title,
-      id: this.props.id
+      id: this.props.play.id
     })
   }
 
@@ -198,10 +199,23 @@ class PlayForm extends Component {
   }
 }
 
+PlayForm.defaultProps = {
+  play: {
+    author: {
+      first_name: '',
+      last_name: '',
+    },
+    date: '01/01/2020',
+    genre: '',
+    title: '',
+  }
+}
+
 PlayForm.propTypes = {
   isOnAuthorPage: PropTypes.bool.isRequired,
   onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired
+  onFormSubmit: PropTypes.func.isRequired,
+  play: PropTypes.object,
 }
 
 export default PlayForm

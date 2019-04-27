@@ -10,20 +10,26 @@ import {
   Tabs,
 } from 'react-bootstrap'
 import {
-  BrowserRouter as Switch,
-  Router,
-  Route,
-  Link
+  Link,
 } from 'react-router-dom'
 
 import ActFormToggle from './Acts/ActFormToggle'
 import ActInfoTab from './Acts/ActInfoTab'
-import Acts from './Acts/Acts'
+
+import CharacterFormToggle from './Characters/CharacterFormToggle'
+import CharacterInfoTab from './Characters/CharacterInfoTab'
 
 import {
   createAct,
-  deleteAct
+  deleteAct,
+  updateServerAct,
 } from '../../api/acts'
+
+import {
+  createCharacter,
+  deleteCharacter,
+  updateServerCharacter,
+} from '../../api/characters'
 
 
 class PlayShow extends Component {
@@ -32,7 +38,8 @@ class PlayShow extends Component {
     this.handleSelect = this.handleSelect.bind(this);
 
     this.state = {
-      acts: this.props.acts,
+      acts: this.props.play.acts,
+      characters: this.props.play.characters,
       key: ''
     };
   }
@@ -45,7 +52,8 @@ class PlayShow extends Component {
       })
     } else {
       this.setState({
-        acts: [...this.state.acts, response.data]
+        acts: [...this.state.acts, response.data].sort((a, b) => (a.number - b.number)),
+        key: response.data.id,
       })
     }
   }
@@ -59,22 +67,110 @@ class PlayShow extends Component {
     } else {
       this.setState({
         acts: this.state.acts.filter(act =>
-          act.id != actId
+          act.id !== actId
         )
       })
     }
   }
 
+  async updateServerAct(actAttrs) {
+    const response = await updateServerAct(actAttrs)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error updating act'
+      })
+    } else {
+      this.setState(state => {
+        const actList = state.acts.map((act) => {
+          if (act.id === actAttrs.id) {
+            return actAttrs
+          } else {
+            return act
+          }
+        })
+        return {
+          acts: actList
+        }
+      })
+    }
+  }
+
+  async createCharacter(playId, character) {
+    const response = await createCharacter(playId, character)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error creating character'
+      })
+    } else {
+      this.setState({
+        characters: [...this.state.characters, response.data].sort((a, b) => (a.name > b.name) - (a.name < b.name))
+      })
+    }
+  }
+
+  async deleteCharacter(characterId) {
+    const response = await deleteCharacter(characterId)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error deleting character'
+      })
+    } else {
+      this.setState({
+        characters: this.state.characters.filter(character =>
+          character.id !== characterId
+        )
+      })
+    }
+  }
+
+  async updateServerCharacter(characterAttrs) {
+    const response = await updateServerCharacter(characterAttrs)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error updating character'
+      })
+    } else {
+      this.setState(state => {
+        const characterList = state.characters.map((character) => {
+          if (character.id === characterAttrs.id) {
+            return characterAttrs
+          } else {
+            return character
+          }
+        })
+        return {
+          characters: characterList
+        }
+      })
+    }
+  }
+
   handleActCreateClick = (act) => {
-    this.createAct(this.props.id, act)
+    this.createAct(this.props.play.id, act)
   }
 
   handleActDeleteClick = (actId) => {
     this.deleteAct(actId)
   }
 
+  handleEditActSubmit = (act) => {
+    this.updateServerAct(act)
+  }
+
+  handleCharacterCreateClick = (character) => {
+    this.createCharacter(this.props.play.id, character)
+  }
+
+  handleCharacterDeleteClick = (characterId) => {
+    this.deleteCharacter(characterId)
+  }
+
+  handleEditCharacterSubmit = (character) => {
+    this.updateServerCharacter(character)
+  }
+
   handleDeleteClick = () => {
-    this.props.handleDeleteClick(this.props.id)
+    this.props.handleDeleteClick(this.props.play.id)
   }
 
   handleSelect(key) {
@@ -84,17 +180,34 @@ class PlayShow extends Component {
   }
 
   render() {
-    var actTabs = this.state.acts.map((act) =>
-      <Tab eventKey={act.id} title={act.act_number} key={act.id}>
-        <ActInfoTab act={act} />
+    let actTabs
+    let characterTabs
+    if (this.state.acts[0]) {
+      actTabs = this.state.acts.map((act) =>
+        <Tab eventKey={`act-${act.id}`} title={`Act ${act.number}`} key={`act-${act.id}`}>
+        <ActInfoTab act={act} play_id={this.props.play.id} onDeleteClick={this.handleActDeleteClick} handleEditSubmit={this.handleEditActSubmit}/>
       </Tab>
-    )
+      )
+    } else {
+      actTabs = <div>No acts found</div>
+    }
+    if (this.state.characters[0]) {
+      characterTabs = this.state.characters.map((character) =>
+        <Tab eventKey={`character-${character.id}`} title={`${character.name}`} key={`character-${character.id}`}>
+        <CharacterInfoTab character={character} play_id={this.props.play.id} onDeleteClick={this.handleCharacterDeleteClick} handleEditSubmit={this.handleEditCharacterSubmit}/>
+      </Tab>
+      )
+    } else {
+      characterTabs = <div>No acts found</div>
+    }
     return (
       <div>
         <Row>
           <Col>
-            <h2>{this.props.title}</h2>
-            by {this.props.author}
+            <h2>{this.props.play.title}</h2>
+            a {this.props.play.genre}<br />
+            by <Link to={`/authors/${this.props.play.author.id}`}> {this.props.play.author.first_name} {this.props.play.author.last_name}</Link><br />
+            {this.props.play.date}<br />
             <span
               className='right floated edit icon'
               onClick={this.props.handleEditClick}
@@ -110,17 +223,30 @@ class PlayShow extends Component {
           </Col>
         </Row>
         <Row>
-          <ActFormToggle play_id={this.props.id} onFormSubmit={this.handleActCreateClick} />
-        </Row>
+        <h2>Characters</h2>
         <Row>
+          <CharacterFormToggle play_id={this.props.play.id} isOpen={false} onFormSubmit={this.handleCharacterCreateClick} />
+        </Row>
         <Tabs
         activeKey={this.state.key}
         onSelect={this.handleSelect}
-        id="stop-info-tabs"
+        id="character-info-tabs"
+      >
+        {characterTabs}
+      </Tabs>
+        </Row>
+        <Row>
+        <h2>Acts</h2>
+        <Row>
+          <ActFormToggle play_id={this.props.play.id} isOpen={false} onFormSubmit={this.handleActCreateClick} />
+        </Row>
+        <Tabs
+        activeKey={this.state.key}
+        onSelect={this.handleSelect}
+        id="act-info-tabs"
       >
         {actTabs}
       </Tabs>
-          <Acts acts={this.state.acts} onDeleteClick={this.handleActDeleteClick} play_id={this.props.id} />
         </Row>
       </div>
     )
@@ -128,18 +254,13 @@ class PlayShow extends Component {
 }
 
 PlayShow.propTypes = {
-  acts: PropTypes.array.isRequired,
-  author: PropTypes.string,
-  characters: PropTypes.array.isRequired,
-  handleCharacterDeleteClick: PropTypes.func.isRequired,
   handleActCreateFormSubmit: PropTypes.func.isRequired,
   handleActDeleteClick: PropTypes.func.isRequired,
   handleCharacterCreateFormSubmit: PropTypes.func.isRequired,
   handleCharacterDeleteClick: PropTypes.func.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
-  id: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
+  play: PropTypes.object.isRequired,
 }
 
 export default PlayShow

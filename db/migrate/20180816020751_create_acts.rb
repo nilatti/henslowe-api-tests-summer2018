@@ -1,7 +1,7 @@
 class CreateActs < ActiveRecord::Migration[5.1]
   def change
     create_table :acts do |t|
-      t.integer :act_number
+      t.integer :number
       t.references :play, foreign_key: true
       t.text :summary
       t.integer :start_page

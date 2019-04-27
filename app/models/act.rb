@@ -1,5 +1,7 @@
 class Act < ApplicationRecord
   belongs_to :play
+  has_many :scenes
+  default_scope {order(:number)}
 
-  validates :act_number, presence: true
+  validates :number, presence: true
 end

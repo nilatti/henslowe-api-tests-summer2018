@@ -19,7 +19,8 @@ class AuthorShow extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      plays: this.props.plays,
+      author: this.props.author,
+      plays: this.props.author.plays,
       playFormOpen: false,
     }
   }
@@ -31,14 +32,10 @@ class AuthorShow extends Component {
         errorStatus: 'Error creating play'
       })
     } else {
-      this.addNewPlay(response.data)
+      this.setState({
+        plays: [...this.state.plays, response.data]
+      })
     }
-  }
-
-  addNewPlay = (newPlay) => {
-    this.setState({
-      plays: [...this.state.plays, newPlay]
-    })
   }
 
   handleCreateFormSubmit = (play) => {
@@ -50,9 +47,9 @@ class AuthorShow extends Component {
   }
 
   render() {
-    let dates = this.props.birthdate //tk
-    if (this.props.deathdate != null) {
-      dates = dates.concat(" to " + this.props.deathdate)
+    let dates = this.state.author.birthdate //tk
+    if (this.state.author.deathdate != null) {
+      dates = dates.concat(" to " + this.state.author.deathdate)
     }
 
     return (
@@ -60,11 +57,11 @@ class AuthorShow extends Component {
       <Row>
         <Col md={3} className="author-profile">
           <h3>
-            {this.props.first_name} {this.props.middle_name} {this.props.last_name}
+            {this.state.author.first_name} {this.state.author.middle_name} {this.state.author.last_name}
           </h3>
           <p>
             {dates}<br />
-            {this.props.nationality}
+            {this.state.author.nationality}
           </p>
           <span
             className='right floated edit icon'
@@ -80,13 +77,13 @@ class AuthorShow extends Component {
           </span>
         </Col>
         <Col md={9}>
-          <h2>Plays by {this.props.last_name}</h2>
+          <h2>Plays by {this.state.author.last_name}</h2>
           <PlaysSubComponent
-            author_id={this.props.id}
+            author_id={this.state.author.id}
             plays={this.state.plays}
           />
           <PlayFormToggle
-            author_id={this.props.id}
+            author_id={this.state.author.id}
             onFormSubmit={this.handleCreateFormSubmit}
             isOnAuthorPage={true}
             isOpen={this.state.playFormOpen}
@@ -100,17 +97,9 @@ class AuthorShow extends Component {
 }
 
 AuthorShow.propTypes = {
-  birthdate: PropTypes.string,
-  deathdate: PropTypes.string,
-  first_name: PropTypes.string,
-  gender: PropTypes.string,
-  id: PropTypes.number.isRequired,
-  last_name: PropTypes.string,
-  middle_name: PropTypes.string,
-  nationality: PropTypes.string,
+  author: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   onEditClick: PropTypes.func.isRequired,
-  plays: PropTypes.array.isRequired,
 }
 
 export default AuthorShow

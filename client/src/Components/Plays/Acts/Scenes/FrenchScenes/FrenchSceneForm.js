@@ -11,13 +11,13 @@ import {
   FormGroup
 } from 'react-bootstrap'
 
-class ActForm extends Component {
+class FrenchSceneForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      number: this.props.act.number,
-      play_id: this.props.play_id,
-      summary: this.props.act.summary,
+      number: this.props.french_scene.number,
+      scene_id: this.props.scene_id,
+      summary: this.props.french_scene.summary,
     }
   }
 
@@ -31,8 +31,8 @@ class ActForm extends Component {
     event.preventDefault()
     this.props.onFormSubmit({
       number: this.state.number,
-      id: this.props.act.id,
-      play_id: this.state.play_id,
+      id: this.props.french_scene.id,
+      scene_id: this.state.scene_id,
       summary: this.state.summary,
     })
   }
@@ -43,12 +43,12 @@ class ActForm extends Component {
         <Form horizontal>
           <FormGroup controlId="number">
             <Col componentClass={ControlLabel} md={2}>
-              Act Number
+              French Scene Number (letter)
             </Col>
             <Col md={5}>
               <FormControl
                 type="text"
-                placeholder="act number"
+                placeholder="french scene number"
                 name="number" value={this.state.number} onChange={this.handleChange} />
             </Col>
           </FormGroup>
@@ -74,18 +74,18 @@ class ActForm extends Component {
   }
 }
 
-ActForm.defaultProps = {
-  act: {
+FrenchSceneForm.defaultProps = {
+  french_scene: {
     number: '',
     summary: ''
   }
 }
 
-ActForm.propTypes = {
-  act: PropTypes.object,
+FrenchSceneForm.propTypes = {
+  french_scene: PropTypes.object,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
+  scene_id: PropTypes.number.isRequired,
 }
 
-export default ActForm
+export default FrenchSceneForm

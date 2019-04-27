@@ -11,13 +11,13 @@ import {
   FormGroup
 } from 'react-bootstrap'
 
-class ActForm extends Component {
+class SceneForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      number: this.props.act.number,
-      play_id: this.props.play_id,
-      summary: this.props.act.summary,
+      number: this.props.scene.number,
+      act_id: this.props.act_id,
+      summary: this.props.scene.summary,
     }
   }
 
@@ -31,8 +31,8 @@ class ActForm extends Component {
     event.preventDefault()
     this.props.onFormSubmit({
       number: this.state.number,
-      id: this.props.act.id,
-      play_id: this.state.play_id,
+      id: this.props.scene.id,
+      act_id: this.state.act_id,
       summary: this.state.summary,
     })
   }
@@ -43,12 +43,12 @@ class ActForm extends Component {
         <Form horizontal>
           <FormGroup controlId="number">
             <Col componentClass={ControlLabel} md={2}>
-              Act Number
+              Scene Number
             </Col>
             <Col md={5}>
               <FormControl
                 type="text"
-                placeholder="act number"
+                placeholder="scene number"
                 name="number" value={this.state.number} onChange={this.handleChange} />
             </Col>
           </FormGroup>
@@ -74,18 +74,18 @@ class ActForm extends Component {
   }
 }
 
-ActForm.defaultProps = {
-  act: {
+SceneForm.defaultProps = {
+  scene: {
     number: '',
     summary: ''
   }
 }
 
-ActForm.propTypes = {
-  act: PropTypes.object,
+SceneForm.propTypes = {
+  scene: PropTypes.object,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
+  act_id: PropTypes.number.isRequired,
 }
 
-export default ActForm
+export default SceneForm

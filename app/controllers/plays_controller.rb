@@ -1,24 +1,30 @@
 class PlaysController < ApiController
-  before_action :set_author
+  before_action :set_author, only: %i[index, create]
   before_action :set_play, only: %i[show update destroy]
   # GET /plays
   def index
     if @author
-      json_response(@author.plays)
+      @author.plays.as_json(only: %i[id title])
     else
-      json_response(Play.all)
+      Play.all.as_json(only: %i[id title])
     end
   end
 
   # GET /plays/1
   def show
-    json_response(@play.as_json(include: %i[author acts characters]))
+    render json: @play.as_json(include: [:author, :characters, acts: { include: {scenes: { include: :french_scenes } }} ])
+    # json_response(@play.as_json(include: [:acts, :author, :characters]))
   end
 
   # POST /plays
   def create
-    @author.plays.create!(play_params)
-    json_response(@author, :created)
+    @play = Play.new(play_params)
+
+    if @play.save
+      render json: @play, status: :created, location: @author
+    else
+      render json: @play.errors, status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /plays/1
@@ -42,7 +48,11 @@ class PlaysController < ApiController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_author
-    @author = Author.find(params[:author_id]) if params[:author_id]
+    if params[:play][:author_id]
+      @author = Author.find(params[:play][:author_id])
+    elsif params[:author_id]
+      Author.find(params[:author_id])
+    end
   end
 
   def set_play
@@ -56,6 +66,6 @@ class PlaysController < ApiController
 
   # Only allow a trusted parameter "white list" through.
   def play_params
-    params.require(:play).permit(:title, :date, :genre)
+    params.require(:play).permit(:author_id, :title, :date, :genre)
   end
 end

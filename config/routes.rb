@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   scope 'api' do
@@ -17,10 +18,18 @@ Rails.application.routes.draw do
       collection do
         get :play_titles
       end
-      resources :acts
+      resources :acts do
+        resources :scenes
+      end
       resources :characters
     end
-    resources :acts
+    resources :acts do
+      resources :scenes
+    end
     resources :characters
+    resources :scenes do
+      resources :french_scenes
+    end
+    resources :french_scenes
   end
 end

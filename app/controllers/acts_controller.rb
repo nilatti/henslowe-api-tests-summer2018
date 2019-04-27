@@ -4,17 +4,17 @@ class ActsController < ApiController
   # GET /acts
   def index
     if @play
-      @acts = Act.where(play_id: @play.id).order('act_number')
+      @acts = Act.where(play_id: @play.id).order('number')
     else
       @acts = Act.all
     end
 
-    render json: @acts.to_json
+    render json: @acts.to_json(include: %i[scenes])
   end
 
   # GET /acts/1
   def show
-    render json: @act.to_json
+    json_response(@act.as_json(include: %i[scenes]))
   end
 
   # POST /acts
@@ -22,7 +22,7 @@ class ActsController < ApiController
     @act = Act.new(act_params)
 
     if @act.save
-      render json: @act, status: :created, location: @play
+      render json: @act.to_json(include: :scenes), status: :created, location: @play
     else
       render json: @act.errors, status: :unprocessable_entity
     end
@@ -56,7 +56,7 @@ class ActsController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def act_params
-      params.require(:act).permit(:act_number, :end_page, :play_id, :start_page, :summary,)
+      params.require(:act).permit(:number, :end_page, :play_id, :start_page, :summary)
     end
 
 end

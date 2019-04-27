@@ -18,15 +18,15 @@ class AuthorForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      birthdate: moment(this.props.birthdate),
-      deathdate: '',
-      deathDateVisible: this.props.deathdate ? true : false,
-      first_name: this.props.first_name || '',
-      gender: this.props.gender || '',
-      last_name: this.props.last_name || '',
-      middle_name: this.props.middle_name || '',
-      nationality: this.props.nationality || '',
-      plays: this.props.plays,
+      birthdate: moment(this.props.author.birthdate),
+      deathdate: moment(this.props.author.birthdate),
+      deathDateVisible: this.props.author.deathdate ? true : false,
+      first_name: this.props.author.first_name || '',
+      gender: this.props.author.gender || '',
+      last_name: this.props.author.last_name || '',
+      middle_name: this.props.author.middle_name || '',
+      nationality: this.props.author.nationality || '',
+      plays: this.props.author.plays,
     }
   }
 
@@ -54,7 +54,7 @@ class AuthorForm extends Component {
   handleSubmit = (event) => {
     event.preventDefault()
     this.props.onFormSubmit({
-      id: this.props.id,
+      id: this.props.author.id,
       first_name: this.state.first_name,
       middle_name: this.state.middle_name,
       last_name: this.state.last_name,
@@ -168,18 +168,23 @@ class AuthorForm extends Component {
   }
 }
 
+AuthorForm.defaultProps = {
+  author: {
+    birthdate: moment(),
+    id: '',
+    first_name: '',
+    gender: '',
+    last_name: '',
+    middle_name: '',
+    nationality: '',
+    plays: [],
+  }
+}
+
 AuthorForm.propTypes = {
+  author: PropTypes.object,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  birthdate: PropTypes.string,
-  deathdate: PropTypes.string,
-  deathDateVisible: PropTypes.bool,
-  first_name: PropTypes.string,
-  gender: PropTypes.string,
-  last_name: PropTypes.string,
-  middle_name: PropTypes.string,
-  nationality: PropTypes.string,
-  plays: PropTypes.array,
 }
 
 export default AuthorForm

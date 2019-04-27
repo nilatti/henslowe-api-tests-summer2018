@@ -10,9 +10,7 @@ class AuthorsController < ApiController
 
   # GET /authors/1
   def show
-    # @author.as_json(include: [:plays])
-    json_response(@author.as_json(include: [:plays])) # how to include plays?
-    # render json: @author.to_json(include: :plays), location: @author
+    json_response(@author.as_json(include: [:plays]))
   end
 
   # POST /authors

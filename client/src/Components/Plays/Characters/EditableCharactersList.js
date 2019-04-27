@@ -7,18 +7,14 @@ import {
   Glyphicon,
   Row
 } from 'react-bootstrap'
-import {
-  BrowserRouter as Switch,
-  Router,
-  Route
-} from 'react-router-dom'
+
 import {
   Link
 } from "react-router-relative-link"
 
-import EditableAct from './EditableAct'
+import EditableCharacter from './EditableCharacter'
 
-class EditableActsList extends Component {
+class EditableCharactersList extends Component {
 
   constructor(props) {
     super(props)
@@ -46,9 +42,9 @@ class EditableActsList extends Component {
 
   render() {
     const play_id = this.props.play_id
-    const acts = this.props.acts.map((act) => (
-      <li key={act.id}>
-        <Link to={`../${play_id}/acts/${act.id}`}>{act.act_number}</Link> <span
+    const acts = this.props.acts.map((character) => (
+      <li key={character.id}>
+        <Link to={`../${play_id}/acts/${character.id}`}>{character.number}</Link> <span
           className='right floated edit icon'
           onClick={this.props.handleEditClick}
         >
@@ -56,8 +52,7 @@ class EditableActsList extends Component {
         </span>
         <span
           className='right floated trash icon'
-          actId="a string of things"
-          onClick={() => this.handleDeleteClick(act.id)}
+          onClick={() => this.handleDeleteClick(character.id)}
         >
           <Glyphicon glyph="glyphicon glyphicon-trash" />
         </span>
@@ -78,11 +73,11 @@ class EditableActsList extends Component {
   }
 }
 
-EditableActsList.propTypes = {
+EditableCharactersList.propTypes = {
   acts: PropTypes.array.isRequired,
   play_id: PropTypes.number.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired
 }
 
-export default EditableActsList
+export default EditableCharactersList

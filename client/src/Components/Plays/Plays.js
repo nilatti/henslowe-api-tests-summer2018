@@ -13,7 +13,6 @@ import {
 
 import {
   createPlay,
-  deletePlay
 } from '../../api/plays'
 import PlaysList from './PlaysList'
 import EditablePlay from './EditablePlay'
@@ -33,26 +32,8 @@ class Plays extends Component {
     }
   }
 
-  async deletePlay(playId) {
-    const response = await deletePlay(playId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting Play'
-      })
-    } else {
-      this.setState({
-        plays: this.state.plays.filter(play =>
-          play.id != playId
-        )
-      })
-    }
-  }
-
   handleCreateFormSubmit = (play) => {
     this.createPlay(play)
-  }
-  handleDeleteClick = (playId) => {
-    this.deletePlay(playId)
   }
 
   render() {
@@ -63,13 +44,12 @@ class Plays extends Component {
             <h2><Link to='/plays'>Plays</Link></h2>
             <hr />
               <Switch>
-              <Route path='/plays/new' render={(props) => <NewPlay {...props} onFormSubmit={this.handleCreateFormSubmit}/> } />
+              <Route path='/plays/new' render={(props) => <NewPlay {...props} onFormSubmit={this.handleCreateFormSubmit} /> } />
               <Route
                 path={`/plays/:playId`}
                 render={(props) => (
                   <EditablePlay
                     {...props}
-                    onDeleteClick={this.handleDeleteClick}
                   />
                 )}
               />

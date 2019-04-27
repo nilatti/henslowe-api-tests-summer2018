@@ -2,11 +2,10 @@ import API from './api'
 
 async function createCharacter(playId, character) {
   return API.post(
-    `plays/${playId}/characters`,
-      {
-        character
-      }
-    )
+    `plays/${playId}/characters`, {
+      character
+    }
+  )
 }
 
 async function deleteCharacter(characterId) {
@@ -22,12 +21,15 @@ async function getCharacters(playId) {
 }
 
 async function updateServerCharacter(character) {
-  return API.put(`characters/${character.id}`,
-    {
-      character: character
-    }
-  )
+  return API.put(`characters/${character.id}`, {
+    character: character
+  })
 }
 
-
-export { createCharacter, deleteCharacter, getCharacter, getCharacters, updateServerCharacter }
+export {
+  createCharacter,
+  deleteCharacter,
+  getCharacter,
+  getCharacters,
+  updateServerCharacter
+}

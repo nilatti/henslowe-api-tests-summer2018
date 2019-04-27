@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180904154617) do
+ActiveRecord::Schema.define(version: 20190427175401) do
 
   create_table "active_admin_comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "namespace"
@@ -77,6 +77,15 @@ ActiveRecord::Schema.define(version: 20180904154617) do
     t.index ["play_id"], name: "index_characters_on_play_id"
   end
 
+  create_table "french_scenes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "scene_id"
+    t.string "number"
+    t.text "summary"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scene_id"], name: "index_french_scenes_on_scene_id"
+  end
+
   create_table "plays", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "title"
     t.bigint "author_id"
@@ -85,6 +94,15 @@ ActiveRecord::Schema.define(version: 20180904154617) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_plays_on_author_id"
+  end
+
+  create_table "scenes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "number"
+    t.text "summary"
+    t.bigint "act_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["act_id"], name: "index_scenes_on_act_id"
   end
 
   create_table "theaters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -102,5 +120,6 @@ ActiveRecord::Schema.define(version: 20180904154617) do
   end
 
   add_foreign_key "acts", "plays"
+  add_foreign_key "french_scenes", "scenes"
   add_foreign_key "plays", "authors"
 end

@@ -3,21 +3,17 @@ class CharactersController < ApiController
   before_action :set_play
   # GET /acts
   def index
-    if @play
-      @characters = Character.where(play_id: @play.id).order('name')
-    else
-      @characters = Character.all.order('name')
-    end
+    @characters = Character.where(play_id: @play.id)
 
     render json: @characters.to_json
   end
 
-  # GET /characters/1
+  # GET /acts/1
   def show
     render json: @character.to_json
   end
 
-  # POST /characters
+  # POST /acts
   def create
     @character = Character.new(character_params)
 
@@ -28,7 +24,7 @@ class CharactersController < ApiController
     end
   end
 
-  # PATCH/PUT /characters/1
+  # PATCH/PUT /acts/1
   def update
     if @character.update(character_params)
       render json: @character
@@ -37,13 +33,13 @@ class CharactersController < ApiController
     end
   end
 
-  # DELETE /characters/1
+  # DELETE /acts/1
   def destroy
     @character.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between characterions.
+    # Use callbacks to share common setup or constraints between actions.
     def set_play
       if params[:play_id]
         @play = Play.find(params[:play_id])

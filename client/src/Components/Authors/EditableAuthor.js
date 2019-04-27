@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react'
+import React, {
+  Component
+} from 'react'
 
-import { getAuthor, updateServerAuthor } from '../../api/authors'
+import {
+  getAuthor,
+  updateServerAuthor
+} from '../../api/authors'
 
 import AuthorForm from './AuthorForm'
 import AuthorShow from './AuthorShow'
@@ -43,19 +48,25 @@ class EditableAuthor extends Component {
     this.closeForm()
   }
 
-  async loadAuthorFromServer (authorId) {
+  async loadAuthorFromServer(authorId) {
     const response = await getAuthor(authorId)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error fetching author' })
+      this.setState({
+        errorStatus: 'Error fetching author'
+      })
     } else {
-      this.setState({ author: response.data })
+      this.setState({
+        author: response.data
+      })
     }
   }
 
-  async updateAuthorOnServer (author) {
+  async updateAuthorOnServer(author) {
     const response = await updateServerAuthor(author)
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error updating author'})
+      this.setState({
+        errorStatus: 'Error updating author'
+      })
     } else {
       this.setState({
         author: response.data
@@ -77,10 +88,12 @@ class EditableAuthor extends Component {
   }
 
   openForm = () => {
-    this.setState({ editFormOpen: true })
+    this.setState({
+      editFormOpen: true
+    })
   }
 
-  render () {
+  render() {
     if (this.state.author === null) {
       return (
         <div>Loading!</div>
@@ -89,33 +102,17 @@ class EditableAuthor extends Component {
     if (this.state.editFormOpen) {
       return (
         <AuthorForm
-          id={this.state.author.id}
-          first_name={this.state.author.first_name}
-          middle_name={this.state.author.middle_name}
-          last_name={this.state.author.last_name}
-          birthdate={this.state.author.birthdate}
-          deathdate={this.state.author.deathdate}
-          nationality={this.state.author.nationality}
-          gender={this.state.author.gender}
-          plays={this.state.author.plays}
+          author={this.state.author}
           onFormSubmit={this.handleSubmit}
           onFormClose={this.handleFormClose}
           isOpen={true}
         />
       )
     } else {
-      return(
+      return (
         <AuthorShow
+        author={this.state.author}
         key={this.state.author.id}
-        id={this.state.author.id}
-        first_name={this.state.author.first_name}
-        middle_name={this.state.author.middle_name}
-        last_name={this.state.author.last_name}
-        birthdate={this.state.author.birthdate}
-        deathdate={this.state.author.deathdate}
-        nationality={this.state.author.nationality}
-        gender={this.state.author.gender}
-        plays={this.state.author.plays}
         onEditClick={this.handleEditClick}
         onDeleteClick={this.props.onDeleteClick}
         />

@@ -1,28 +1,62 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react'
-import { Glyphicon, Row, Col } from 'react-bootstrap'
-import { BrowserRouter as Switch, Router, Route, Link, Redirect } from 'react-router-dom'
+import React, {
+  Component
+} from 'react'
+import {
+  Glyphicon,
+  Row,
+  Col
+} from 'react-bootstrap'
+import {
+  BrowserRouter as Switch,
+  Router,
+  Route,
+  Link,
+  Redirect
+} from 'react-router-dom'
 
-import { deleteItem, getItem } from '../../../api/crud'
+import {
+  deleteItem,
+  getItem
+} from '../../../api/crud'
 
 import CharacterShow from './CharacterShow'
 import CharacterForm from './CharacterForm'
 
 class EditableCharacter extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       editFormOpen: false,
       character: null,
     }
   }
+  closeForm = () => {
+    this.setState({
+      editFormOpen: false
+    })
+  }
 
-  async loadCharacterFromServer (characterId) {
-    const response = await getItem(characterId, "character")
+  componentDidMount = () => {
+    this.loadCharacterFromServer(this.props.match.params.actId)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.character === null || prevProps.match.params.actId !== this.props.match.params.actId) {
+      this.loadCharacterFromServer(this.props.match.params.actId);
+    }
+  }
+
+  async loadCharacterFromServer(actId) {
+    const response = await getItem(actId, "character")
     if (response.status >= 400) {
-      this.setState({ errorStatus: 'Error fetching character' })
+      this.setState({
+        errorStatus: 'Error fetching character'
+      })
     } else {
-      this.setState({ character: response.data })
+      this.setState({
+        character: response.data
+      })
     }
   }
 
@@ -39,21 +73,6 @@ class EditableCharacter extends Component {
     return null;
   }
 
-  closeForm = () => {
-    console.log('inside close form');
-    this.setState({ editFormOpen: false });
-  }
-
-  componentDidMount = () => {
-      this.loadCharacterFromServer(this.props.match.params.characterId)
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.character === null || prevProps.match.params.characterId !== this.props.match.params.characterId) {
-      this.loadCharacterFromServer(this.props.match.params.characterId);
-    }
-  }
-
   onEditClick = () => {
     this.openForm()
   }
@@ -68,16 +87,17 @@ class EditableCharacter extends Component {
   }
 
   openForm = () => {
-    this.setState({ editFormOpen: true })
+    this.setState({
+      editFormOpen: true
+    })
   }
 
-  render () {
+  render() {
     if (this.state.editFormOpen) {
-      return(
+      return (
         <CharacterForm
           onFormClose={this.handleFormClose}
           onFormSubmit={this.handleSubmit}
-          play_id={this.props.play_id}
         />
       )
     }
@@ -98,8 +118,7 @@ class EditableCharacter extends Component {
 
 EditableCharacter.propTypes = {
   onDeleteClick: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
+  onFormSubmit: PropTypes.func.isRequired
 }
 
 export default EditableCharacter
