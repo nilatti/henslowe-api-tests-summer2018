@@ -95,7 +95,9 @@ RSpec.describe 'Authors API', type: :request do
 
   # Test suite for DELETE /authors/:id
   describe 'DELETE /authors/:id' do
-    before { delete "/api/authors/#{author_id}" }
+    before {
+      delete "/api/authors/#{author_id}"
+    }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

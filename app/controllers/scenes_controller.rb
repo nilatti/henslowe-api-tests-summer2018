@@ -4,7 +4,7 @@ class ScenesController < ApiController
 
   # GET /scenes
   def index
-    @scenes = Scene.all
+    @scenes = @act.scenes
 
     render json: @scenes
   end
@@ -43,7 +43,7 @@ class ScenesController < ApiController
     # Use callbacks to share common setup or constraints between actions.
     def set_act
       if params[:act_id]
-        @act = Act.find(params[:id])
+        @act = Act.find(params[:act_id])
       end
     end
 

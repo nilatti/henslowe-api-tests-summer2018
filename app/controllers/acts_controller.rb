@@ -9,12 +9,12 @@ class ActsController < ApiController
       @acts = Act.all
     end
 
-    render json: @acts.to_json(include: %i[scenes])
+    render json: @acts.as_json(include: %i[scenes])
   end
 
   # GET /acts/1
   def show
-    json_response(@act.as_json(include: %i[scenes]))
+    render json: @act.as_json(include: {scenes: { include: :french_scenes } })
   end
 
   # POST /acts
@@ -22,7 +22,7 @@ class ActsController < ApiController
     @act = Act.new(act_params)
 
     if @act.save
-      render json: @act.to_json(include: :scenes), status: :created, location: @play
+      render json: @act.as_json(include: :scenes), status: :created, location: @play
     else
       render json: @act.errors, status: :unprocessable_entity
     end

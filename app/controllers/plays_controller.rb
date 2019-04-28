@@ -4,9 +4,9 @@ class PlaysController < ApiController
   # GET /plays
   def index
     if @author
-      @author.plays.as_json(only: %i[id title])
+      json_response(@author.plays.as_json(only: %i[id title]))
     else
-      Play.all.as_json(only: %i[id title])
+      json_response(Play.all.as_json(only: %i[id title]))
     end
   end
 
@@ -41,7 +41,7 @@ class PlaysController < ApiController
 
   def play_titles
     @plays = Play.all
-    render json: @plays.to_json(only: %i[id title])
+    render json: @plays.as_json(only: %i[id title])
   end
 
   private
@@ -51,7 +51,7 @@ class PlaysController < ApiController
     if params[:play][:author_id]
       @author = Author.find(params[:play][:author_id])
     elsif params[:author_id]
-      Author.find(params[:author_id])
+      @author = Author.find(params[:author_id])
     end
   end
 

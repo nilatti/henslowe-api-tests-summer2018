@@ -35,7 +35,7 @@ class AuthorsController < ApiController
 
   def author_names
     @authors = Author.all
-    render json: @authors.to_json(only: %i[id first_name last_name])
+    render json: @authors.as_json(only: %i[id first_name last_name])
   end
 
   private

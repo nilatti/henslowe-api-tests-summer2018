@@ -5,12 +5,12 @@ class CharactersController < ApiController
   def index
     @characters = Character.where(play_id: @play.id)
 
-    render json: @characters.to_json
+    render json: @characters.as_json
   end
 
   # GET /acts/1
   def show
-    render json: @character.to_json
+    render json: @character.as_json
   end
 
   # POST /acts

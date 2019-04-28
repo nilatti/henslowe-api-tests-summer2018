@@ -4,7 +4,7 @@ class FrenchScenesController < ApiController
 
   # GET /scenes
   def index
-    @french_scenes = FrenchScene.all
+    @french_scenes = @scene.french_scenes
 
     render json: @french_scenes
   end
@@ -43,7 +43,7 @@ class FrenchScenesController < ApiController
     # Use callbacks to share common setup or constraints between actions.
     def set_scene
       if params[:scene_id]
-        @scene = Scene.find(params[:id])
+        @scene = Scene.find(params[:scene_id])
       end
     end
 

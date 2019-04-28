@@ -10,9 +10,7 @@ class TheatersController < ApiController
 
   # GET /theaters/1
   def show
-    # @theater.as_json(include: [:plays])
-    json_response(@theater) # how to include plays?
-    # render json: @theater.to_json(include: :plays), location: @theater
+  json_response(@theater) # how to include plays?
   end
 
   # POST /theaters
@@ -35,7 +33,7 @@ class TheatersController < ApiController
 
   def theater_names
     @theaters = Theater.all
-    render json: @theaters.to_json(only: %i[id name])
+    render json: @theaters.as_json(only: %i[id name])
   end
 
   private

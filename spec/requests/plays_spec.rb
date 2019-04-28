@@ -10,7 +10,9 @@ RSpec.describe 'Plays API' do
 
   # Test suite for GET /authors/:author_id/plays
   describe 'GET api/authors/:author_id/plays' do
-    before { get "/api/authors/#{author_id}/plays" }
+    before {
+      get "/api/authors/#{author_id}/plays", params: {author_id: author_id}
+    }
 
     context 'when author exists' do
       it 'returns status code 200' do
@@ -21,31 +23,26 @@ RSpec.describe 'Plays API' do
         expect(json.size).to eq(8)
       end
     end
-
-    context 'when author does not exist' do
-      let(:author_id) { 0 }
-
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
-
-      it 'returns a not found message' do
-        expect(response.body).to match(/Couldn't find Author/)
-      end
-    end
   end
 
   # Test suite for GET /authors/:author_id/plays/:id
   describe 'GET /authors/:author_id/plays/:id' do
     before { get "/api/authors/#{author_id}/plays/#{id}" }
 
-    context 'when author play exists' do
+    context 'when play exists' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
 
       it 'returns the play' do
         expect(json['id']).to eq(id)
+      end
+
+      it 'has acts, scenes, characters, and french scenes' do
+        expect(json['characters'].size).to eq(3)
+        expect(json['acts'].size).to eq(3)
+        expect(json['acts'][0]['scenes'].size).to eq(3)
+        expect(json['acts'][0]['scenes'][0]['french_scenes'].size).to eq(3)
       end
     end
 
@@ -64,7 +61,7 @@ RSpec.describe 'Plays API' do
 
   # Test suite for PUT /authors/:author_id/plays
   describe 'POST /authors/:author_id/plays' do
-    let(:valid_attributes) { { play: { title: 'Give Us Good' } } }
+    let(:valid_attributes) { { play: { title: 'Give Us Good', author_id: author_id } } }
 
     context 'when request attributes are valid' do
       before { post "/api/authors/#{author_id}/plays", params: valid_attributes }
@@ -82,7 +79,8 @@ RSpec.describe 'Plays API' do
       end
 
       it 'returns a failure message' do
-        expect(response.body).to match(/Validation failed: Title can't be blank/)
+        expected_response = "{\"author\":[\"must exist\"],\"title\":[\"can't be blank\"]}"
+        expect(response.body).to match(expected_response)
       end
     end
   end

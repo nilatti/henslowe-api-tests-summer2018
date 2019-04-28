@@ -29,6 +29,8 @@ gem 'activeadmin'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
+gem 'rubocop'
+gem 'rubocop-performance'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.5'
