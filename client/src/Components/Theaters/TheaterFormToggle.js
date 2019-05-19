@@ -4,7 +4,6 @@ import React, {
 } from 'react'
 import {
   Button,
-  Glyphicon
 } from 'react-bootstrap'
 
 import TheaterForm from './TheaterForm.js'
@@ -52,10 +51,10 @@ class TheaterFormToggle extends Component { //opens form for create action
     } else {
       return (
         <div>
-          <Button bsStyle="info"
+          <Button variant="info"
             onClick={this.handleFormOpen}
           >
-            <Glyphicon glyph='glyphicon glyphicon-plus' /> Add New Theater
+            Add New Theater
           </Button>
         </div>
       );

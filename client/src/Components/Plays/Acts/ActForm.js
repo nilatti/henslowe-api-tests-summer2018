@@ -5,19 +5,19 @@ import React, {
 import {
   Button,
   Col,
-  ControlLabel,
   Form,
-  FormControl,
-  FormGroup
 } from 'react-bootstrap'
 
 class ActForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      end_page: this.props.act.end_page,
       number: this.props.act.number,
       play_id: this.props.play_id,
+      start_page: this.props.act.start_page,
       summary: this.props.act.summary,
+      validated: false,
     }
   }
 
@@ -28,44 +28,105 @@ class ActForm extends Component {
   }
 
   handleSubmit = (event) => {
-    event.preventDefault()
-    this.props.onFormSubmit({
-      number: this.state.number,
-      id: this.props.act.id,
-      play_id: this.state.play_id,
-      summary: this.state.summary,
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      this.processSubmit()
+    }
+    this.setState({
+      validated: true
     })
   }
 
+  processSubmit = () => {
+    this.props.onFormSubmit({
+      end_page: this.state.end_page,
+      id: this.props.act.id,
+      number: this.state.number,
+      play_id: this.state.play_id,
+      start_page: this.state.start_page,
+      summary: this.state.summary,
+    })
+
+  }
+
   render() {
+    const {
+      validated
+    } = this.state
     return (
-      <Col md={12}>
-        <Form horizontal>
-          <FormGroup controlId="number">
-            <Col componentClass={ControlLabel} md={2}>
+      <Col md={{ span: 8, offset: 2 }}>
+        <Form
+        noValidate
+        onSubmit={e => this.handleSubmit(e)}
+        validated={validated}
+        >
+        <Form.Row>
+          <Col>
+          <Form.Group controlId="number">
+            <Form.Label>
               Act Number
-            </Col>
-            <Col md={5}>
-              <FormControl
-                type="text"
+            </Form.Label>
+              <Form.Control
+                type="number"
                 placeholder="act number"
-                name="number" value={this.state.number} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="summary">
-            <Col componentClass={ControlLabel} md={2}>
-              Summary
-            </Col>
-            <Col md={5}>
-              <FormControl
-                componentClass="textarea"
-                rows="10"
-                placeholder="summary"
-                name="summary" value={this.state.summary} onChange={this.handleChange}
+                name="number"
+                onChange={this.handleChange}
+                pattern="[0-9]+"
+                required
+                value={this.state.number}
               />
-            </Col>
-          </FormGroup>
-          <Button type="submit" bsStyle="primary" onClick={this.handleSubmit} block>Submit</Button>
+              <Form.Control.Feedback type="invalid">
+                Acts require numbers.
+              </Form.Control.Feedback>
+          </Form.Group>
+          </Col>
+          <Col>
+
+              <Form.Group controlId="start_page">
+                  <Form.Label>
+                    Start Page
+                  </Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="starting page number"
+                      name="start_page"
+                      onChange={this.handleChange}
+                      pattern="[0-9]+"
+                      value={this.state.start_page}
+                    />
+                </Form.Group>
+              </Col>
+              <Col>
+              <Form.Group controlId="end_page">
+                  <Form.Label>
+                    End Page
+                  </Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="ending page number"
+                      name="end_page"
+                      onChange={this.handleChange}
+                      pattern="[0-9]+"
+                      value={this.state.end_page}
+                    />
+                </Form.Group>
+              </Col>
+          </Form.Row>
+          <Form.Group controlId="summary">
+            <Form.Label>
+              Summary
+            </Form.Label>
+            <Form.Control
+              as="textarea"
+              rows="10"
+              placeholder="summary"
+              name="summary" value={this.state.summary} onChange={this.handleChange}
+            />
+          </Form.Group>
+          <Button type="submit" variant="primary" block>Submit</Button>
           <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
         </Form>
         <hr />

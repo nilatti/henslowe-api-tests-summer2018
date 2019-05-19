@@ -29,7 +29,6 @@ class AuthorsList extends Component {
       this.setState({
         authors: response.data
       })
-      console.log(response.data)
     }
   }
 

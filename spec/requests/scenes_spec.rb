@@ -14,7 +14,7 @@ RSpec.describe 'Scenes API' do
       get "/api/acts/#{act_id}/scenes", params: {act_id: act_id}
     }
 
-    context 'when act exists' do
+    context 'when scene exists' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end

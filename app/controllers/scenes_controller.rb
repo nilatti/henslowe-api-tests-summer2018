@@ -19,7 +19,7 @@ class ScenesController < ApiController
     @scene = Scene.new(scene_params)
 
     if @scene.save
-      render json: @scene, status: :created, location: @scene
+      render json: @scene.as_json(include: :french_scenes), status: :created, location: @scene
     else
       render json: @scene.errors, status: :unprocessable_entity
     end
@@ -53,6 +53,6 @@ class ScenesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def scene_params
-      params.require(:scene).permit(:act_id, :number, :summary)
+      params.require(:scene).permit(:act_id, :end_page, :number, :start_page, :summary)
     end
 end

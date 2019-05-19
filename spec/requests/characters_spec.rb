@@ -110,7 +110,7 @@ RSpec.describe 'Characters API' do
   # Test suite for DELETE /characters/:id
   describe 'DELETE /characters/:id' do
     before { delete "/api/plays/#{play.id}/characters/#{id}" }
-  
+
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
     end

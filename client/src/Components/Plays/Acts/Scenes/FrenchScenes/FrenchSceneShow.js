@@ -4,7 +4,6 @@ import React, {
 } from 'react'
 import {
   Col,
-  Glyphicon,
   Row,
   Tab,
   Tabs,
@@ -30,16 +29,24 @@ class FrenchSceneShow extends Component {
               className='right floated edit icon'
               onClick={this.props.handleEditClick}
             >
-              <Glyphicon glyph="pencil" />
+              <i className="fas fa-pencil-alt"></i>
             </span>
             <span
               className='right floated trash icon'
               onClick={this.handleDeleteClick}
             >
-              <Glyphicon glyph="glyphicon glyphicon-trash" />
+              <i className="fas fa-trash-alt"></i>
             </span>
           </Col>
         </Row>
+        {
+          this.props.french_scene.start_page ?
+            <p>
+              Pages {this.props.french_scene.start_page} - {this.props.french_scene.end_page}
+            </p>
+          :
+          <br />
+        }
       </div>
     )
   }

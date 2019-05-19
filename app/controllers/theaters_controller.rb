@@ -10,7 +10,7 @@ class TheatersController < ApiController
 
   # GET /theaters/1
   def show
-  json_response(@theater) # how to include plays?
+    json_response(@theater.as_json(include: [:spaces]))
   end
 
   # POST /theaters
@@ -21,8 +21,10 @@ class TheatersController < ApiController
 
   # PATCH/PUT /theaters/1
   def update
+    puts "RECEIVED UPDATE"
+    puts theater_params
     @theater.update(theater_params)
-    json_response(@theater)
+    json_response(@theater.as_json(include: [:spaces]))
   end
 
   # DELETE /theaters/1
@@ -40,7 +42,7 @@ class TheatersController < ApiController
 
   # Only allow a trusted parameter "white list" through.
   def theater_params
-    params.require(:theater).permit(:calendar_url, :city, :id, :mission_statement, :name, :phone_number, :state, :street_address, :website, :zip)
+    params.require(:theater).permit(:calendar_url, :city, :id, :mission_statement, :name, :phone_number, :state, :street_address, :website, :zip, space_ids: [])
   end
 
   # Use callbacks to share common setup or constraints between actions.

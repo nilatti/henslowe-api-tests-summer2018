@@ -1,22 +1,30 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react'
-import { Button, Glyphicon } from 'react-bootstrap'
+import React, {
+  Component
+} from 'react'
+import {
+  Button
+} from 'react-bootstrap'
 
 import AuthorForm from './AuthorForm.js'
 
 class AuthorFormToggle extends Component { //opens form for create action
-  constructor (props) {
-    super (props)
+  constructor(props) {
+    super(props)
     this.state = {
       isOpen: this.props.isOpen,
     }
   }
 
   handleFormOpen = () => {
-    this.setState({ isOpen: true })
+    this.setState({
+      isOpen: true
+    })
   }
   handleFormClose = () => {
-    this.setState({ isOpen: false })
+    this.setState({
+      isOpen: false
+    })
   }
   handleFormSubmit = (author) => {
     this.handleFormClose()
@@ -43,10 +51,10 @@ class AuthorFormToggle extends Component { //opens form for create action
     } else {
       return (
         <div>
-          <Button bsStyle="info"
+          <Button variant="info"
             onClick={this.handleFormOpen}
           >
-            <Glyphicon glyph='glyphicon glyphicon-plus' /> Add New Author
+            Add New Author
           </Button>
         </div>
       );

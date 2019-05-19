@@ -101,15 +101,7 @@ class EditableTheater extends Component {
     if (this.state.editFormOpen) {
       return (
         <TheaterForm
-          id={this.state.theater.id}
-          city={this.state.theater.city}
-          mission_statement={this.state.theater.mission_statement}
-          name={this.state.theater.name}
-          phone_number={this.state.theater.phone_number}
-          state={this.state.theater.state}
-          street_address={this.state.theater.street_address}
-          website={this.state.theater.website}
-          zip={this.state.theater.zip}
+          theater={this.state.theater}
           onFormSubmit={this.handleSubmit}
           onFormClose={this.handleFormClose}
           isOpen={true}
@@ -118,18 +110,10 @@ class EditableTheater extends Component {
     } else {
       return (
         <TheaterShow
-        key={this.state.theater.id}
-        id={this.state.theater.id}
-        city={this.state.theater.city}
-        mission_statement={this.state.theater.mission_statement}
-        name={this.state.theater.name}
-        phone_number={this.state.theater.phone_number}
-        state={this.state.theater.state}
-        street_address={this.state.theater.street_address}
-        website={this.state.theater.website}
-        zip={this.state.theater.zip}
+        theater={this.state.theater}
         onEditClick={this.handleEditClick}
         onDeleteClick={this.props.onDeleteClick}
+        onFormSubmit={this.handleSubmit}
         />
       )
     }

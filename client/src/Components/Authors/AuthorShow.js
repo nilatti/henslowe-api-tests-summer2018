@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import {
-  Glyphicon,
   Row,
   Col
 } from 'react-bootstrap'
@@ -43,7 +42,7 @@ class AuthorShow extends Component {
   }
 
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.id)
+    this.props.onDeleteClick(this.props.author.id)
   }
 
   render() {
@@ -67,13 +66,13 @@ class AuthorShow extends Component {
             className='right floated edit icon'
             onClick={this.props.onEditClick}
           >
-            <Glyphicon glyph="pencil" />
+            <i className="fas fa-pencil-alt"></i>
           </span>
           <span
             className='right floated trash icon'
             onClick={this.handleDeleteClick}
           >
-            <Glyphicon glyph="glyphicon glyphicon-trash" />
+            <i className="fas fa-trash-alt"></i>
           </span>
         </Col>
         <Col md={9}>

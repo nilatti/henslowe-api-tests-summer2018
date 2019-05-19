@@ -6,10 +6,7 @@ import React, {
 import {
   Button,
   Col,
-  ControlLabel,
-  Form,
-  FormControl,
-  FormGroup
+  Form
 } from 'react-bootstrap'
 import {
   Typeahead
@@ -32,6 +29,7 @@ class PlayForm extends Component {
       date: moment(this.props.play.date) || '',
       genre: this.props.play.genre || '',
       title: this.props.play.title || '',
+      validated: false,
     }
   }
 
@@ -68,7 +66,19 @@ class PlayForm extends Component {
   }
 
   handleSubmit = (event) => {
-    event.preventDefault()
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      this.processSubmit()
+    }
+    this.setState({
+      validated: true
+    })
+  }
+
+  processSubmit = () => {
     this.props.onFormSubmit({
       author_id: this.state.author_id,
       date: this.state.date,
@@ -105,8 +115,11 @@ class PlayForm extends Component {
   }
 
   render() {
+    const {
+      validated
+    } = this.state
     if (!this.state.authors) {
-      return <div>Loading</div>
+      return <div>Loading authors</div>
     }
 
     var authors = this.state.authors.map((author) => ({
@@ -114,28 +127,34 @@ class PlayForm extends Component {
       label: `${author.first_name} ${author.last_name}`
     }))
     return (
-      <Col md={12} >
-          <Form horizontal>
-				    <FormGroup controlId="title">
-      				<Col componentClass={ControlLabel} md={2}>
+      <Col md={{ span: 8, offset: 2 }}>
+        <Form
+          noValidate
+          onSubmit={e => this.handleSubmit(e)}
+          validated={validated}
+        >
+				    <Form.Group controlId="title">
+      				<Form.Label>
                 Title
-              </Col>
-              <Col md={5}>
-      				    <FormControl
-                    type="text"
-      				      placeholder="title"
-      				      name="title"
-      				      value={this.state.title}
-      				      onChange={this.handleChange}
-      				    />
-              </Col>
-            </FormGroup>
+              </Form.Label>
+  				    <Form.Control
+                type="text"
+  				      placeholder="title"
+  				      name="title"
+                onChange={this.handleChange}
+                required
+  				      value={this.state.title}
+  				    />
+              <Form.Control.Feedback type="invalid">
+                Title is required
+              </Form.Control.Feedback>
+            </Form.Group>
             { !this.props.isOnAuthorPage
               ?
-              <FormGroup>
-                <ControlLabel>
+              <Form.Group>
+                <Form.Label>
   								Author:
-  							</ControlLabel>
+  							</Form.Label>
                 <Typeahead
                   allowNew
                   newSelectionPrefix="Add a new item: "
@@ -147,47 +166,43 @@ class PlayForm extends Component {
                   placeholder="Choose author..."
                   defaultSelected={[this.state.author_name]}
                   />
-  						</FormGroup>
+  						</Form.Group>
               :
               <br/>
             }
 
-						<FormGroup controlId="genre">
-							<Col componentClass={ControlLabel} md={2}>
+						<Form.Group controlId="genre">
+							<Form.Label>
 								Genre
-							</Col>
-							<Col md={5}>
-								<FormControl
-									type="text"
-									placeholder="genre"
-									name="genre"
-									value={this.state.genre}
-									onChange={this.handleChange}
-								/>
-							</Col>
-						</FormGroup>
-						<FormGroup>
-							<Col componentClass={ControlLabel}
-								md={2}>
+							</Form.Label>
+							<Form.Control
+								type="text"
+								placeholder="genre"
+								name="genre"
+								value={this.state.genre}
+								onChange={this.handleChange}
+							/>
+						</Form.Group>
+						<Form.Group>
+							<Form.Label>
 								Publication or first performance date
-							</Col>
-							<Col md={5}>
-								<DatePicker
-									name="date"
-									selected={this.state.date}
-									onChange={this.handleDateChange}
-								/>
-							</Col>
-						</FormGroup>
+							</Form.Label><br />
+							<DatePicker
+                className="form-control"
+                name="date"
+								selected={this.state.date}
+								onChange={this.handleDateChange}
+							/>
+						</Form.Group>
 						<Button
 							type="submit"
-							bsStyle="primary"
-							onClick={this.handleSubmit}
+							variant="primary"
 						>
 							Submit
 						</Button>
 						<Button
 							type="button"
+              variant="outline-primary"
 							onClick={this.props.onFormClose}
 						>
 							Cancel

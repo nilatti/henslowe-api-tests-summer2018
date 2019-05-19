@@ -29,7 +29,7 @@ ShallowWrapper {
       "bsClass": "row",
       "children": <Col
         bsClass="col"
-        componentClass="div"
+        as="div"
         md={12}
 >
         <div

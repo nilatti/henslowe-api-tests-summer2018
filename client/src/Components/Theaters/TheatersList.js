@@ -28,7 +28,6 @@ class TheatersList extends Component {
       this.setState({
         theaters: response.data
       })
-      console.log(response.data)
     }
   }
 

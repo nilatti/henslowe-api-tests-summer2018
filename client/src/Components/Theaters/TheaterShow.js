@@ -1,73 +1,101 @@
 import PropTypes from 'prop-types';
 import {
-  Glyphicon,
+  Col,
   Row,
-  Col
+  Tab,
+  Tabs,
 } from 'react-bootstrap'
 import React, {
   Component
 } from 'react'
 
-class TheaterShow extends Component {
-  constructor(props) {
-    super(props)
-    console.log(this.props)
-    this.state = {
+import SpaceAgreementFormForTheatersToggle from '../SpaceAgreements/SpaceAgreementFormForTheatersToggle'
+import SpaceInfoTab from '../Spaces/SpaceInfoTab'
 
-    }
+import {
+  updateServerTheater
+} from '../../api/theaters.js'
+
+class TheaterShow extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.handleSelect = this.handleSelect.bind(this);
+
+    this.state = {
+      key: ''
+    };
   }
 
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.id)
   }
 
+  handleSelect(key) {
+    this.setState({
+      key
+    });
+  }
+
   render() {
+    let spaceTabs
+    if (this.props.theater.spaces[0]) {
+      spaceTabs = this.props.theater.spaces.map((space) =>
+        <Tab eventKey={`space-${space.id}`} title={space.name} key={`space-${space.id}`}>
+        <SpaceInfoTab space={space} />
+      </Tab>
+      )
+    } else {
+      spaceTabs = <div>No spaces found</div>
+    }
 
     return (
       <Col md={12}>
       <Row>
         <Col md={12} className="theater-profile">
-          <h2>{this.props.name}</h2>
-          <p><em>{this.props.mission_statement}</em></p>
+          <h2>{this.props.theater.name}</h2>
+          <p><em>{this.props.theater.mission_statement}</em></p>
           <p>
-          {this.props.street_address}<br />
-          {this.props.city}, {this.props.state}  {this.props.zip}<br />
-          {this.props.phone_number}<br />
-          <a href={'http://' + this.props.website} target="_blank">{this.props.website}</a>
+          {this.props.theater.street_address}<br />
+          {this.props.theater.city}, {this.props.theater.state}  {this.props.theater.zip}<br />
+          {this.props.theater.phone_number}<br />
+          <a href={'http://' + this.props.theater.website} target="_blank">{this.props.theater.website}</a>
           </p>
           <span
             className='right floated edit icon'
             onClick={this.props.onEditClick}
           >
-            <Glyphicon glyph="pencil" />
+            <i className="fas fa-pencil-alt"></i>
           </span>
           <span
             className='right floated trash icon'
             onClick={this.handleDeleteClick}
           >
-            <Glyphicon glyph="glyphicon glyphicon-trash" />
+            <i className="fas fa-trash-alt"></i>
           </span>
         </Col>
       </Row>
       <hr />
-      <div>
-        Lists of productions and users can go here eventually
-      </div>
+      <Row>
+        <h2>Spaces</h2>
+        </Row>
+        <Row>
+          <SpaceAgreementFormForTheatersToggle theater={this.props.theater} isOpen={false} onFormSubmit={this.props.onFormSubmit} />
+        </Row>
+
+          <Tabs
+          activeKey={this.state.key}
+          onSelect={this.handleSelect}
+          id="space-info-tabs"
+        >
+          {spaceTabs}
+        </Tabs>
       </Col>
     )
   }
 }
 
 TheaterShow.propTypes = {
-  city: PropTypes.string,
-  id: PropTypes.number.isRequired,
-  mission_statement: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  phone_number: PropTypes.string,
-  state: PropTypes.string,
-  street_address: PropTypes.string,
-  website: PropTypes.string,
-  zip: PropTypes.string,
+  theater: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   onEditClick: PropTypes.func.isRequired,
 }

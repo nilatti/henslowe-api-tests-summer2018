@@ -1,5 +1,6 @@
 class Play < ApplicationRecord
   belongs_to :author
+  belongs_to :production, optional: true
 
   default_scope {order(:title)}
 

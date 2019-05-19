@@ -5,11 +5,10 @@ import React, {
 import {
   Button,
   Col,
-  ControlLabel,
   Form,
-  FormControl,
-  FormGroup
 } from 'react-bootstrap'
+
+import AddressForm from '../AddressForm'
 
 class TheaterForm extends Component {
   constructor(props) {
@@ -21,6 +20,7 @@ class TheaterForm extends Component {
       phone_number: this.props.phone_number || '',
       state: this.props.state || '',
       street_address: this.props.street_address || '',
+      validated: false,
       website: this.props.website || '',
       zip: this.props.zip || '',
     }
@@ -33,7 +33,19 @@ class TheaterForm extends Component {
   }
 
   handleSubmit = (event) => {
-    event.preventDefault()
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      this.processSubmit()
+    }
+    this.setState({
+      validated: true
+    })
+  }
+
+  processSubmit = () => {
     this.props.onFormSubmit({
       city: this.state.city,
       id: this.props.id,
@@ -48,103 +60,85 @@ class TheaterForm extends Component {
   }
 
   render() {
+    const {
+      validated
+    } = this.state
     // update states to be all 50 with outside ref
     // figure out why text area is small for mission statement.
     return (
-      <Col md={12}>
-        <Form horizontal>
-          <FormGroup controlId="name">
-            <Col componentClass={ControlLabel} md={2}>
+      <Col md = {
+        {
+          span: 8,
+          offset: 2
+        }
+      } >
+      <Form
+        noValidate
+        onSubmit={e => this.handleSubmit(e)}
+        validated={validated}
+      >
+          <Form.Group controlId="name">
+            <Form.Label>
               Name
-            </Col>
-            <Col md={5}>
-              <FormControl
+            </Form.Label>
+            <Form.Control
                 type="text"
                 placeholder="name"
-                name="name" value={this.state.name} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="website">
-            <Col componentClass={ControlLabel}  md={2}>
+                name="name"
+                onChange={this.handleChange}
+                required
+                value={this.state.name}
+              />
+              <Form.Control.Feedback type="invalid">
+                Name is required
+              </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="website">
+            <Form.Label>
               Website
-            </Col>
-            <Col md={5}>
-              <FormControl
+            </Form.Label>
+              <Form.Control
                 type="text"
                 placeholder="website"
-                name="website" value={this.state.website} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="streetAddress">
-            <Col componentClass={ControlLabel} md={2}>
-              Street Address
-            </Col>
-            <Col md={5}>
-              <FormControl
-                type="text"
-                placeholder="street address"
-                name="street_address" value={this.state.street_address} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="city">
-            <Col componentClass={ControlLabel}  md={2}>
-              City
-            </Col>
-            <Col md={5}>
-              <FormControl
-                type="text"
-                placeholder="city"
-                name="city" value={this.state.city} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="state">
-            <Col componentClass={ControlLabel}  md={2}>
-              State
-            </Col>
-            <Col md={5}>
-              <FormControl componentClass="select" name="state" value={this.state.state} onChange={this.handleChange}>
-                <option value="MI">Michigan</option>
-                <option value="VA">Virginia</option>
-                <option value="OH">Ohio</option>
-              </FormControl>
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="zip">
-            <Col componentClass={ControlLabel}  md={2}>
-              Zip Code
-            </Col>
-            <Col md={5}>
-              <FormControl
-                type="text"
-                placeholder="zip"
-                name="zip" value={this.state.zip} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="phoneNumber">
-            <Col componentClass={ControlLabel} md={2}>
+                name="website"
+                value={this.state.website}
+                onChange={this.handleChange}
+              />
+          </Form.Group>
+          <AddressForm
+            city={this.state.city}
+            onChange={this.handleChange}
+            state={this.state.state}
+            street_address={this.state.street_address}
+            zip={this.state.zip}
+          />
+          <Form.Group controlId="phoneNumber">
+            <Form.Label>
               Phone Number
-            </Col>
-            <Col md={5}>
-              <FormControl
-                type="text"
-                placeholder="phone number"
-                name="phone_number" value={this.state.phone_number} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="missionStatement">
-            <Col componentClass={ControlLabel}  md={2}>
+            </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="phone number"
+              name="phone_number"
+              value={this.state.phone_number}
+              onChange={this.handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="missionStatement">
+            <Form.Label>
               Mission Statement
-            </Col>
-            <Col md={5}>
-              <FormControl
-                as="textarea"
-                rows="30"
-                placeholder="mission statement"
-                name="mission_statement" value={this.state.mission_statement} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
+            </Form.Label>
+            <Form.Control
+              as="textarea"
+              rows="30"
+              placeholder="mission statement"
+              name="mission_statement"
+              value={this.state.mission_statement}
+              onChange={this.handleChange}
+            />
+          </Form.Group>
 
-          <Button type="submit" bsStyle="primary" onClick={this.handleSubmit} block>Submit</Button>
+          <Button type="submit" variant="primary" block>Submit</Button>
           <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
         </Form>
         <hr />

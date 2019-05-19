@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190427175401) do
+ActiveRecord::Schema.define(version: 20190519012400) do
 
   create_table "active_admin_comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "namespace"
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 20190427175401) do
   end
 
   create_table "acts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "act_number"
+    t.integer "number"
     t.bigint "play_id"
     t.text "summary"
     t.integer "start_page"
@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(version: 20190427175401) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "play_id"
+    t.string "xml_id"
     t.index ["play_id"], name: "index_characters_on_play_id"
   end
 
@@ -83,6 +84,8 @@ ActiveRecord::Schema.define(version: 20190427175401) do
     t.text "summary"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "end_page"
+    t.integer "start_page"
     t.index ["scene_id"], name: "index_french_scenes_on_scene_id"
   end
 
@@ -93,7 +96,20 @@ ActiveRecord::Schema.define(version: 20190427175401) do
     t.string "genre"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "canonical", default: false
+    t.text "text_notes"
+    t.bigint "production_id"
     t.index ["author_id"], name: "index_plays_on_author_id"
+    t.index ["production_id"], name: "index_plays_on_production_id"
+  end
+
+  create_table "productions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.date "start_date"
+    t.date "end_date"
+    t.bigint "theater_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["theater_id"], name: "index_productions_on_theater_id"
   end
 
   create_table "scenes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -102,7 +118,32 @@ ActiveRecord::Schema.define(version: 20190427175401) do
     t.bigint "act_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "end_page"
+    t.integer "start_page"
     t.index ["act_id"], name: "index_scenes_on_act_id"
+  end
+
+  create_table "space_agreements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "theater_id"
+    t.bigint "space_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["space_id"], name: "index_space_agreements_on_space_id"
+    t.index ["theater_id"], name: "index_space_agreements_on_theater_id"
+  end
+
+  create_table "spaces", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.string "street_address"
+    t.string "city"
+    t.string "state"
+    t.string "zip"
+    t.string "phone_number"
+    t.string "website"
+    t.integer "seating_capacity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "mission_statement"
   end
 
   create_table "theaters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -122,4 +163,7 @@ ActiveRecord::Schema.define(version: 20190427175401) do
   add_foreign_key "acts", "plays"
   add_foreign_key "french_scenes", "scenes"
   add_foreign_key "plays", "authors"
+  add_foreign_key "productions", "theaters"
+  add_foreign_key "space_agreements", "spaces"
+  add_foreign_key "space_agreements", "theaters"
 end

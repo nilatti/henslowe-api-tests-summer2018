@@ -4,7 +4,6 @@ import React, {
 } from 'react'
 import {
   Col,
-  Glyphicon,
   Row,
   Tab,
   Tabs,
@@ -212,18 +211,19 @@ class PlayShow extends Component {
               className='right floated edit icon'
               onClick={this.props.handleEditClick}
             >
-              <Glyphicon glyph="pencil" />
+              <i className="fas fa-pencil-alt"></i>
             </span>
             <span
               className='right floated trash icon'
               onClick={this.handleDeleteClick}
             >
-              <Glyphicon glyph="glyphicon glyphicon-trash" />
+              <i className="fas fa-trash-alt"></i>
             </span>
           </Col>
         </Row>
         <Row>
-        <h2>Characters</h2>
+          <h2>Characters</h2>
+        </Row>
         <Row>
           <CharacterFormToggle play_id={this.props.play.id} isOpen={false} onFormSubmit={this.handleCharacterCreateClick} />
         </Row>
@@ -234,9 +234,9 @@ class PlayShow extends Component {
       >
         {characterTabs}
       </Tabs>
-        </Row>
         <Row>
         <h2>Acts</h2>
+        </Row>
         <Row>
           <ActFormToggle play_id={this.props.play.id} isOpen={false} onFormSubmit={this.handleActCreateClick} />
         </Row>
@@ -247,7 +247,6 @@ class PlayShow extends Component {
       >
         {actTabs}
       </Tabs>
-        </Row>
       </div>
     )
   }

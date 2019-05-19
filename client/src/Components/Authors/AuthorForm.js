@@ -6,10 +6,7 @@ import React, {
 import {
   Button,
   Col,
-  ControlLabel,
   Form,
-  FormControl,
-  FormGroup
 } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -27,6 +24,7 @@ class AuthorForm extends Component {
       middle_name: this.props.author.middle_name || '',
       nationality: this.props.author.nationality || '',
       plays: this.props.author.plays,
+      validated: false,
     }
   }
 
@@ -46,13 +44,25 @@ class AuthorForm extends Component {
     })
   }
   handleDeathdateChange = (date) => {
-    console.log("death date change", date)
     this.setState({
       deathdate: date
     });
   }
+
   handleSubmit = (event) => {
-    event.preventDefault()
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      this.processSubmit()
+    }
+    this.setState({
+      validated: true
+    })
+  }
+
+  processSubmit = () => {
     this.props.onFormSubmit({
       id: this.props.author.id,
       first_name: this.state.first_name,
@@ -67,99 +77,133 @@ class AuthorForm extends Component {
   }
 
   render() {
+    const {
+      validated
+    } = this.state
     return (
-      <Col md={12}>
-        <Form horizontal>
-          <FormGroup controlId="firstName">
-            <Col componentClass={ControlLabel} md={2}>
-              First Name
-            </Col>
-            <Col md={5}>
-              <FormControl
+      <Col md={{ span: 8, offset: 2 }}>
+      <Form
+        noValidate
+        onSubmit={e => this.handleSubmit(e)}
+        validated={validated}
+      >
+          <Form.Row>
+            <Form.Group as={Col} controlId="firstName">
+              <Form.Label>
+                First Name
+              </Form.Label>
+              <Form.Control
                 type="text"
                 placeholder="first name"
-                name="first_name" value={this.state.first_name} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="middleName">
-            <Col componentClass={ControlLabel} md={2}>
-              Middle Name
-            </Col>
-            <Col md={5}>
-              <FormControl
+                name="first_name"
+                value={this.state.first_name}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group as={Col} controlId="middleName">
+              <Form.Label>
+                Middle Name
+              </Form.Label>
+              <Form.Control
                 type="text"
                 placeholder="middle name"
-                name="middle_name" value={this.state.middle_name} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="lastName">
-            <Col componentClass={ControlLabel}  md={2}>
-              Last Name
-            </Col>
-            <Col md={5}>
-              <FormControl
+                name="middle_name"
+                value={this.state.middle_name}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group as={Col} controlId="lastName">
+              <Form.Label>
+                Last Name
+              </Form.Label>
+              <Form.Control
                 type="text"
                 placeholder="last name"
-                name="last_name" value={this.state.last_name} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="gender">
-            <Col componentClass={ControlLabel}  md={2}>
-              Gender
-            </Col>
-            <Col md={5}>
-              <FormControl componentClass="select" name="gender" value={this.state.gender} onChange={this.handleChange}>
+                name="last_name"
+                onChange={this.handleChange}
+                required
+                value={this.state.last_name}
+              />
+              <Form.Control.Feedback type="invalid">
+                Last name is required
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group
+              as={Col}
+              controlId="gender"
+            >
+              <Form.Label>
+                Gender
+              </Form.Label>
+              <Form.Control
+                as="select"
+                name="gender"
+                value={this.state.gender}
+                onChange={this.handleChange}
+              >
                 <option value="female">female</option>
                 <option value="male">male</option>
                 <option value="nonbinary">nonbinary</option>
-              </FormControl>
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="nationality">
-            <Col componentClass={ControlLabel} md={2}>
-              Nationality
-            </Col>
-            <Col md={5}>
-              <FormControl
+              </Form.Control>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group
+              as={Col}
+              controlId="nationality"
+            >
+              <Form.Label>
+                Nationality
+              </Form.Label>
+              <Form.Control
                 type="text"
                 placeholder="nationality"
-                name="nationality" value={this.state.nationality} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-          <FormGroup>
-            <Col componentClass={ControlLabel}  md={2}>
-              Birthdate
-            </Col>
-            <Col md={5}>
-              <DatePicker
-                name="birthdate"
-                selected={this.state.birthdate}
-                onChange={this.handleBirthdateChange}
+                name="nationality"
+                value={this.state.nationality}
+                onChange={this.handleChange}
               />
-            </Col>
-          </FormGroup>
-          { this.state.deathDateVisible
-            ?
-            <FormGroup>
-              <Col componentClass={ControlLabel}  md={2}>
-                Deathdate
-              </Col>
-              <Col md={5}>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group
+              as={Col}
+              controlId="birthdate"
+            >
+              <Form.Label>
+                Birthdate
+              </Form.Label>
+                <DatePicker
+                  name="birthdate"
+                  selected={this.state.birthdate}
+                  onChange={this.handleBirthdateChange}
+                />
+            </Form.Group>
+            { this.state.deathDateVisible
+              ?
+              <Form.Group
+                as={Col}
+                controlId="deathdate"
+              >
+                <Form.Label>
+                  Deathdate
+                </Form.Label>
                 <DatePicker
                   name="deathdate"
                   selected={this.state.deathdate}
                   onChange={this.handleDeathdateChange}
                 />
+              </Form.Group>
+              :
+              <Col md={2}>
+                <Button type="button" variant="primary" onClick={ () => this.addDeathDate() }>
+                  Click to add Death date
+                </Button>
               </Col>
-            </FormGroup>
-            :
-            <Col md={2}>
-              <Button type="button" bsStyle="primary" onClick={ () => this.addDeathDate() }>
-                Click to add Death date
-              </Button>
-            </Col>
-          }
-          <Button type="submit" bsStyle="primary" onClick={this.handleSubmit} block>Submit</Button>
+            }
+          </Form.Row>
+          <Button type="submit" variant="primary" block>Submit</Button>
           <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
         </Form>
         <hr />

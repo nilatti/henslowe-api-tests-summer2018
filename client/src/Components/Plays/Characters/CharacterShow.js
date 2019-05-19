@@ -3,9 +3,8 @@ import React, {
   Component
 } from 'react'
 import {
-  Glyphicon,
+  Col,
   Row,
-  Col
 } from 'react-bootstrap'
 
 class CharacterShow extends Component {
@@ -27,13 +26,13 @@ class CharacterShow extends Component {
               className='right floated edit icon'
               onClick={this.props.handleEditClick}
             >
-              <Glyphicon glyph="pencil" />
+              <i className="fas fa-pencil-alt"></i>
             </span>
             <span
               className='right floated trash icon'
               onClick={this.handleDeleteClick}
             >
-              <Glyphicon glyph="glyphicon glyphicon-trash" />
+              <i className="fas fa-trash-alt"></i>
             </span>
           </Col>
         </Row>

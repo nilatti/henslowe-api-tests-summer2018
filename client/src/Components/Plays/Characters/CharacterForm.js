@@ -5,10 +5,7 @@ import React, {
 import {
   Button,
   Col,
-  ControlLabel,
   Form,
-  FormControl,
-  FormGroup,
 } from 'react-bootstrap'
 
 class CharacterForm extends Component {
@@ -20,6 +17,7 @@ class CharacterForm extends Component {
       gender: this.props.character.gender,
       name: this.props.character.name,
       play_id: this.props.play_id,
+      validated: false,
     }
   }
 
@@ -30,7 +28,19 @@ class CharacterForm extends Component {
   }
 
   handleSubmit = (event) => {
-    event.preventDefault()
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      this.processSubmit()
+    }
+    this.setState({
+      validated: true
+    })
+  }
+
+  processSubmit = () => {
     this.props.onFormSubmit({
       age: this.state.age,
       description: this.state.description,
@@ -43,77 +53,82 @@ class CharacterForm extends Component {
   }
 
   render() {
+    const {
+      validated
+    } = this.state
     return (
-      <Col md={12}>
-        <Form horizontal>
-          <FormGroup controlId="name">
-            <Col componentClass={ControlLabel} md={2}>
+      <Col md={{ span: 8, offset: 2 }}>
+      <Form
+        noValidate
+        onSubmit={e => this.handleSubmit(e)}
+        validated={validated}
+      >
+          <Form.Group controlId="name">
+            <Form.Label>
               Name
-            </Col>
-            <Col md={5}>
-              <FormControl
-                type="text"
-                placeholder="name"
-                name="name" value={this.state.name} onChange={this.handleChange} />
-            </Col>
-          </FormGroup>
-
-          <FormGroup controlId="gender">
-            <Col componentClass={ControlLabel} md={2}>
+            </Form.Label>
+            <Form.Control
+              name="name"
+              onChange={this.handleChange}
+              placeholder="name"
+              required
+              type="text"
+              value={this.state.name}
+            />
+            <Form.Control.Feedback type="invalid">
+              Name is required
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="gender">
+            <Form.Label>
               Gender
-            </Col>
-            <Col md={5}>
-              <FormControl
-                as="select"
-                componentClass="select"
-                name="gender"
-                onChange={this.handleChange}
-                value={this.state.gender}
-              >
-                <option></option>
-                <option>Female</option>
-                <option>Male</option>
-                <option>Neutral</option>
-                <option>Nonbinary/other</option>
-              </FormControl>
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="age">
-            <Col componentClass={ControlLabel} md={2}>
+            </Form.Label>
+            <Form.Control
+              as="select"
+              name="gender"
+              onChange={this.handleChange}
+              value={this.state.gender}
+            >
+              <option></option>
+              <option>Female</option>
+              <option>Male</option>
+              <option>Neutral</option>
+              <option>Nonbinary/other</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="age">
+            <Form.Label>
               Age
-            </Col>
-            <Col md={5}>
-              <FormControl
-                as="select"
-                componentClass="select"
-                name="age"
-                onChange={this.handleChange}
-                value={this.state.age}
-              >
-                <option></option>
-                <option>Baby</option>
-                <option>Child</option>
-                <option>Teenager</option>
-                <option>Young Adult</option>
-                <option>Adult</option>
-                <option>Senior</option>
-              </FormControl>
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="description">
-            <Col componentClass={ControlLabel} md={2}>
+            </Form.Label>
+            <Form.Control
+              as="select"
+              name="age"
+              onChange={this.handleChange}
+              value={this.state.age}
+            >
+              <option></option>
+              <option>Baby</option>
+              <option>Child</option>
+              <option>Teenager</option>
+              <option>Young Adult</option>
+              <option>Adult</option>
+              <option>Senior</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="description">
+            <Form.Label>
               Description
-            </Col>
-            <Col md={5}>
-              <FormControl
-                componentClass="textarea"
-                rows="10"
-                placeholder="description"
-                name="description" value={this.state.description} onChange={this.handleChange}
-              />
-            </Col>
-          </FormGroup>
-          <Button type="submit" bsStyle="primary" onClick={this.handleSubmit} block>Submit</Button>
+            </Form.Label>
+            <Form.Control
+              as="textarea"
+              name="description"
+              onChange={this.handleChange}
+              placeholder="description"
+              rows="10"
+              value={this.state.description}
+            />
+          </Form.Group>
+          <Button type="submit" variant="primary" block>Submit</Button>
           <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
         </Form>
         <hr />

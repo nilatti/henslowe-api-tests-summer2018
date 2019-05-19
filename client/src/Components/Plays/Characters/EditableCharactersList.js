@@ -4,7 +4,6 @@ import React, {
 } from 'react'
 import {
   Col,
-  Glyphicon,
   Row
 } from 'react-bootstrap'
 
@@ -48,13 +47,13 @@ class EditableCharactersList extends Component {
           className='right floated edit icon'
           onClick={this.props.handleEditClick}
         >
-          <Glyphicon glyph="pencil" />
+          <i className="fas fa-pencil-alt"></i>
         </span>
         <span
           className='right floated trash icon'
           onClick={() => this.handleDeleteClick(character.id)}
         >
-          <Glyphicon glyph="glyphicon glyphicon-trash" />
+          <i className="fas fa-trash-alt"></i>
         </span>
       </li>
     ))

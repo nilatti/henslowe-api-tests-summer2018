@@ -27,7 +27,8 @@ async function getTheaters() {
 
 async function updateServerTheater(theater) {
   return API.put(`theaters/${theater.id}`, {
-    theater: theater
+    id: theater.id,
+    theater: theater,
   })
 }
 

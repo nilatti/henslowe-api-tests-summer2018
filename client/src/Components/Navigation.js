@@ -4,7 +4,6 @@ import React, {
 import {
   Nav,
   Navbar,
-  NavItem
 } from 'react-bootstrap'
 
 // The Header creates links that can be used to navigate
@@ -17,10 +16,32 @@ class Navigation extends Component {
       <header>
         <Navbar>
           <Nav>
-            <NavItem href="/">Dashboard</NavItem>
-            <NavItem href="/authors">Authors</NavItem>
-            <NavItem href="/plays">Plays</NavItem>
-            <NavItem href="/theaters">Theaters</NavItem>
+            <Nav.Item>
+              <Nav.Link href="/">
+                Dashboard
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/authors">
+                Authors
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/plays">
+                Plays
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/theaters">
+                Theaters
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/spaces">
+                Spaces
+              </Nav.Link>
+            </Nav.Item>
+
           </Nav>
         </Navbar>
       </header>

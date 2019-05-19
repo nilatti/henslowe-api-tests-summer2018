@@ -3,9 +3,8 @@ import React, {
   Component
 } from 'react'
 import {
-  Glyphicon,
+  Col,
   Row,
-  Col
 } from 'react-bootstrap'
 import {
   BrowserRouter as Switch,

@@ -1,19 +1,25 @@
 import React from 'react'
-import { Col } from 'react-bootstrap'
+import {
+  Col,
+  Container
+} from 'react-bootstrap'
+
+import Footer from './Components/Footer'
 import Navigation from './Components/Navigation'
 import Main from './Components/Main'
-import { Grid } from 'react-bootstrap'
 import './App.css';
 
 const App = () => (
-  <Grid fluid={true}>
+  <Container fluid={true}>
     <div className="App">
       <Navigation />
       <Col xs={12}>
         <Main />
+        <Footer />
       </Col>
+
     </div>
-  </Grid>
+  </Container>
 )
 
 export default App

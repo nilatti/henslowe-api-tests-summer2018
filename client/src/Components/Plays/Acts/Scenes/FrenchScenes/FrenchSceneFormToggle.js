@@ -1,6 +1,5 @@
 import {
   Button,
-  Glyphicon
 } from 'react-bootstrap'
 import PropTypes from 'prop-types';
 import React, {
@@ -46,10 +45,10 @@ class FrenchSceneFormToggle extends Component { //opens form for create action
     } else {
       return (
         <div>
-          <Button bsStyle="info"
+          <Button variant="info"
             onClick={this.handleFormOpen}
           >
-            <Glyphicon glyph='glyphicon glyphicon-plus' /> Add New French Scene
+            Add New French Scene
           </Button>
         </div>
       );

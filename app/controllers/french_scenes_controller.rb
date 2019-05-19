@@ -53,6 +53,6 @@ class FrenchScenesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def french_scene_params
-      params.require(:french_scene).permit(:scene_id, :number, :summary)
+      params.require(:french_scene).permit(:end_page, :number, :scene_id, :start_page, :summary)
     end
 end
