@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190519012400) do
+ActiveRecord::Schema.define(version: 20190520022716) do
 
   create_table "active_admin_comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "namespace"
@@ -87,6 +87,17 @@ ActiveRecord::Schema.define(version: 20190519012400) do
     t.integer "end_page"
     t.integer "start_page"
     t.index ["scene_id"], name: "index_french_scenes_on_scene_id"
+  end
+
+  create_table "on_stages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "character_id"
+    t.bigint "user_id"
+    t.bigint "french_scene_id"
+    t.text "description"
+    t.text "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "nonspeaking", default: false
   end
 
   create_table "plays", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

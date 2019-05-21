@@ -1,5 +1,7 @@
 class Character < ApplicationRecord
   belongs_to :play
+  has_many :on_stages
+  has_many :french_scenes, through: :on_stages
   default_scope { order('name ASC') }
   validates :name, presence: true
 

@@ -15,18 +15,13 @@ import {
   getCharacters
 } from '../../../../../api/plays'
 
-class FrenchSceneForm extends Component {
+class OnStagesForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
       available_characters: [],
-      end_page: this.props.french_scene.end_page,
-      number: this.props.french_scene.number,
-      scene_id: this.props.scene_id,
+      french_scene_id: this.props.scene_id,
       selected_characters: this.props.french_scene.characters || [],
-      start_page: this.props.french_scene.start_page,
-      summary: this.props.french_scene.summary,
-      validated: false,
     }
   }
 
@@ -41,9 +36,8 @@ class FrenchSceneForm extends Component {
   }
 
   handleCharactersChange = (selected) => {
-    console.log('characters change caled')
     this.setState({
-      selected_characters: selected
+      selected_character_ids: selected
     })
   }
 
@@ -61,7 +55,6 @@ class FrenchSceneForm extends Component {
   }
 
   processSubmit = () => {
-    console.log('inside process', this.state.selected_characters)
     var character_ids = this.state.selected_characters.map((character) => character.id)
     var characters = this.state.available_characters.filter(character => character_ids.includes(character.id))
     this.props.onFormSubmit({

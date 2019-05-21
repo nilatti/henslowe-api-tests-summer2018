@@ -110,8 +110,9 @@ class ActShow extends Component {
             scene={scene}
             act_id={this.props.act.id}
             act_number={this.props.act.number}
-            onDeleteClick={this.handleSceneDeleteClick}
             handleEditSubmit={this.handleEditSceneSubmit}
+            onDeleteClick={this.handleSceneDeleteClick}
+            play_id={this.props.play_id}
           />
         </Tab>
       )
@@ -176,6 +177,7 @@ ActShow.propTypes = {
   act: PropTypes.object.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
+  play_id: PropTypes.number.isRequired,
 }
 
 export default ActShow

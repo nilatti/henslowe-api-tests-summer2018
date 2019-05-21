@@ -18,6 +18,10 @@ import {
   updateServerFrenchScene,
 } from '../../../../api/french_scenes'
 
+import {
+  updateServerOnStage
+} from '../../../../api/on_stages.js'
+
 class SceneShow extends Component {
   constructor(props, context) {
     super(props, context);
@@ -59,27 +63,15 @@ class SceneShow extends Component {
     }
   }
 
-  async updateServerFrenchScene(frenchSceneAttrs) {
-    const response = await updateServerFrenchScene(frenchSceneAttrs)
+  async updateServerFrenchScene(attrsForApi) {
+    const response = await updateServerFrenchScene(attrsForApi)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error updating French scene'
       })
-    } else {
-      this.setState(state => {
-        const frenchSceneList = state.french_scenes.map((french_scene) => {
-          if (french_scene.id === frenchSceneAttrs.id) {
-            return frenchSceneAttrs
-          } else {
-            return french_scene
-          }
-        })
-        return {
-          french_scenes: frenchSceneList
-        }
-      })
     }
   }
+
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.scene.id)
   }
@@ -93,14 +85,44 @@ class SceneShow extends Component {
   }
 
   handleEditFrenchSceneSubmit = (frenchScene) => {
-    this.updateServerFrenchScene(frenchScene)
+    this.updateServerFrenchScene(this.updateFrenchSceneAttrsForServer(frenchScene))
+    this.updateFrenchSceneAttrsForState(frenchScene)
   }
+
+  handleEditOnStageSubmit = (onStage) => {
+    this.updateServerOnStage(onStage)
+  }
+
   handleSelect(key) {
     this.setState({
       key
     });
   }
 
+  updateFrenchSceneAttrsForServer = (frenchSceneAttrs) => {
+    const {
+      characters,
+      ...attrsForApi
+    } = frenchSceneAttrs
+    return attrsForApi
+  }
+
+  async updateFrenchSceneAttrsForState(frenchSceneAttrs) {
+    console.log('update for state called')
+
+    this.setState(state => {
+      const frenchSceneList = this.state.french_scenes.map((french_scene) => {
+        if (french_scene.id === frenchSceneAttrs.id) {
+          return frenchSceneAttrs
+        } else {
+          return french_scene
+        }
+      })
+      return {
+        french_scenes: frenchSceneList
+      }
+    })
+  }
   render() {
     let frenchSceneTabs
     if (this.state.french_scenes[0]) {
@@ -109,10 +131,11 @@ class SceneShow extends Component {
           <FrenchSceneInfoTab
             act_number={this.props.act_number}
             french_scene={french_scene}
+            handleEditSubmit={this.handleEditFrenchSceneSubmit}
+            onDeleteClick={this.handleFrenchSceneDeleteClick}
+            play_id={this.props.play_id}
             scene_id={this.props.scene.id}
             scene_number={this.props.scene.number}
-            onDeleteClick={this.handleFrenchSceneDeleteClick}
-            handleEditSubmit={this.handleEditFrenchSceneSubmit}
           />
         </Tab>
       )
@@ -153,7 +176,7 @@ class SceneShow extends Component {
           <h2>French Scenes</h2>
         </Row>
         <Row>
-          <FrenchSceneFormToggle scene_id={this.props.scene.id} isOpen={false} onFormSubmit={this.handleFrenchSceneCreateClick} />
+          <FrenchSceneFormToggle scene_id={this.props.scene.id} isOpen={false} onFormSubmit={this.handleFrenchSceneCreateClick} play_id={this.props.play_id}/>
         </Row>
         <Tabs
         activeKey={this.state.key}
@@ -175,9 +198,10 @@ SceneShow.defaultProps = {
 
 SceneShow.propTypes = {
   act_number: PropTypes.number.isRequired,
-  scene: PropTypes.object.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
+  onDeleteClick: PropTypes.func.isRequired,
+  play_id: PropTypes.number.isRequired,
+  scene: PropTypes.object.isRequired,
 }
 
 export default SceneShow

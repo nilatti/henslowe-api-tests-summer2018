@@ -12,7 +12,28 @@ class PlaysController < ApiController
 
   # GET /plays/1
   def show
-    render json: @play.as_json(include: [:author, :characters, acts: { include: {scenes: { include: :french_scenes } }} ])
+    render json: @play.as_json(include:
+      [
+        :author,
+        :characters,
+        acts: {
+          include: {
+            scenes: {
+              include: {
+                french_scenes: {
+                  include: [
+                    :characters,
+                    on_stages: {
+                      include: :character
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+        ]
+      )
     # json_response(@play.as_json(include: [:acts, :author, :characters]))
   end
 

@@ -29,6 +29,15 @@ async function deletePlay(playId) {
   return API.delete(`plays/${playId}`)
 }
 
+async function getActs(playId) {
+  return API.request(`plays/${playId}/acts`)
+}
+
+async function getCharacters(playId) {
+  return API.request(`plays/${playId}/characters`)
+}
+
+
 async function getPlay(playId) {
   return API.request(`plays/${playId}`)
 }
@@ -37,9 +46,6 @@ async function getPlayTitles() {
   return API.request(`plays/play_titles`)
 }
 
-async function getActs(playId) {
-  return API.request(`plays/${playId}/acts`)
-}
 
 async function getPlays() {
   return API.request(`plays`)
@@ -57,6 +63,7 @@ export {
   createPlay,
   deletePlay,
   getActs,
+  getCharacters,
   getPlay,
   getPlayTitles,
   getPlays,

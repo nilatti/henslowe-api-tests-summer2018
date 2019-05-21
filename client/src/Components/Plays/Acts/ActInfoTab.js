@@ -44,7 +44,7 @@ class ActInfoTab extends Component {
     }
     return (
       <div>
-        <ActShow act={this.props.act} handleEditClick={this.handleEditClick} handleDeleteClick={this.handleDeleteClick}/>
+        <ActShow act={this.props.act} handleEditClick={this.handleEditClick} handleDeleteClick={this.handleDeleteClick} play_id={this.props.play_id}/>
       </div>
     )
   }
@@ -52,8 +52,8 @@ class ActInfoTab extends Component {
 
 ActInfoTab.propTypes = {
   act: PropTypes.object.isRequired,
-  play_id: PropTypes.number.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
+  play_id: PropTypes.number.isRequired,
 }
 
 export default ActInfoTab

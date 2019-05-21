@@ -11,7 +11,7 @@ class FrenchScenesController < ApiController
 
   # GET /scenes/1
   def show
-    render json: @french_scene
+    json_response(@french_scene.as_json(include: [:characters, on_stages: {include: :character}]))
   end
 
   # POST /scenes
@@ -28,7 +28,9 @@ class FrenchScenesController < ApiController
   # PATCH/PUT /scenes/1
   def update
     if @french_scene.update(french_scene_params)
-      render json: @french_scene
+      puts "UPDATING FRENCH SCENE"
+      puts @french_scene.as_json(include: [:characters, on_stages: {include: :character} ])
+      json_response(@french_scene.as_json(include: [:characters, on_stages: {include: :character} ]))
     else
       render json: @french_scene.errors, status: :unprocessable_entity
     end
@@ -53,6 +55,26 @@ class FrenchScenesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def french_scene_params
-      params.require(:french_scene).permit(:end_page, :number, :scene_id, :start_page, :summary)
+      params.require(:french_scene).permit(
+        :end_page,
+        :id,
+        :number,
+        :scene_id,
+        :start_page,
+        :summary,
+        character_ids: [],
+        on_stages_attributes: [
+          :category,
+          :character_id,
+          :created_at,
+          :description,
+          :french_scene_id,
+          :id,
+          :nonspeaking,
+          :updated_at,
+          :user_id,
+          :_destroy
+          ]
+        )
     end
 end

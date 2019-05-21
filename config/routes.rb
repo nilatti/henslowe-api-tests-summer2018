@@ -38,5 +38,6 @@ Rails.application.routes.draw do
       resources :french_scenes
     end
     resources :french_scenes
+    resources :on_stages
   end
 end
