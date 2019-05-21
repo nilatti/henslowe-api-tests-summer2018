@@ -9,5 +9,9 @@ FactoryBot.define do
     mission_statement { Faker::Movies::HarryPotter.quote }
     website { Faker::Internet.url }
     calendar_url { Faker::Internet.url }
+
+    after(:create) do |theater|
+        theater.spaces << create(:space)
+    end
   end
 end

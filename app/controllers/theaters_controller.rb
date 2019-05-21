@@ -21,7 +21,6 @@ class TheatersController < ApiController
 
   # PATCH/PUT /theaters/1
   def update
-    puts "RECEIVED UPDATE"
     puts theater_params
     @theater.update(theater_params)
     json_response(@theater.as_json(include: [:spaces]))

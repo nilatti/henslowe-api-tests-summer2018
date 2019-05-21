@@ -33,6 +33,10 @@ RSpec.describe 'theaters API', type: :request do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
+
+      it 'includes spaces' do
+        expect(json['spaces'].size).to eq(1) 
+      end
     end
 
     context 'when the record does not exist' do

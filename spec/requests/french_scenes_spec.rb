@@ -7,7 +7,8 @@ RSpec.describe 'Scenes API' do
   let!(:play) { create(:play, author_id: author.id) }
   let!(:scene_id) { play.acts.first.scenes.first.id }
   let!(:id) { play.acts.first.scenes.first.french_scenes.first.id }
-
+  let!(:character) {play.characters.first}
+  let!(:on_stage) { create(:on_stage, french_scene_id: id, character_id: character.id)}
   # Test suite for GET /scenes/:scene_id/french_scenes
   describe 'GET api/scenes/:scene_id/french_scenes' do
     before {
@@ -38,6 +39,14 @@ RSpec.describe 'Scenes API' do
 
       it 'returns the french scene' do
         expect(json['id']).to eq(id)
+      end
+
+      it 'returns characters' do
+        expect(json['characters'].size).to eq(1)
+      end
+
+      it 'returns on_stages' do
+        expect(json['on_stages'].size).to eq(1)
       end
     end
 
