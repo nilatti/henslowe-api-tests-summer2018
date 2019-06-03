@@ -22,16 +22,18 @@ import NewUser from './NewUser'
 class Users extends Component {
 
   async createUser(user) {
-    console.log('inside async create user')
-    const response = await createUser(user)
-    console.log('response', response)
+    const response = await (createUser(user), {
+      timeout: 1000
+    })
+    if (!response) {
+    return
+  }
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error creating User'
       })
     } else {
-      console.log('response', response.data)
-      this.props.history.push(`/users/${response.data.id}`)
+      this.props.history.push(`/users/`)
       window.location.reload();
     }
   }

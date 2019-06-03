@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   # devise_for :admin_users, ActiveAdmin::Devise.config
   devise_for :users, :controllers => {
 
-   :registrations => "users/registrations",
-   :sessions => "users/sessions"
+   :registrations => "registrations",
+   :sessions => "sessions"
 
    }
   ActiveAdmin.routes(self)

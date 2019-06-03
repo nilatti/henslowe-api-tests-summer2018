@@ -6,14 +6,11 @@ let base_api = axios.create({
 })
 
 async function createUser(user) {
-  console.log('post called')
-  let req = base_api.post(
+  return (base_api.post(
     'users', {
       user
     }
-  )
-  console.log(req)
-  return req
+  ))
 }
 
 async function deleteUser(userId) {
