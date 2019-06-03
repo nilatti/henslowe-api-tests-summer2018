@@ -10,8 +10,10 @@ FactoryBot.define do
     website { Faker::Internet.url }
     calendar_url { Faker::Internet.url }
 
-    after(:create) do |theater|
-        theater.spaces << create(:space)
+    trait :has_spaces do
+      after(:create) do |theater|
+        theater.spaces << create_list(:space, 3)
+      end
     end
   end
 end

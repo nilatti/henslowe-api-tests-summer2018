@@ -16,6 +16,7 @@ class TheatersController < ApiController
   # POST /theaters
   def create
     @theater = Theater.create!(theater_params)
+    puts @theater.to_json
     json_response(@theater, :created)
   end
 

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'theaters API', type: :request do
   # initialize test data
-  let!(:theaters) { create_list(:theater, 10) }
+  let!(:theaters) { create_list(:theater, 10, :has_spaces) }
   let(:theater_id) { theaters.first.id }
 
   # Test suite for GET /theaters
@@ -35,7 +35,7 @@ RSpec.describe 'theaters API', type: :request do
       end
 
       it 'includes spaces' do
-        expect(json['spaces'].size).to eq(1) 
+        expect(json['spaces'].size).to eq(3)
       end
     end
 

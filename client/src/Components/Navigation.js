@@ -41,7 +41,11 @@ class Navigation extends Component {
                 Spaces
               </Nav.Link>
             </Nav.Item>
-
+            <Nav.Item>
+              <Nav.Link href="/users">
+                Users
+              </Nav.Link>
+            </Nav.Item>
           </Nav>
         </Navbar>
       </header>

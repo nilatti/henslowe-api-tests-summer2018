@@ -9,6 +9,8 @@ import {
   Tabs,
 } from 'react-bootstrap'
 
+import EditableOnStage from './OnStages/EditableOnStage'
+
 class FrenchSceneShow extends Component {
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.french_scene.id)
@@ -19,15 +21,21 @@ class FrenchSceneShow extends Component {
     this.props.handleNonspeakingClick(on_stage)
   }
 
+  handleEditSubmit = (on_stage) => {
+    this.props.handleNonspeakingClick(on_stage)
+  }
+
   render() {
     if (this.props.french_scene.on_stages[0]) {
-      var characters = this.props.french_scene.on_stages.map((on_stage) => {
-        if (on_stage.nonspeaking) {
-          return <li key={on_stage.character.id} onClick={(e) => this.changeNonspeaking(e, on_stage)}>{on_stage.character.name}*</li>
-        } else {
-          return <li key={on_stage.character.id} onClick={(e) => this.changeNonspeaking(e, on_stage)}>{on_stage.character.name}</li>
-        }
-      })
+      var characters = this.props.french_scene.on_stages.map((on_stage) => (
+        <EditableOnStage
+          changeNonspeaking={this.changeNonspeaking}
+          french_scene_id={this.props.french_scene.id}
+          handleEditSubmit={this.handleEditSubmit}
+          key={on_stage.id}
+          on_stage={on_stage}
+        />
+      ))
     } else {
 
     }

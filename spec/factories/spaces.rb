@@ -10,8 +10,10 @@ FactoryBot.define do
     seating_capacity {Faker::Number.within(100..1000)}
     mission_statement {Faker::TvShows::MichaelScott.quote}
 
-    after(:create) do |space|
-        space.theaters << create(:theater)
+    trait :has_theaters do
+      after(:create) do |space|
+        space.theaters << create_list(:theater, 3)
+      end
     end
   end
 

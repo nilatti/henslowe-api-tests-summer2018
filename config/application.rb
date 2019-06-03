@@ -15,21 +15,20 @@ require "rails/test_unit/railtie"
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
+Dotenv::Railtie.load
 
 module June20
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
 
-    config.load_defaults 5.1
+    config.load_defaults 5.2
 
     config.middleware.use Rack::MethodOverride
     config.middleware.use ActionDispatch::Flash
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
-
-    config.x.cors_allowed_origins
-
     config.app_generators.scaffold_controller = :scaffold_controller
+    config.x.cors_allowed_origins
 
     config.api_only = true
   end

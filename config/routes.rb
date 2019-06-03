@@ -1,8 +1,16 @@
 Rails.application.routes.draw do
 
-  devise_for :admin_users, ActiveAdmin::Devise.config
+  # devise_for :admin_users, ActiveAdmin::Devise.config
+  devise_for :users, :controllers => {
+
+   :registrations => "users/registrations",
+   :sessions => "users/sessions"
+
+   }
   ActiveAdmin.routes(self)
   scope 'api' do
+
+    resources :users, only: [:index, :show, :update, :destroy]
     resources :productions
 
     resources :theaters do

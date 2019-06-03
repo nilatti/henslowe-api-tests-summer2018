@@ -10,6 +10,7 @@ import Dashboard from './Dashboard/Dashboard'
 import Plays from './Plays/Plays'
 import Spaces from './Spaces/Spaces'
 import Theaters from './Theaters/Theaters'
+import Users from './Users/Users'
 
 class Main extends Component {
   render() {
@@ -21,6 +22,7 @@ class Main extends Component {
             <Route path='/plays' component={Plays}/>
             <Route path='/theaters' component={Theaters} />
             <Route path='/spaces' component={Spaces} />
+            <Route path='/users' component={Users} />
           </Switch>
         </main>
     )

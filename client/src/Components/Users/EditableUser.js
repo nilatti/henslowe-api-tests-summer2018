@@ -4,19 +4,19 @@ import React, {
 } from 'react'
 
 import {
-  getTheater,
-  updateServerTheater
-} from '../../api/theaters'
+  getUser,
+  updateServerUser
+} from '../../api/users'
 
-import TheaterForm from './TheaterForm'
-import TheaterShow from './TheaterShow'
+import UserForm from './UserForm'
+import UserShow from './UserShow'
 
-class EditableTheater extends Component {
+class EditableUser extends Component {
   constructor(props) {
     super(props)
     this.state = {
       editFormOpen: false,
-      theater: null,
+      user: null,
     }
   }
 
@@ -27,11 +27,11 @@ class EditableTheater extends Component {
   }
 
   componentDidMount = () => {
-    this.loadTheaterFromServer(this.props.match.params.theaterId)
+    this.loadUserFromServer(this.props.match.params.userId)
   }
   componentDidUpdate(prevProps) {
-    if (this.state.theater === null || prevProps.match.params.theaterId !== this.props.match.params.theaterId) {
-      this.loadTheaterFromServer(this.props.match.params.theaterId);
+    if (this.state.user === null || prevProps.match.params.userId !== this.props.match.params.userId) {
+      this.loadUserFromServer(this.props.match.params.userId);
     }
   }
 
@@ -42,33 +42,33 @@ class EditableTheater extends Component {
     this.closeForm()
   }
 
-  handleSubmit = (theater) => {
-    this.updateTheaterOnServer(theater)
+  handleSubmit = (user) => {
+    this.updateUserOnServer(user)
     this.handleFormClose()
   }
 
-  async loadTheaterFromServer(theaterId) {
-    const response = await getTheater(theaterId)
+  async loadUserFromServer(userId) {
+    const response = await getUser(userId)
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error fetching theater'
+        errorStatus: 'Error fetching user'
       })
     } else {
       this.setState({
-        theater: response.data
+        user: response.data
       })
     }
   }
 
-  async updateTheaterOnServer(theater) {
-    const response = await updateServerTheater(theater)
+  async updateUserOnServer(user) {
+    const response = await updateServerUser(user)
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error updating theater'
+        errorStatus: 'Error updating user'
       })
     } else {
       this.setState({
-        theater: response.data
+        user: response.data
       })
     }
   }
@@ -78,7 +78,7 @@ class EditableTheater extends Component {
     // Clear out previously-loaded data (so we don't render stale stuff).
     if (props.id !== state.prevId) {
       return {
-        Theater: null,
+        User: null,
         prevId: props.id,
       };
     }
@@ -93,15 +93,15 @@ class EditableTheater extends Component {
   }
 
   render() {
-    if (this.state.theater === null) {
+    if (this.state.user === null) {
       return (
         <div>Loading!</div>
       )
     }
     if (this.state.editFormOpen) {
       return (
-        <TheaterForm
-          theater={this.state.theater}
+        <UserForm
+          user={this.state.user}
           onFormSubmit={this.handleSubmit}
           onFormClose={this.handleFormClose}
           isOpen={true}
@@ -109,8 +109,8 @@ class EditableTheater extends Component {
       )
     } else {
       return (
-        <TheaterShow
-        theater={this.state.theater}
+        <UserShow
+        user={this.state.user}
         onEditClick={this.handleEditClick}
         onDeleteClick={this.props.onDeleteClick}
         onFormSubmit={this.handleSubmit}
@@ -120,9 +120,9 @@ class EditableTheater extends Component {
   }
 }
 
-EditableTheater.propTypes = {
+EditableUser.propTypes = {
   match: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
 }
 
-export default EditableTheater
+export default EditableUser

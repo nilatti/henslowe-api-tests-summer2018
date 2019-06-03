@@ -27,7 +27,7 @@ class TheaterShow extends Component {
   }
 
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.id)
+    this.props.onDeleteClick(this.props.theater.id)
   }
 
   handleSelect(key) {

@@ -18,9 +18,9 @@ import {
   updateServerFrenchScene,
 } from '../../../../api/french_scenes'
 
-import {
-  updateServerOnStage
-} from '../../../../api/on_stages.js'
+// import {
+//   updateServerOnStage
+// } from '../../../../api/on_stages.js'
 
 class SceneShow extends Component {
   constructor(props, context) {
@@ -89,9 +89,9 @@ class SceneShow extends Component {
     this.updateFrenchSceneAttrsForState(frenchScene)
   }
 
-  handleEditOnStageSubmit = (onStage) => {
-    this.updateServerOnStage(onStage)
-  }
+  // handleEditOnStageSubmit = (onStage) => {
+  //   this.updateServerOnStage(onStage)
+  // }
 
   handleSelect(key) {
     this.setState({
@@ -108,8 +108,6 @@ class SceneShow extends Component {
   }
 
   async updateFrenchSceneAttrsForState(frenchSceneAttrs) {
-    console.log('update for state called')
-
     this.setState(state => {
       const frenchSceneList = this.state.french_scenes.map((french_scene) => {
         if (french_scene.id === frenchSceneAttrs.id) {
