@@ -33,7 +33,7 @@ class UsersList extends Component {
 
   render() {
     let users = this.state.users.map(user =>
-      <li key={user.id}> <Link to={`/users/${user.id}`}>{user.email}</Link></li>
+      <li key={user.id}> <Link to={`/users/${user.id}`}>{user.preferred_name || user.first_name || user.email} {user.last_name}</Link></li>
     )
     return (
       <div>

@@ -200,6 +200,8 @@ ActiveRecord::Schema.define(version: 2019_06_02_005724) do
     t.string "website"
     t.string "emergency_contact_name"
     t.string "emergency_contact_number"
+    t.string "preferred_name"
+    t.string "program_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

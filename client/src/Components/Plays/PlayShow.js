@@ -204,7 +204,7 @@ class PlayShow extends Component {
         <Row>
           <Col>
             <h2>{this.props.play.title}</h2>
-            a {this.props.play.genre}<br />
+            a {this.props.play.genre.join('/')}<br />
             by <Link to={`/authors/${this.props.play.author.id}`}> {this.props.play.author.first_name} {this.props.play.author.last_name}</Link><br />
             {this.props.play.date}<br />
             <span

@@ -87,6 +87,6 @@ class PlaysController < ApiController
 
   # Only allow a trusted parameter "white list" through.
   def play_params
-    params.require(:play).permit(:author_id, :title, :date, :genre)
+    params.require(:play).permit(:author_id, :title, :date, genre: [])
   end
 end

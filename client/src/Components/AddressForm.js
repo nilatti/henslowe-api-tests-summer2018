@@ -272,26 +272,25 @@ class AddressForm extends Component {
             value={city}
             onChange={this.handleChange}
           />
-        </Form.Group> <
-      Form.Group as = {
-        Col
-      }
-      controlId = "state" >
-      <Form.Label>
-        State
-      </Form.Label> <
-      Form.Control as = "select"
-      name = "state"
-      onChange = {
-        this.handleChange
-      }
-      value = {
-        state
-      } > {
-        states
-      } <
-      /Form.Control> < /
-      Form.Group > <
+        </Form.Group>
+        <Form.Group
+          as={Col}
+          controlId="state" >
+        <Form.Label>
+          State
+        </Form.Label>
+        <Form.Control
+          as="select"
+          name="state"
+          onChange={
+            this.handleChange
+          }
+          value={state}
+        >
+          {states}
+        </Form.Control>
+      </Form.Group> 
+      <
       Form.Group as = {
         Col
       }

@@ -18,11 +18,36 @@ class UsersController < ApiController
     json_response(@user)
   end
 
+  def destroy
+    @user.destroy
+    head :no_content
+  end
+
   private
 
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit(:first_name, :email)
+    params.require(:user).permit(
+      :bio,
+      :birthdate,
+      :city,
+      :description,
+      :emergency_contact_name,
+      :emergency_contact_number,
+      :first_name,
+      :gender,
+      :email,
+      :last_name,
+      :middle_name,
+      :phone_number,
+      :preferred_name,
+      :program_name,
+      :state,
+      :street_address,
+      :timezone,
+      :website,
+      :zip
+    )
   end
 
   # Use callbacks to share common setup or constraints between actions.

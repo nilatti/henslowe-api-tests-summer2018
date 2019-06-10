@@ -4,6 +4,8 @@ class Play < ApplicationRecord
 
   default_scope {order(:title)}
 
+  serialize :genre, Array
+
   has_many :acts, -> { order(:number) }, dependent: :destroy
   has_many :characters, -> { order(:name) }, dependent: :destroy
   has_many :scenes, through: :acts

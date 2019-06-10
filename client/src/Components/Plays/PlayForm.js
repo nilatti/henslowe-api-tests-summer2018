@@ -22,12 +22,14 @@ import {
 class PlayForm extends Component {
   constructor(props) {
     super(props)
+    let props_date
+    moment(this.props.play.date).isValid() ? props_date = moment(this.props.play.date) : props_date = moment()
     this.state = {
       author_id: this.props.play.author.id || this.props.author_id,
       author_name: this.props.play.author.first_name + ' ' + this.props.play.author.last_name,
       authors: null,
-      date: moment(this.props.play.date) || '',
-      genre: this.props.play.genre || '',
+      date: props_date,
+      genre: this.props.play.genre || [],
       title: this.props.play.title || '',
       validated: false,
     }
@@ -56,13 +58,21 @@ class PlayForm extends Component {
         author_name: e[0].label
       })
     }
-
   }
 
   handleDateChange = (date) => {
     this.setState({
       date: date
     })
+  }
+
+  handleGenreChange = (e) => {
+    console.log('genres', e)
+    if (e.length > 0) {
+      this.setState({
+        genre: e.map((item) => item.id),
+      })
+    }
   }
 
   handleSubmit = (event) => {
@@ -115,6 +125,22 @@ class PlayForm extends Component {
   }
 
   render() {
+    console.log('date from props', this.props.play.date)
+    console.log('date', this.state.date)
+    const genres = [
+      {id: 'comedy', label: 'Comedy'},
+      {id: 'fringe', label: 'Fringe'},
+      {id: 'history', label: 'History'},
+      {id: 'musical', label: 'Musical'},
+      {id: 'romance', label: 'Romance'},
+      {id: 'solo', label: 'Solo'},
+      {id: 'tragedy', label: 'Tragedy'},
+    ]
+
+    const selected_genres = this.state.genre.map((genre) => ({
+      id: genre,
+      label: genre.charAt(0).toUpperCase() + genre.slice(1)
+    }))
     const {
       validated
     } = this.state
@@ -171,18 +197,24 @@ class PlayForm extends Component {
               <br/>
             }
 
-						<Form.Group controlId="genre">
-							<Form.Label>
-								Genre
-							</Form.Label>
-							<Form.Control
-								type="text"
-								placeholder="genre"
-								name="genre"
-								value={this.state.genre}
-								onChange={this.handleChange}
-							/>
-						</Form.Group>
+            <Form.Group
+              controlId="genre" >
+            <Form.Label>
+              Genre
+            </Form.Label>
+            <Typeahead
+              allowNew
+              id="genre"
+              multiple={true}
+              newSelectionPrefix="Add a new item: "
+              options={genres}
+              onChange={selected => {
+                this.handleGenreChange(selected)
+              }}
+              placeholder="Choose genres..."
+              defaultSelected={selected_genres}
+              />
+          </Form.Group>
 						<Form.Group>
 							<Form.Label>
 								Publication or first performance date
