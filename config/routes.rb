@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   # devise_for :admin_users, ActiveAdmin::Devise.config
   devise_for :users, :controllers => {
 
@@ -11,6 +10,7 @@ Rails.application.routes.draw do
   scope 'api' do
 
     resources :users, only: [:index, :show, :update, :destroy]
+    resources :specializations
     resources :productions
 
     resources :theaters do

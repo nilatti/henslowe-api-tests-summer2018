@@ -46,6 +46,11 @@ class Navigation extends Component {
                 Users
               </Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/specializations">
+                Specializations
+              </Nav.Link>
+            </Nav.Item>
           </Nav>
         </Navbar>
       </header>

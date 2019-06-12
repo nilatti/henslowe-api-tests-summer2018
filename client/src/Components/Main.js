@@ -9,6 +9,7 @@ import Authors from './Authors/Authors'
 import Dashboard from './Dashboard/Dashboard'
 import Plays from './Plays/Plays'
 import Spaces from './Spaces/Spaces'
+import Specializations from './Specializations/Specializations'
 import Theaters from './Theaters/Theaters'
 import Users from './Users/Users'
 
@@ -23,6 +24,7 @@ class Main extends Component {
             <Route path='/theaters' component={Theaters} />
             <Route path='/spaces' component={Spaces} />
             <Route path='/users' component={Users} />
+            <Route path='/specializations' component={Specializations} />
           </Switch>
         </main>
     )
