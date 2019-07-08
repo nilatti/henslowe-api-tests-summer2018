@@ -91,6 +91,7 @@ class PlayForm extends Component {
   processSubmit = () => {
     this.props.onFormSubmit({
       author_id: this.state.author_id,
+      canonical: true,
       date: this.state.date,
       genre: this.state.genre,
       title: this.state.title,

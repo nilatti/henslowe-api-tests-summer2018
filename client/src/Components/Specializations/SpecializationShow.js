@@ -9,6 +9,8 @@ import React, {
   Component
 } from 'react'
 
+import JobsList from '../Jobs/JobsList'
+
 class SpecializationShow extends Component {
   constructor(props, context) {
     super(props, context);
@@ -38,6 +40,9 @@ class SpecializationShow extends Component {
             <i className="fas fa-trash-alt"></i>
           </span>
         </Col>
+      </Row>
+      <Row>
+        <JobsList specialization_id={this.props.specialization.id} />
       </Row>
       </Col>
     )

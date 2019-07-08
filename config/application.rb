@@ -31,5 +31,6 @@ module June20
     config.x.cors_allowed_origins
 
     config.api_only = true
+    config.active_job.queue_adapter = :sidekiq
   end
 end

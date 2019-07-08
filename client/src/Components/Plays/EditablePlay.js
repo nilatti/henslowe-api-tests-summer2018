@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, {
   Component
 } from 'react'
@@ -265,10 +264,6 @@ class EditablePlay extends Component {
       />
     )
   }
-}
-
-EditablePlay.propTypes = {
-
 }
 
 export default EditablePlay

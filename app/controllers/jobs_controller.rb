@@ -1,0 +1,87 @@
+class JobsController < ApiController
+  before_action :set_job, only: [:show, :update, :destroy]
+
+  # GET /jobs
+  def index
+    @jobs = Job.filter(params.slice(:production, :specialiation, :theater, :user))
+
+    json_response(
+      @jobs.as_json(
+        include: [
+          :character,
+          :specialization,
+          :theater,
+          :user,
+          production: {
+            include: :play
+          }
+        ]
+      )
+    )
+  end
+
+  # GET /jobs/1
+  def show
+    json_response(
+      @job.as_json(
+        include: [
+          :character,
+          :specialization,
+          :theater,
+          :user,
+          production: {
+            include: :play
+          }
+        ]
+      )
+    )
+  end
+
+  # POST /jobs
+  def create
+    @job = Job.new(job_params)
+
+    if @job.save
+      render json: @job, status: :created, location: @job
+    else
+      render json: @job.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /jobs/1
+  def update
+    if @job.update(job_params)
+      json_response(
+        @job.as_json(
+          include: [
+            :character,
+            :specialization,
+            :theater,
+            :user,
+            production: {
+              include: :play
+            }
+          ]
+        )
+      )
+    else
+      render json: @job.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /jobs/1
+  def destroy
+    @job.destroy
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_job
+      @job = Job.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def job_params
+      params.require(:job).permit(:character_id, :end_date, :id, :production_id, :specialization_id, :start_date, :theater_id, :user_id)
+    end
+end

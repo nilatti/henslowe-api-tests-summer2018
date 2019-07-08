@@ -24,6 +24,7 @@ gem 'foreman'
 gem 'devise'
 gem 'activeadmin'
 gem 'devise-jwt'
+gem 'sidekiq'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -32,6 +33,7 @@ gem 'devise-jwt'
 gem 'rack-cors'
 gem 'rubocop'
 gem 'rubocop-performance'
+gem 'activerecord-import'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.5'

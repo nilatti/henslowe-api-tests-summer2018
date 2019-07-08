@@ -3,6 +3,5 @@ FactoryBot.define do
     number { 'a' }
     summary { Faker:: Hipster.sentence}
     scene
-
   end
 end

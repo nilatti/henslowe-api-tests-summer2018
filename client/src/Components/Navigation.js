@@ -32,6 +32,11 @@ class Navigation extends Component {
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
+              <Nav.Link href="/productions">
+                Productions
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
               <Nav.Link href="/theaters">
                 Theaters
               </Nav.Link>
@@ -49,6 +54,11 @@ class Navigation extends Component {
             <Nav.Item>
               <Nav.Link href="/specializations">
                 Specializations
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/jobs">
+                Jobs
               </Nav.Link>
             </Nav.Item>
           </Nav>

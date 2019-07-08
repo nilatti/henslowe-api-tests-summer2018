@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_12_020641) do
+ActiveRecord::Schema.define(version: 2019_06_24_024330) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -89,6 +89,23 @@ ActiveRecord::Schema.define(version: 2019_06_12_020641) do
     t.index ["scene_id"], name: "index_french_scenes_on_scene_id"
   end
 
+  create_table "jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "production_id"
+    t.bigint "specialization_id"
+    t.bigint "user_id"
+    t.date "start_date"
+    t.date "end_date"
+    t.bigint "theater_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "character_id"
+    t.index ["character_id"], name: "index_jobs_on_character_id"
+    t.index ["production_id"], name: "index_jobs_on_production_id"
+    t.index ["specialization_id"], name: "index_jobs_on_specialization_id"
+    t.index ["theater_id"], name: "index_jobs_on_theater_id"
+    t.index ["user_id"], name: "index_jobs_on_user_id"
+  end
+
   create_table "jwt_blacklist", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "jti", null: false
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
@@ -115,6 +132,7 @@ ActiveRecord::Schema.define(version: 2019_06_12_020641) do
     t.boolean "canonical", default: false
     t.text "text_notes"
     t.bigint "production_id"
+    t.integer "original_play_id"
     t.index ["author_id"], name: "index_plays_on_author_id"
     t.index ["production_id"], name: "index_plays_on_production_id"
   end
@@ -215,6 +233,11 @@ ActiveRecord::Schema.define(version: 2019_06_12_020641) do
 
   add_foreign_key "acts", "plays"
   add_foreign_key "french_scenes", "scenes"
+  add_foreign_key "jobs", "characters"
+  add_foreign_key "jobs", "productions"
+  add_foreign_key "jobs", "specializations"
+  add_foreign_key "jobs", "theaters"
+  add_foreign_key "jobs", "users"
   add_foreign_key "plays", "authors"
   add_foreign_key "productions", "theaters"
   add_foreign_key "space_agreements", "spaces"

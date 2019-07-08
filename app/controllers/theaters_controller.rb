@@ -10,7 +10,14 @@ class TheatersController < ApiController
 
   # GET /theaters/1
   def show
-    json_response(@theater.as_json(include: [:spaces]))
+    json_response(@theater.as_json(include:
+      [
+        :spaces,
+        productions: {
+          include: :play
+        }
+      ]
+    ))
   end
 
   # POST /theaters

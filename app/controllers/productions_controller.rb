@@ -1,24 +1,40 @@
-class ProductionsController < ApplicationController
+class ProductionsController < ApiController
   before_action :set_production, only: [:show, :update, :destroy]
 
   # GET /productions
   def index
     @productions = Production.all
 
-    render json: @productions
+    json_response(@productions.as_json(include: [:play, :theater]))
+    # render json: @productions
   end
 
   # GET /productions/1
   def show
-    render json: @production
+    json_response(@production.as_json(include:
+        [
+          :play,
+          :theater,
+          jobs: {
+            include: [
+              :character,
+              :specialization,
+            ]
+          }
+        ]
+      )
+    )
   end
 
   # POST /productions
   def create
+    puts "production create called"
     @production = Production.new(production_params)
 
     if @production.save
-      render json: @production, status: :created, location: @production
+      puts "production saved"
+      json_response(@production.as_json(include: [:theater]), :created)
+      PlayCopyWorker.perform_async(production_params['play_id'], @production.id)
     else
       render json: @production.errors, status: :unprocessable_entity
     end
@@ -27,7 +43,7 @@ class ProductionsController < ApplicationController
   # PATCH/PUT /productions/1
   def update
     if @production.update(production_params)
-      render json: @production
+      json_response(@production.as_json(include: [:play, :theater]))
     else
       render json: @production.errors, status: :unprocessable_entity
     end
@@ -38,6 +54,11 @@ class ProductionsController < ApplicationController
     @production.destroy
   end
 
+  def production_names
+    @productions = Production.all
+    render json: @productions.as_json(only: %i[id name], include: [:theater, :play])
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_production
@@ -46,6 +67,12 @@ class ProductionsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def production_params
-      params.require(:production).permit(:start_date, :end_date, :theater_id)
+      params.require(:production).permit(
+        :end_date,
+        :id,
+        :play_id,
+        :theater_id,
+        :start_date
+      )
     end
 end

@@ -9,12 +9,10 @@ import React, {
   Component
 } from 'react'
 
+import JobsList from '../Jobs/JobsList'
+import ProductionInfoTab from '../Productions/ProductionInfoTab'
 import SpaceAgreementFormForTheatersToggle from '../SpaceAgreements/SpaceAgreementFormForTheatersToggle'
 import SpaceInfoTab from '../Spaces/SpaceInfoTab'
-
-import {
-  updateServerTheater
-} from '../../api/theaters.js'
 
 class TheaterShow extends Component {
   constructor(props, context) {
@@ -48,6 +46,16 @@ class TheaterShow extends Component {
       spaceTabs = <div>No spaces found</div>
     }
 
+    let productionTabs
+    if (this.props.theater.productions[0]) {
+      spaceTabs = this.props.theater.productions.map((production) =>
+        <Tab eventKey={`production-${production.id}`} title={production.play ? production.play.title : 'A Play'} key={`production-${production.id}`}>
+        <ProductionInfoTab production={production} />
+      </Tab>
+      )
+    } else {
+      productionTabs = <div>No productions found</div>
+    }
     return (
       <Col md={12}>
       <Row>
@@ -89,6 +97,19 @@ class TheaterShow extends Component {
         >
           {spaceTabs}
         </Tabs>
+        <Row>
+          <h2>Productions</h2>
+          </Row>
+            <Tabs
+            activeKey={this.state.key}
+            onSelect={this.handleSelect}
+            id="production-info-tabs"
+          >
+            {productionTabs}
+          </Tabs>
+          <Row>
+            <JobsList theater_id={this.props.theater.id} />
+          </Row>
       </Col>
     )
   }

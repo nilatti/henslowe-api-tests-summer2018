@@ -14,6 +14,8 @@ import {
   updateServerUser
 } from '../../api/users.js'
 
+import JobsList from '../Jobs/JobsList'
+
 class UserShow extends Component {
   constructor(props, context) {
     super(props, context);
@@ -83,6 +85,9 @@ class UserShow extends Component {
             <i className="fas fa-trash-alt"></i>
           </span>
         </Col>
+      </Row>
+      <Row>
+        <JobsList user_id={this.props.user.id} />
       </Row>
       </Col>
     )

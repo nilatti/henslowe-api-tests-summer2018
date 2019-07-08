@@ -8,8 +8,6 @@ import {
   Form,
 } from 'react-bootstrap'
 
-import AddressForm from '../AddressForm'
-
 class SpecializationForm extends Component {
   constructor(props) {
     super(props)

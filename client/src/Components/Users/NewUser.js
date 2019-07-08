@@ -11,8 +11,6 @@ import {
   Row,
 } from 'react-bootstrap'
 
-import UserForm from './UserForm'
-
 class NewUser extends Component {
   constructor(props) {
     super(props)
