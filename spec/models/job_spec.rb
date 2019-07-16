@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Job, type: :model do
-  describe validate_dates do
+  it 'validate_dates' do
     subject.start_date = Date.now
     subject.end_date = Date.now - 5.days
     subject.valid?

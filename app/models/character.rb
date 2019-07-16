@@ -1,6 +1,6 @@
 class Character < ApplicationRecord
   belongs_to :play
-  belongs_to :job
+  belongs_to :job, optional: :true
   has_many :on_stages
   has_many :french_scenes, through: :on_stages
   default_scope { order('name ASC') }
