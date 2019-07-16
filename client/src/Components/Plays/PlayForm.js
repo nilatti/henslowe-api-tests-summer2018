@@ -126,8 +126,6 @@ class PlayForm extends Component {
   }
 
   render() {
-    console.log('date from props', this.props.play.date)
-    console.log('date', this.state.date)
     const genres = [
       {id: 'comedy', label: 'Comedy'},
       {id: 'fringe', label: 'Fringe'},

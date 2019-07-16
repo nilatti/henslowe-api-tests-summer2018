@@ -51,7 +51,6 @@ class EditProductionForm extends Component {
     const {
       validated
     } = this.state
-    console.log(this.state.start_date)
     return (
       <Col md = {{span: 8, offset: 2}}>
       <h2>{this.props.production.play.title} at {this.props.production.theater.name}</h2>

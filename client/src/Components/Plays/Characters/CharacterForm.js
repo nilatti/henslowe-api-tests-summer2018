@@ -48,7 +48,6 @@ class CharacterForm extends Component {
       id: this.props.character.id,
       name: this.state.name,
       play_id: this.props.play_id,
-
     })
   }
 

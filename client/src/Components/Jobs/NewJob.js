@@ -30,6 +30,8 @@ class NewJob extends Component {
         <Col md={12} >
           <div id="new-job-form">
             <JobForm
+            production={this.props.location.state.production}
+            productionSet={this.props.location.state.productionSet}
             onFormSubmit={this.handleFormSubmit}
             onFormClose={this.handleFormClose}
              />

@@ -18,30 +18,11 @@ import EditableCharactersList from './EditableCharactersList'
 import EditableCharacter from './EditableCharacter'
 import CharacterFormToggle from './CharacterFormToggle'
 
-// import {
-//   deleteCharacter
-// } from '../../../api/acts'
-
 class Characters extends Component {
   state = {
-    acts: this.props.acts,
+    characters: this.props.characters,
     errorStatus: '',
   }
-
-  // async deleteCharacter(actId) {
-  //   const response = await deleteCharacter(actId)
-  //   if (response.status >= 400) {
-  //     this.setState({
-  //       errorStatus: 'Error deleting character'
-  //     })
-  //   } else {
-  //     this.setState({
-  //       acts: this.state.acts.filter(character =>
-  //         character.id != actId
-  //       )
-  //     })
-  //   }
-  // }
 
   render() {
     return (
@@ -51,7 +32,7 @@ class Characters extends Component {
             <h2>Characters</h2>
             <Switch>
             <Route
-              path={`/plays/:playId/acts/:actId`}
+              path={`/plays/:playId/characters/:characterId`}
               render={(props) => (
                 <EditableCharacter
                   {...props}
@@ -62,7 +43,7 @@ class Characters extends Component {
             <Route
               path={`/plays/:playId`}
               render={(props) => (
-                <EditableCharactersList acts={this.props.acts} onDeleteClick={this.props.onDeleteClick} play_id={this.props.play_id} />
+                <EditableCharactersList characters={this.props.characters} onDeleteClick={this.props.onDeleteClick} play_id={this.props.play_id} />
               )}
             />
             </Switch>
@@ -75,7 +56,7 @@ class Characters extends Component {
 }
 
 Characters.propTypes = {
-  acts: PropTypes.array.isRequired,
+  characters: PropTypes.array.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   play_id: PropTypes.number.isRequired,
 }

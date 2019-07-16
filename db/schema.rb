@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_24_024330) do
+ActiveRecord::Schema.define(version: 2019_07_16_004710) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -76,6 +76,20 @@ ActiveRecord::Schema.define(version: 2019_06_24_024330) do
     t.bigint "play_id"
     t.string "xml_id"
     t.index ["play_id"], name: "index_characters_on_play_id"
+  end
+
+  create_table "entrance_exits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "french_scene_id"
+    t.integer "page"
+    t.integer "line"
+    t.integer "order"
+    t.bigint "user_id"
+    t.bigint "stage_exit_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["french_scene_id"], name: "index_entrance_exits_on_french_scene_id"
+    t.index ["stage_exit_id"], name: "index_entrance_exits_on_stage_exit_id"
+    t.index ["user_id"], name: "index_entrance_exits_on_user_id"
   end
 
   create_table "french_scenes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -187,6 +201,14 @@ ActiveRecord::Schema.define(version: 2019_06_24_024330) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "stage_exits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "production_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["production_id"], name: "index_stage_exits_on_production_id"
+  end
+
   create_table "theaters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "street_address"
@@ -232,6 +254,9 @@ ActiveRecord::Schema.define(version: 2019_06_24_024330) do
   end
 
   add_foreign_key "acts", "plays"
+  add_foreign_key "entrance_exits", "french_scenes"
+  add_foreign_key "entrance_exits", "stage_exits"
+  add_foreign_key "entrance_exits", "users"
   add_foreign_key "french_scenes", "scenes"
   add_foreign_key "jobs", "characters"
   add_foreign_key "jobs", "productions"
@@ -242,4 +267,5 @@ ActiveRecord::Schema.define(version: 2019_06_24_024330) do
   add_foreign_key "productions", "theaters"
   add_foreign_key "space_agreements", "spaces"
   add_foreign_key "space_agreements", "theaters"
+  add_foreign_key "stage_exits", "productions"
 end

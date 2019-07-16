@@ -130,15 +130,16 @@ class PlayShow extends Component {
       })
     } else {
       this.setState(state => {
-        const characterList = state.characters.map((character) => {
+        let characterList = state.characters.map((character) => {
           if (character.id === characterAttrs.id) {
             return characterAttrs
           } else {
             return character
           }
         })
+        let characterListSorted = characterList.sort((a, b) => (a.name > b.name) - (a.name < b.name));
         return {
-          characters: characterList
+          characters: characterListSorted
         }
       })
     }

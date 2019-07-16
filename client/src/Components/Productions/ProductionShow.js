@@ -15,6 +15,7 @@ import {
 
 import CastList from '../Jobs/CastList'
 import JobsList from '../Jobs/JobsList'
+import StageExitsList from './SetDesign/StageExitsList'
 import TheaterInfoTab from '../Theaters/TheaterInfoTab'
 
 class ProductionShow extends Component {
@@ -27,6 +28,7 @@ class ProductionShow extends Component {
     };
   }
 
+
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.production.id)
   }
@@ -38,7 +40,6 @@ class ProductionShow extends Component {
   }
 
   render() {
-
     return (
       <Col md={12}>
       <Row>
@@ -77,13 +78,21 @@ class ProductionShow extends Component {
       </Row>
       <hr />
       <Row>
-        <JobsList production_id={this.props.production.id} />
+        <JobsList production={this.props.production} />
       </Row>
       <hr />
       <Row>
-        <CastList production_id={this.props.production.id} />
+        <CastList production={this.props.production} />
       </Row>
-
+      <hr />
+      <Row>
+        <h2>
+          Set Design
+        </h2>
+      </Row>
+      <Row>
+        <StageExitsList productionId={this.props.production.id}/>
+      </Row>
       </Col>
     )
   }

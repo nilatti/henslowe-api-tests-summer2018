@@ -12,6 +12,22 @@ async function deleteJob(jobId) {
   return API.delete(`jobs/${jobId}`)
 }
 
+async function getActorsAndAuditionersForProduction(productionId) {
+  return API.request(`jobs/get_actors_and_auditioners_for_production`, {
+    params: {
+      production: productionId,
+    }
+  })
+}
+
+async function getActorsAndAuditionersForTheater(theaterId) {
+  return API.request(`jobs/get_actors_and_auditioners_for_theater`, {
+    params: {
+      theater: theaterId,
+    }
+  })
+}
+
 async function getJob(jobId) {
   return API.request(`jobs/${jobId}`)
 }
@@ -39,6 +55,8 @@ async function updateServerJob(job) {
 export {
   createJob,
   deleteJob,
+  getActorsAndAuditionersForProduction,
+  getActorsAndAuditionersForTheater,
   getJob,
   getJobNames,
   getJobs,

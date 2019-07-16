@@ -22,9 +22,7 @@ import NewProduction from './NewProduction'
 class Productions extends Component {
 
   async createProduction(production) {
-    console.log('create production called')
     const response = await createProduction(production)
-    console.log('response is ', response.status)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error creating Production'

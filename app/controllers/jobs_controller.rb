@@ -3,7 +3,7 @@ class JobsController < ApiController
 
   # GET /jobs
   def index
-    @jobs = Job.filter(params.slice(:production, :specialiation, :theater, :user))
+    @jobs = Job.filter(params.slice(:production, :specialization, :theater, :user))
 
     json_response(
       @jobs.as_json(
@@ -72,6 +72,29 @@ class JobsController < ApiController
   # DELETE /jobs/1
   def destroy
     @job.destroy
+  end
+
+  def get_actors_and_auditioners_for_production
+    puts params[:production]
+    @jobs = Job.actor_or_auditioner_for_production(params[:production])
+    json_response(
+      @jobs.as_json(
+        include: [
+          :user,
+        ]
+      )
+    )
+  end
+
+  def get_actors_and_auditioners_for_theater
+    @jobs = Job.actor_or_auditioner_for_theater(params[:theater])
+    json_response(
+      @jobs.as_json(
+        include: [
+          :user,
+        ]
+      )
+    )
   end
 
   private

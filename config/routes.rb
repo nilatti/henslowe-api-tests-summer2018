@@ -10,13 +10,21 @@ Rails.application.routes.draw do
   scope 'api' do
 
     resources :users, only: [:index, :show, :update, :destroy]
-    resources :jobs
+    resources :jobs do
+      collection do
+        get :get_actors_and_auditioners_for_production
+        get :get_actors_and_auditioners_for_theater
+      end
+    end
     resources :specializations
     resources :productions do
+      resources :stage_exits
       collection do
         get :production_names
       end
     end
+    resources :stage_exits
+    resources :entrance_exits
 
     resources :theaters do
       collection do

@@ -18,7 +18,7 @@ class EditableCharactersList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      acts: this.props.acts
+      characters: this.props.characters
     }
   }
 
@@ -41,7 +41,7 @@ class EditableCharactersList extends Component {
 
   render() {
     const play_id = this.props.play_id
-    const acts = this.props.acts.map((character) => (
+    const characters = this.props.characters.map((character) => (
       <li key={character.id}>
         <Link to={`../${play_id}/acts/${character.id}`}>{character.number}</Link> <span
           className='right floated edit icon'
@@ -63,7 +63,7 @@ class EditableCharactersList extends Component {
         <Row>
         <Col md={2}>
         <ul>
-          {acts}
+          {characters}
         </ul>
         </Col>
         </Row>
@@ -73,7 +73,7 @@ class EditableCharactersList extends Component {
 }
 
 EditableCharactersList.propTypes = {
-  acts: PropTypes.array.isRequired,
+  characters: PropTypes.array.isRequired,
   play_id: PropTypes.number.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired

@@ -13,8 +13,10 @@ class ProductionsController < ApiController
   def show
     json_response(@production.as_json(include:
         [
-          :play,
           :theater,
+          play: {
+            include: :characters
+          },
           jobs: {
             include: [
               :character,

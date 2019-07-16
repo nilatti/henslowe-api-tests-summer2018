@@ -21,8 +21,8 @@ class JobsList extends Component {
   async loadJobsFromServer() {
    const response = await getJobs(
      {
-       production_id: this.props.production_id,
-       specialization_id: this.props.specialiation_id,
+       production_id: this.props.production.id,
+       specialization_id: this.props.specialization_id,
        theater_id: this.props.theater_id,
        user_id: this.props.user_id})
 
@@ -51,7 +51,17 @@ class JobsList extends Component {
         <ul>
           {jobs}
         </ul>
-        <Link to='/jobs/new'>Add New</Link>
+        <Link
+          to={{
+            pathname: '/jobs/new',
+            state: {
+              production: this.props.production,
+              productionSet: true            
+            }
+          }}
+        >
+          Add New
+        </Link>
       </div>
     )
   }

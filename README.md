@@ -22,3 +22,10 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+rvm use gemset ruby-2.6.1@henslowe5
+
+rails s -p 3001
+bundle exec sidekiq
+cd client
+npm start

@@ -32,16 +32,18 @@ import {
 class JobForm extends Component {
   constructor(props) {
     super(props)
+    const production = this.props.job.production || this.props.production
+    const theater = this.props.job.theater || this.props.production.theater || this.props.theater
     this.state = {
-      end_date: this.props.job.end_date || '',
+      end_date: this.props.job.end_date || production.end_date || '',
       productions: [],
-      productionSet: false,
-      selectedProduction: this.props.job.production ? [{id: this.props.job.production.id, label: `${this.props.job.production.play.title} at ${this.props.job.theater.name}` }] : [],
+      productionSet: this.props.productionSet || false,
+      selectedProduction: production ? [{id: production.id, label: `${production.play.title} at ${production.theater.name}` }] : [],
       selectedSpecialization: this.props.job.specialization ? [{id: this.props.job.specialization.id, label: this.props.job.specialization.title }] : [],
-      selectedTheater: this.props.job.theater ? [{id: this.props.job.theater.id, label: this.props.job.theater.name }] : [],
+      selectedTheater: theater ? [{id: theater.id, label: theater.name }] : [],
       selectedUser: this.props.job.user ? [{id: this.props.job.user.id, label: this.props.job.user.first_name ? `${this.props.job.user.first_name} ${this.props.job.user.last_name}` : `${this.props.job.user.email}` }] : [],
       specializations: [],
-      start_date: this.props.job.start_date || '',
+      start_date: this.props.job.start_date || production.start_date || '',
       theaters: [],
       users: [],
       validated: false,
@@ -337,7 +339,6 @@ JobForm.defaultProps = {
     street_address: '',
     website: '',
     zip: '',
-
   }
 }
 

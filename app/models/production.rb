@@ -1,8 +1,12 @@
 class Production < ApplicationRecord
   attr_accessor :play_id
   belongs_to :theater
+
   has_one :play, dependent: :destroy
+
   has_many :jobs, dependent: :destroy
+  has_many :stage_exits, dependent: :destroy
+
   validate :end_date_after_start_date
 
   default_scope {order(:start_date)}
