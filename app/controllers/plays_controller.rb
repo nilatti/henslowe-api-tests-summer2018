@@ -23,6 +23,12 @@ class PlaysController < ApiController
                 french_scenes: {
                   include: [
                     :characters,
+                    entrance_exits: {
+                      include: [
+                          :stage_exit,
+                          :user
+                        ]
+                    },
                     on_stages: {
                       include: :character
                     }

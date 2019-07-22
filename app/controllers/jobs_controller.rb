@@ -74,8 +74,18 @@ class JobsController < ApiController
     @job.destroy
   end
 
+  def get_actors_for_production
+    @jobs = Job.actor_for_production(params[:production])
+    json_response(
+      @jobs.as_json(
+        include: [
+          :user,
+        ]
+      )
+    )
+  end
+
   def get_actors_and_auditioners_for_production
-    puts params[:production]
     @jobs = Job.actor_or_auditioner_for_production(params[:production])
     json_response(
       @jobs.as_json(

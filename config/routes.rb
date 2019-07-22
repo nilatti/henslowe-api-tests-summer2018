@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :show, :update, :destroy]
     resources :jobs do
       collection do
+        get :get_actors_for_production
         get :get_actors_and_auditioners_for_production
         get :get_actors_and_auditioners_for_theater
       end
@@ -21,10 +22,10 @@ Rails.application.routes.draw do
       resources :stage_exits
       collection do
         get :production_names
+        get :get_productions_for_theater
       end
     end
     resources :stage_exits
-    resources :entrance_exits
 
     resources :theaters do
       collection do
@@ -58,7 +59,9 @@ Rails.application.routes.draw do
     resources :scenes do
       resources :french_scenes
     end
-    resources :french_scenes
+    resources :french_scenes do
+      resources :entrance_exits
+    end
     resources :on_stages
   end
 end

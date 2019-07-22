@@ -85,10 +85,10 @@ class TheaterShow extends Component {
       <hr />
       <Row>
         <h2>Spaces</h2>
-        </Row>
-        <Row>
-          <SpaceAgreementFormForTheatersToggle theater={this.props.theater} isOpen={false} onFormSubmit={this.props.onFormSubmit} />
-        </Row>
+      </Row>
+      <Row>
+        <SpaceAgreementFormForTheatersToggle theater={this.props.theater} isOpen={false} onFormSubmit={this.props.onFormSubmit} />
+      </Row>
 
           <Tabs
           activeKey={this.state.key}
@@ -108,7 +108,10 @@ class TheaterShow extends Component {
             {productionTabs}
           </Tabs>
           <Row>
-            <JobsList theater_id={this.props.theater.id} />
+            <h2>Jobs</h2>
+          </Row>
+          <Row>
+            <JobsList theater={this.props.theater} />
           </Row>
       </Col>
     )

@@ -23,13 +23,11 @@ class TheatersController < ApiController
   # POST /theaters
   def create
     @theater = Theater.create!(theater_params)
-    puts @theater.to_json
     json_response(@theater, :created)
   end
 
   # PATCH/PUT /theaters/1
   def update
-    puts theater_params
     @theater.update(theater_params)
     json_response(@theater.as_json(include: [:spaces]))
   end

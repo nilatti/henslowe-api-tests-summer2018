@@ -10,11 +10,13 @@ class Job < ApplicationRecord
   scope :specialization, -> (specialization) { where specialization: specialization }
   scope :theater, -> (theater) { where theater: theater }
   scope :user, -> (user) { where user: user }
+  scope :actor, -> { where(specialization: Specialization.actor).where.not(user: nil) }
   scope :actor_or_auditioner, -> { where(specialization: Specialization.actor_or_auditioner).where.not(user: nil) }
+  scope :actor_for_production, -> (production) {production(production).actor}
   scope :actor_or_auditioner_for_production, -> (production) {production(production).actor_or_auditioner}
   scope :actor_or_auditioner_for_theater, -> (theater) {theater(theater).actor_or_auditioner}
 
-  validate :end_date_after_start_date
+  validate :end_date_after_start_date if :end_date
 
 private
   def end_date_after_start_date

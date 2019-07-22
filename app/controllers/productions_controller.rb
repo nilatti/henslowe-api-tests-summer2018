@@ -30,11 +30,9 @@ class ProductionsController < ApiController
 
   # POST /productions
   def create
-    puts "production create called"
     @production = Production.new(production_params)
 
     if @production.save
-      puts "production saved"
       json_response(@production.as_json(include: [:theater]), :created)
       PlayCopyWorker.perform_async(production_params['play_id'], @production.id)
     else
@@ -59,6 +57,11 @@ class ProductionsController < ApiController
   def production_names
     @productions = Production.all
     render json: @productions.as_json(only: %i[id name], include: [:theater, :play])
+  end
+
+  def get_productions_for_theater
+    @productions = Production.where(theater: params[:theater])
+    json_response(@productions.as_json(include: [:play, :theater]))
   end
 
   private

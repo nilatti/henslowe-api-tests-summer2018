@@ -51,7 +51,6 @@ class Users extends Component {
   }
 
   handleCreateFormSubmit = (user) => {
-    console.log(user)
     this.createUser(user)
 
   }

@@ -40,7 +40,6 @@ class StageExitsList extends Component {
   }
 
   onSave = (nameObj, stageExitId) => {
-    console.log('stage exit', nameObj, stageExitId)
     let stageExitObj = {
       id: stageExitId,
       name: nameObj['name']

@@ -16,7 +16,8 @@ import {
 } from '../../api/specializations'
 
 import {
-  getProductions
+  getProductions,
+  getProductionsForTheater
 } from '../../api/productions'
 
 import {
@@ -32,26 +33,56 @@ import {
 class JobForm extends Component {
   constructor(props) {
     super(props)
-    const production = this.props.job.production || this.props.production
-    const theater = this.props.job.theater || this.props.production.theater || this.props.theater
+    let end_date
+    let production
+    let start_date
+    let theater
+    let theaterSet
+    let user
+    if (this.props.job) {
+      end_date = this.props.job.end_date
+      production = this.props.job.production
+      start_date = this.props.job.start_date
+      theater = this.props.job.theater
+      user = this.props.job.user
+    }
+
+    if (this.props.production) {
+      end_date = this.props.production.end_date
+      production = this.props.production
+      end_date = this.props.production.start_date
+      theater = this.props.production.theater
+    }
+
+    if (this.props.theater) {
+      theater = this.props.theater
+      theaterSet = true
+    }
+
     this.state = {
-      end_date: this.props.job.end_date || production.end_date || '',
+      end_date: end_date || '',
       productions: [],
-      productionSet: this.props.productionSet || false,
-      selectedProduction: production ? [{id: production.id, label: `${production.play.title} at ${production.theater.name}` }] : [],
+      productionSet: this.props.productionSet,
+      selectedProduction: production ? [{id: production.id, label: `${production.play.title} at ${theater.name}` }] : [],
       selectedSpecialization: this.props.job.specialization ? [{id: this.props.job.specialization.id, label: this.props.job.specialization.title }] : [],
       selectedTheater: theater ? [{id: theater.id, label: theater.name }] : [],
-      selectedUser: this.props.job.user ? [{id: this.props.job.user.id, label: this.props.job.user.first_name ? `${this.props.job.user.first_name} ${this.props.job.user.last_name}` : `${this.props.job.user.email}` }] : [],
+      selectedUser: user ? [{id: user.id, label: user.first_name ? `${user.first_name} ${user.last_name}` : `${user.email}` }] : [],
       specializations: [],
-      start_date: this.props.job.start_date || production.start_date || '',
+      start_date: start_date || '',
       theaters: [],
+      theaterSet: theaterSet,
       users: [],
       validated: false,
     }
   }
 
   componentDidMount = () => {
-    this.loadProductionsFromServer()
+    if (this.props.theater) {
+      this.loadProductionsForTheaterFromServer(this.props.theater.id)
+    } else {
+      this.loadProductionsFromServer()
+    }
+
     this.loadSpecializationsFromServer()
     this.loadTheatersFromServer()
     this.loadUsersFromServer()
@@ -70,7 +101,6 @@ class JobForm extends Component {
       })
       this.setState({
         end_date: newProd.end_date,
-        productionSet: true,
         selectedProduction: [e[0]],
         selectedTheater: [{id: newProd.theater.id, label: newProd.theater.name }],
         start_date: newProd.start_date,
@@ -140,6 +170,19 @@ class JobForm extends Component {
     }
   }
 
+  async loadProductionsForTheaterFromServer(theaterId) {
+    const response = await getProductionsForTheater(theaterId)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error fetching productions'
+      })
+    } else {
+      this.setState({
+        productions: response.data
+      })
+    }
+  }
+
   async loadSpecializationsFromServer() {
     const response = await getSpecializations()
     if (response.status >= 400) {
@@ -180,25 +223,6 @@ class JobForm extends Component {
   }
 
   render() {
-    var productions = this.state.productions.map((production) => ({
-      id: production.id,
-      label: `${production.play.title} at ${production.theater.name}`
-    }))
-    var specializations = this.state.specializations.map((specialization) => ({
-      id: specialization.id,
-      label: String(specialization.title)
-    }))
-
-    var theaters = this.state.theaters.map((theater) => ({
-      id: theater.id,
-      label: String(theater.name)
-    }))
-
-    var users = this.state.users.map((user) => ({
-      id: user.id,
-      label: user.first_name ? `${user.first_name} ${user.last_name}` : `${user.email}`
-    }))
-
     const {
       validated
     } = this.state
@@ -214,6 +238,26 @@ class JobForm extends Component {
     if (!this.state.users) {
       return <div>Loading users</div>
     }
+
+    var productions = this.state.productions.map((production) => ({
+      id: production.id,
+      label: `${production.play.title} at ${production.theater.name}`
+    }))
+
+    var specializations = this.state.specializations.map((specialization) => ({
+      id: specialization.id,
+      label: String(specialization.title)
+    }))
+
+    var theaters = this.state.theaters.map((theater) => ({
+      id: theater.id,
+      label: String(theater.name)
+    }))
+
+    var users = this.state.users.map((user) => ({
+      id: user.id,
+      label: user.first_name ? `${user.first_name} ${user.last_name}` : `${user.email}`
+    }))
     return (<Col md = {{span: 8, offset: 2}}>
       <Form
         noValidate
@@ -279,7 +323,7 @@ class JobForm extends Component {
           Theater
         </Form.Label>
         <Typeahead
-          disabled={this.state.productionSet === true ? true : false}
+          disabled={(this.state.productionSet === true || this.state.theaterSet) ? true : false}
           id="theater"
           options={theaters}
           onChange={(selected) => {

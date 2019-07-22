@@ -67,7 +67,6 @@ class PlayForm extends Component {
   }
 
   handleGenreChange = (e) => {
-    console.log('genres', e)
     if (e.length > 0) {
       this.setState({
         genre: e.map((item) => item.id),

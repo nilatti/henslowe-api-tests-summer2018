@@ -1,7 +1,6 @@
 class CopyPlayForProduction
   attr_accessor :original_play, :production_id, :new_play
   def initialize(play_id:, production_id:)
-    puts "copy play for production"
     @original_play = Play.find(play_id)
     @production_id = production_id
   end

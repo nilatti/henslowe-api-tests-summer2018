@@ -25,13 +25,27 @@ class NewJob extends Component {
   }
 
   render() {
+    let production
+    let productionSet
+    let theater
+    if (this.props.location.state){
+      production = this.props.location.state.production
+      productionSet = this.props.location.state.productionSet
+      theater = this.props.location.state.theater
+    } else {
+      production = ''
+      productionSet = false
+      theater = ''
+    }
+
     return (
       <Row>
         <Col md={12} >
           <div id="new-job-form">
             <JobForm
-            production={this.props.location.state.production}
-            productionSet={this.props.location.state.productionSet}
+            production={production}
+            productionSet={productionSet}
+            theater={theater}
             onFormSubmit={this.handleFormSubmit}
             onFormClose={this.handleFormClose}
              />

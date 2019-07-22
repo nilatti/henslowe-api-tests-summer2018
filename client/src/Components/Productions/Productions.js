@@ -28,7 +28,6 @@ class Productions extends Component {
         errorStatus: 'Error creating Production'
       })
     } else {
-      console.log('response from production create', response.status, response.data)
       this.props.history.push(`/productions/${response.data.id}`)
       window.location.reload();
     }

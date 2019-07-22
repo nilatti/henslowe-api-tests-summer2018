@@ -22,7 +22,6 @@ class NewUser extends Component {
   }
 
   handleFormClose = () => {
-    console.log('form close called')
     this.setState({
       isOpen: false
     })
@@ -42,7 +41,6 @@ class NewUser extends Component {
 
   processSubmit = () => {
     this.handleFormClose()
-    console.log('form submit called in new user')
     this.props.onFormSubmit({
       email: this.state.email,
       password: this.state.password,

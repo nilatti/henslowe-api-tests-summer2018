@@ -41,7 +41,6 @@ class FrenchSceneForm extends Component {
   }
 
   handleCharactersChange = (selected) => {
-    console.log('characters change caled')
     this.setState({
       selected_characters: selected
     })
@@ -61,7 +60,6 @@ class FrenchSceneForm extends Component {
   }
 
   processSubmit = () => {
-    console.log('inside process', this.state.selected_characters)
     var character_ids = this.state.selected_characters.map((character) => character.id)
     var characters = this.state.available_characters.filter(character => character_ids.includes(character.id))
     this.props.onFormSubmit({

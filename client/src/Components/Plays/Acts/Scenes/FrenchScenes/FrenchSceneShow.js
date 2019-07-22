@@ -10,6 +10,7 @@ import {
 } from 'react-bootstrap'
 
 import EditableOnStage from './OnStages/EditableOnStage'
+import EntranceExitList from './EntranceExits/EntranceExitList'
 
 class FrenchSceneShow extends Component {
   handleDeleteClick = () => {
@@ -36,8 +37,6 @@ class FrenchSceneShow extends Component {
           on_stage={on_stage}
         />
       ))
-    } else {
-
     }
     return (
       <div>
@@ -73,9 +72,15 @@ class FrenchSceneShow extends Component {
         </Row>
         <Row>
           <h3>Characters</h3>
+        </Row>
+        <Row>
           <ul>
             {characters}
           </ul>
+        </Row>
+        <Row>
+          Entrances and Exits:
+          <EntranceExitList frenchSceneId={this.props.french_scene.id}/>        
         </Row>
       </div>
     )
