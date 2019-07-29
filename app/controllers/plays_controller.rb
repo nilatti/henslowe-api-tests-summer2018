@@ -26,7 +26,7 @@ class PlaysController < ApiController
                     entrance_exits: {
                       include: [
                           :stage_exit,
-                          :user
+                          :character
                         ]
                     },
                     on_stages: {
@@ -93,6 +93,12 @@ class PlaysController < ApiController
 
   # Only allow a trusted parameter "white list" through.
   def play_params
-    params.require(:play).permit(:author_id, :title, :date, genre: [])
+    params.require(:play).permit(
+      :author_id,
+      :canonical, 
+      :date,
+      :title,
+      genre: []
+    )
   end
 end

@@ -20,7 +20,7 @@ class JobShow extends Component {
   }
 
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.id)
+    this.props.onDeleteClick(this.props.job.id)
   }
 
   handleSelect(key) {
@@ -34,7 +34,13 @@ class JobShow extends Component {
       <Col md={12}>
       <Row>
         <Col md={12} className="job-profile">
-          <h2>{this.props.job.user.first_name} {this.props.job.user.last_name}</h2>
+          <h2>
+            {
+              this.props.job.user
+              ? this.props.job.user.first_name
+              : <div>Job yet to be filled</div>
+            }
+            </h2>
           <p><em>{this.props.job.specialization.title} for {this.props.job.production.play.title} at {this.props.job.theater.name}</em></p>
           <p>
             {this.props.job.start_date} - {this.props.job.end_date}

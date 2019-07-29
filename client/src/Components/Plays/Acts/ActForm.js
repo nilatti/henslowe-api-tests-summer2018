@@ -14,7 +14,7 @@ class ActForm extends Component {
     this.state = {
       end_page: this.props.act.end_page,
       number: this.props.act.number,
-      play_id: this.props.play_id,
+      play: this.props.play,
       start_page: this.props.act.start_page,
       summary: this.props.act.summary,
       validated: false,
@@ -42,11 +42,11 @@ class ActForm extends Component {
 
   processSubmit = () => {
     this.props.onFormSubmit({
-      end_page: this.state.end_page,
+      end_page: this.state.end_page || '',
       id: this.props.act.id,
       number: this.state.number,
-      play_id: this.state.play_id,
-      start_page: this.state.start_page,
+      play_id: this.state.play.id,
+      start_page: this.state.start_page || '',
       summary: this.state.summary,
     })
 
@@ -84,21 +84,20 @@ class ActForm extends Component {
           </Form.Group>
           </Col>
           <Col>
-
-              <Form.Group controlId="start_page">
-                  <Form.Label>
-                    Start Page
-                  </Form.Label>
-                    <Form.Control
-                      type="number"
-                      placeholder="starting page number"
-                      name="start_page"
-                      onChange={this.handleChange}
-                      pattern="[0-9]+"
-                      value={this.state.start_page}
-                    />
-                </Form.Group>
-              </Col>
+            <Form.Group controlId="start_page">
+                <Form.Label>
+                  Start Page
+                </Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="starting page number"
+                    name="start_page"
+                    onChange={this.handleChange}
+                    pattern="[0-9]+"
+                    value={this.state.start_page}
+                  />
+              </Form.Group>
+            </Col>
               <Col>
               <Form.Group controlId="end_page">
                   <Form.Label>
@@ -146,7 +145,7 @@ ActForm.propTypes = {
   act: PropTypes.object,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
 }
 
 export default ActForm

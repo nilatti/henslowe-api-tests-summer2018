@@ -13,9 +13,9 @@ class SceneForm extends Component {
     super(props)
     this.state = {
       act_id: this.props.act_id,
-      end_page: this.props.scene.end_page,
+      end_page: this.props.scene.end_page || '',
       number: this.props.scene.number,
-      start_page: this.props.scene.start_page,
+      start_page: this.props.scene.start_page || '',
       summary: this.props.scene.summary,
       validated: false,
     }

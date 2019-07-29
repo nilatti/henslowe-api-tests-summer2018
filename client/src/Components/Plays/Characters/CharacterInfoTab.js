@@ -40,12 +40,21 @@ class CharacterInfoTab extends Component {
   render() {
     if (this.state.editFormOpen) {
       return (
-        <CharacterForm character={this.props.character} play_id={this.props.play_id} onFormClose={this.handleFormClose} onFormSubmit={this.handleSubmit} />
+        <CharacterForm
+          character={this.props.character}
+           onFormClose={this.handleFormClose}
+           onFormSubmit={this.handleSubmit}
+           play_id={this.props.play.id} 
+          />
       )
     }
     return (
       <div>
-        <CharacterShow character={this.props.character} handleEditClick={this.handleEditClick} handleDeleteClick={this.handleDeleteClick}/>
+        <CharacterShow
+          character={this.props.character}
+          handleEditClick={this.handleEditClick}
+          handleDeleteClick={this.handleDeleteClick}
+        />
         </div>
     )
   }
@@ -53,7 +62,7 @@ class CharacterInfoTab extends Component {
 
 CharacterInfoTab.propTypes = {
   character: PropTypes.object.isRequired,
-  play_id: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
 }
 

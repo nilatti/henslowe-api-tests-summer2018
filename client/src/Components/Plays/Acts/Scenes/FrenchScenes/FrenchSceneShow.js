@@ -9,7 +9,7 @@ import {
   Tabs,
 } from 'react-bootstrap'
 
-import EditableOnStage from './OnStages/EditableOnStage'
+import OnStagesList from './OnStages/OnStagesList'
 import EntranceExitList from './EntranceExits/EntranceExitList'
 
 class FrenchSceneShow extends Component {
@@ -27,17 +27,7 @@ class FrenchSceneShow extends Component {
   }
 
   render() {
-    if (this.props.french_scene.on_stages[0]) {
-      var characters = this.props.french_scene.on_stages.map((on_stage) => (
-        <EditableOnStage
-          changeNonspeaking={this.changeNonspeaking}
-          french_scene_id={this.props.french_scene.id}
-          handleEditSubmit={this.handleEditSubmit}
-          key={on_stage.id}
-          on_stage={on_stage}
-        />
-      ))
-    }
+
     return (
       <div>
         <Row>
@@ -75,13 +65,25 @@ class FrenchSceneShow extends Component {
         </Row>
         <Row>
           <ul>
-            {characters}
+            <OnStagesList
+              frenchSceneId={this.props.french_scene.id}
+              on_stages={this.props.on_stages}
+              play={this.props.play}
+            />
           </ul>
         </Row>
-        <Row>
-          Entrances and Exits:
-          <EntranceExitList frenchSceneId={this.props.french_scene.id}/>        
-        </Row>
+        {
+          !this.props.play.canonical
+          ? <Row>
+            <EntranceExitList
+              frenchSceneId={this.props.french_scene.id}
+              play={this.props.play}
+            />
+          </Row>
+          : <span></span>
+
+        }
+
       </div>
     )
   }
@@ -98,6 +100,7 @@ FrenchSceneShow.propTypes = {
   french_scene: PropTypes.object.isRequired,
   handleNonspeakingClick: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
+  play: PropTypes.object.isRequired,
   scene_number: PropTypes.number.isRequired,
 }
 

@@ -39,7 +39,13 @@ class SceneInfoTab extends Component {
   render() {
     if (this.state.editFormOpen) {
       return (
-        <SceneForm scene={this.props.scene} act_id={this.props.act_id} onFormClose={this.handleFormClose} onFormSubmit={this.handleSubmit} play_id={this.props.play_id}/>
+        <SceneForm
+          act_id={this.props.act_id}
+          scene={this.props.scene}
+          onFormClose={this.handleFormClose}
+          onFormSubmit={this.handleSubmit}
+          play_id={this.props.play.id}
+        />
       )
     }
     return (
@@ -48,7 +54,7 @@ class SceneInfoTab extends Component {
           act_number={this.props.act_number}
           handleEditClick={this.handleEditClick}
           onDeleteClick={this.handleDeleteClick}
-          play_id={this.props.play_id}
+          play={this.props.play}
           scene={this.props.scene}
           />
       </div>
@@ -59,7 +65,7 @@ class SceneInfoTab extends Component {
 SceneInfoTab.propTypes = {
   act_id: PropTypes.number.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,
 }
 

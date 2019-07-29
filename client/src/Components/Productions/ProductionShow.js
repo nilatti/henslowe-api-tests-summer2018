@@ -13,8 +13,9 @@ import {
   Link
 } from 'react-router-dom'
 
+import ActorsList from './Actors/ActorsList'
 import CastList from '../Jobs/CastList'
-import JobsList from '../Jobs/JobsList'
+import JobsListExcludingActorsAndAuditioners from '../Jobs/JobsListExcludingActorsAndAuditioners'
 import StageExitsList from './SetDesign/StageExitsList'
 import TheaterInfoTab from '../Theaters/TheaterInfoTab'
 
@@ -78,11 +79,17 @@ class ProductionShow extends Component {
       </Row>
       <hr />
       <Row>
-        <JobsList production={this.props.production} />
+        <JobsListExcludingActorsAndAuditioners production={this.props.production} />
       </Row>
       <hr />
       <Row>
         <CastList production={this.props.production} />
+      </Row>
+      <hr />
+      <Row>
+        <Col md={12}>
+          <ActorsList production={this.props.production} />
+        </Col>
       </Row>
       <hr />
       <Row>

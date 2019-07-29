@@ -20,11 +20,11 @@ class FrenchSceneForm extends Component {
     super(props)
     this.state = {
       available_characters: [],
-      end_page: this.props.french_scene.end_page,
+      end_page: this.props.french_scene.end_page || '',
       number: this.props.french_scene.number,
       scene_id: this.props.scene_id,
       selected_characters: this.props.french_scene.characters || [],
-      start_page: this.props.french_scene.start_page,
+      start_page: this.props.french_scene.start_page || '',
       summary: this.props.french_scene.summary,
       validated: false,
     }

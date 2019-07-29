@@ -11,7 +11,14 @@ class FrenchScenesController < ApiController
 
   # GET /scenes/1
   def show
-    json_response(@french_scene.as_json(include: :entrance_exits, [:characters, on_stages: {include: :character}]))
+    json_response(@french_scene.as_json(
+      include: [
+        :entrance_exits,
+        :characters,
+        on_stages: {
+          include:
+            [:characters]
+        }]))
   end
 
   # POST /scenes

@@ -5,6 +5,9 @@ import React, {
 import {
   Link
 } from 'react-router-dom'
+import _ from 'lodash'
+
+import {buildUserName} from '../../utils/actorUtils'
 
 import {
   getJobs,
@@ -29,8 +32,8 @@ class JobsList extends Component {
       theater = this.props.theater
     }
 
-    if (this.props.user_id) {
-      user = this.props.user_id
+    if (this.props.user) {
+      user = this.props.user
     }
 
     this.state = {
@@ -50,7 +53,7 @@ class JobsList extends Component {
     let production_id = this.props.production ? this.props.production.id : ''
     let specialization_id = this.props.specialization_id ? this.props.specialization_id : ''
     let theater_id = this.props.theater ? this.props.theater.id : ''
-    let user_id = this.props.user_id ? this.props.user_id : ''
+    let user_id = this.props.user ? this.props.user.id : ''
    const response = await getJobs(
      {
        production_id: production_id,
@@ -66,7 +69,7 @@ class JobsList extends Component {
       })
     } else {
       this.setState({
-        jobs: response.data
+        jobs: _.orderBy(response.data, ['user.last_name', 'user.first_name', 'production.id', 'theater.name','specialization_id'])
       })
     }
   }
@@ -76,8 +79,11 @@ class JobsList extends Component {
     let jobs = this.state.jobs.map(job =>
       <li key={job.id}>
         <Link to={`/jobs/${job.id}`}>
-          {job.user ? job.user.preferred_name || job.user.first_name : ''} {job.user ? job.user.last_name : ''}
-          : {job.specialization.title} at {job.theater.name}
+          {job.user
+            ? buildUserName(job.user)
+            : <></>
+          }
+          : {job.specialization.title} at {job.theater.name} <em>{job.production ? job.production.play.title : <></>}</em>
         </Link>
       </li>
     )
@@ -93,6 +99,7 @@ class JobsList extends Component {
               production: this.props.production,
               productionSet: productionSet,
               theater: this.props.theater,
+              user: this.props.user,
             }
           }}
         >

@@ -87,7 +87,7 @@ class UserShow extends Component {
         </Col>
       </Row>
       <Row>
-        <JobsList user_id={this.props.user.id} />
+        <JobsList user={this.props.user} />
       </Row>
       </Col>
     )

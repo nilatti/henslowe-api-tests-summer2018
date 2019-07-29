@@ -1,5 +1,6 @@
 ul {
   list-style-type: none;
+  text-align: left;
 }
 
 .App {
@@ -33,7 +34,10 @@ ul {
 .fas {
   padding: 4px;
 }
-
+.rie-select {
+  display: inline-block;
+  width: 30px;
+}
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

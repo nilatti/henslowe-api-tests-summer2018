@@ -14,13 +14,29 @@ class ProductionsController < ApiController
     json_response(@production.as_json(include:
         [
           :theater,
+          :stage_exits,
           play: {
-            include: :characters
+            include: [
+              :characters,
+              acts: {
+                include: [
+                  scenes: {
+                    include: [
+                      french_scenes: {
+                        include: :entrance_exits
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           jobs: {
             include: [
               :character,
               :specialization,
+              :theater,
+              :user
             ]
           }
         ]

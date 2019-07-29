@@ -18,10 +18,6 @@ import {
   updateServerFrenchScene,
 } from '../../../../api/french_scenes'
 
-// import {
-//   updateServerOnStage
-// } from '../../../../api/on_stages.js'
-
 class SceneShow extends Component {
   constructor(props, context) {
     super(props, context);
@@ -131,7 +127,7 @@ class SceneShow extends Component {
             french_scene={french_scene}
             handleEditSubmit={this.handleEditFrenchSceneSubmit}
             onDeleteClick={this.handleFrenchSceneDeleteClick}
-            play_id={this.props.play_id}
+            play={this.props.play}
             scene_id={this.props.scene.id}
             scene_number={this.props.scene.number}
           />
@@ -174,15 +170,20 @@ class SceneShow extends Component {
           <h2>French Scenes</h2>
         </Row>
         <Row>
-          <FrenchSceneFormToggle scene_id={this.props.scene.id} isOpen={false} onFormSubmit={this.handleFrenchSceneCreateClick} play_id={this.props.play_id}/>
+          <FrenchSceneFormToggle
+            isOpen={false}
+            onFormSubmit={this.handleFrenchSceneCreateClick}
+            play_id={this.props.play.id}
+            scene_id={this.props.scene.id}
+          />
         </Row>
         <Tabs
-        activeKey={this.state.key}
-        onSelect={this.handleSelect}
-        id="french-scene-info-tabs"
-      >
-        {frenchSceneTabs}
-      </Tabs>
+          activeKey={this.state.key}
+          onSelect={this.handleSelect}
+          id="french-scene-info-tabs"
+        >
+          {frenchSceneTabs}
+        </Tabs>
       </div>
     )
   }
@@ -198,7 +199,7 @@ SceneShow.propTypes = {
   act_number: PropTypes.number.isRequired,
   handleEditClick: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,
 }
 

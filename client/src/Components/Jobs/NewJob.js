@@ -28,14 +28,17 @@ class NewJob extends Component {
     let production
     let productionSet
     let theater
+    let user
     if (this.props.location.state){
       production = this.props.location.state.production
       productionSet = this.props.location.state.productionSet
       theater = this.props.location.state.theater
+      user = this.props.location.state.user
     } else {
       production = ''
       productionSet = false
       theater = ''
+      user = ''
     }
 
     return (
@@ -48,6 +51,7 @@ class NewJob extends Component {
             theater={theater}
             onFormSubmit={this.handleFormSubmit}
             onFormClose={this.handleFormClose}
+            user={user}
              />
           </div>
         </Col>

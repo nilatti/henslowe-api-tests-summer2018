@@ -5,7 +5,7 @@ import React, {
 
 import {Button} from 'react-bootstrap'
 
-import { RIEInput} from 'riek'
+import { RIEInput} from '@attently/riek'
 import _ from 'lodash'
 
 import {
@@ -29,10 +29,11 @@ class StageExitsList extends Component {
 
   createNewStageExit = (stageExit) => {
     this.createServerStageExit(stageExit)
+    this.handleToggleClick()
   }
 
   handleToggleClick = () => {
-    this.setState({newStageExitFormOpen: true})
+    this.setState({newStageExitFormOpen: !this.state.newStageExitFormOpen})
   }
 
   onDeleteClick = (stageExitId) => {
@@ -134,7 +135,11 @@ class StageExitsList extends Component {
           {stageExits}
         </ul>
         { this.state.newStageExitFormOpen ?
-          <NewStageExitForm productionId={this.props.productionId} onFormClose={this.handleToggleClick} onFormSubmit={this.createNewStageExit}/>
+          <NewStageExitForm
+            onFormClose={this.handleToggleClick}
+            onFormSubmit={this.createNewStageExit}
+            productionId={this.props.productionId}
+          />
           :
           <Button
             onClick={this.handleToggleClick}

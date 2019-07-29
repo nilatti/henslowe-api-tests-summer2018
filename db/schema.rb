@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_16_004710) do
+ActiveRecord::Schema.define(version: 2019_07_23_210224) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -83,13 +83,15 @@ ActiveRecord::Schema.define(version: 2019_07_16_004710) do
     t.integer "page"
     t.integer "line"
     t.integer "order"
-    t.bigint "user_id"
     t.bigint "stage_exit_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "category"
+    t.text "notes"
+    t.bigint "character_id"
+    t.index ["character_id"], name: "index_entrance_exits_on_character_id"
     t.index ["french_scene_id"], name: "index_entrance_exits_on_french_scene_id"
     t.index ["stage_exit_id"], name: "index_entrance_exits_on_stage_exit_id"
-    t.index ["user_id"], name: "index_entrance_exits_on_user_id"
   end
 
   create_table "french_scenes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -256,7 +258,6 @@ ActiveRecord::Schema.define(version: 2019_07_16_004710) do
   add_foreign_key "acts", "plays"
   add_foreign_key "entrance_exits", "french_scenes"
   add_foreign_key "entrance_exits", "stage_exits"
-  add_foreign_key "entrance_exits", "users"
   add_foreign_key "french_scenes", "scenes"
   add_foreign_key "jobs", "characters"
   add_foreign_key "jobs", "productions"

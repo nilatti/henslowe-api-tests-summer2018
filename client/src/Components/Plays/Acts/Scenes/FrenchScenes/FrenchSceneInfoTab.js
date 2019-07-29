@@ -73,7 +73,7 @@ class FrenchSceneInfoTab extends Component {
           french_scene={this.props.french_scene}
           onFormClose={this.handleFormClose}
           onFormSubmit={this.handleSubmit}
-          play_id={this.props.play_id}
+          play_id={this.props.play.id}
           scene_id={this.props.scene_id}
         />
       )
@@ -86,7 +86,7 @@ class FrenchSceneInfoTab extends Component {
           handleEditClick={this.handleEditClick}
           handleNonspeakingClick={this.handleOnStageEditSubmit}
           onDeleteClick={this.handleDeleteClick}
-          play_id={this.props.play_id}
+          play={this.props.play}
           scene_number={this.props.scene_number}
         />
       </div>
@@ -99,7 +99,7 @@ FrenchSceneInfoTab.propTypes = {
   french_scene: PropTypes.object.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
   scene_id: PropTypes.number.isRequired,
   scene_number: PropTypes.number.isRequired,
 }

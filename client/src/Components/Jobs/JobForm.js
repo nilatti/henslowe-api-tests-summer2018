@@ -39,6 +39,8 @@ class JobForm extends Component {
     let theater
     let theaterSet
     let user
+    let userName
+    let userSet
     if (this.props.job) {
       end_date = this.props.job.end_date
       production = this.props.job.production
@@ -50,13 +52,19 @@ class JobForm extends Component {
     if (this.props.production) {
       end_date = this.props.production.end_date
       production = this.props.production
-      end_date = this.props.production.start_date
+      start_date = this.props.production.start_date
       theater = this.props.production.theater
     }
 
     if (this.props.theater) {
       theater = this.props.theater
       theaterSet = true
+    }
+
+    if (this.props.user) {
+      user = this.props.user
+      userSet = true
+      userName = this.buildUserName(user)
     }
 
     this.state = {
@@ -66,14 +74,21 @@ class JobForm extends Component {
       selectedProduction: production ? [{id: production.id, label: `${production.play.title} at ${theater.name}` }] : [],
       selectedSpecialization: this.props.job.specialization ? [{id: this.props.job.specialization.id, label: this.props.job.specialization.title }] : [],
       selectedTheater: theater ? [{id: theater.id, label: theater.name }] : [],
-      selectedUser: user ? [{id: user.id, label: user.first_name ? `${user.first_name} ${user.last_name}` : `${user.email}` }] : [],
+      selectedUser: user ? [{id: user.id, label: userName}] : [],
       specializations: [],
       start_date: start_date || '',
       theaters: [],
       theaterSet: theaterSet,
       users: [],
+      userSet: userSet || false,
       validated: false,
     }
+  }
+
+  buildUserName = (user) => {
+    const userNameFirst = user.preferred_name || user.first_name || user.email
+    const userNameLast = user.last_name || user.email
+    return `${userNameFirst} ${userNameLast}`
   }
 
   componentDidMount = () => {
@@ -256,7 +271,7 @@ class JobForm extends Component {
 
     var users = this.state.users.map((user) => ({
       id: user.id,
-      label: user.first_name ? `${user.first_name} ${user.last_name}` : `${user.email}`
+      label: this.buildUserName(user)
     }))
     return (<Col md = {{span: 8, offset: 2}}>
       <Form
@@ -269,6 +284,7 @@ class JobForm extends Component {
           User
         </Form.Label>
         <Typeahead
+          disabled={(this.state.userSet === true || this.state.userSet) ? true : false}
           id="user"
           required
           options={users}

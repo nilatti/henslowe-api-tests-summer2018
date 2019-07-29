@@ -22,11 +22,13 @@ import {
 
 import {
   createJob,
+  deleteJob,
   getActorsAndAuditionersForProduction,
   getJobs,
   updateServerJob,
 } from '../../api/jobs'
 
+import CastingShow from './CastingShow'
 import NewCasting from './NewCasting'
 
 class CastList extends Component {
@@ -50,6 +52,21 @@ class CastList extends Component {
     } else {
       this.setState({
         castings: [...this.state.castings, response.data]
+      })
+    }
+  }
+
+  async deleteCasting(castingId) {
+    const response = await deleteJob(castingId)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error deleting casting'
+      })
+    } else {
+      this.setState({
+        castings: this.state.castings.filter(casting =>
+          casting.id !== castingId
+        )
       })
     }
   }
@@ -87,41 +104,6 @@ async loadActorsAndAuditionersFromServer(){
     }
   }
 
-  async updateJobOnServer(actorId, castingId) {
-    let casting = this.state.castings.filter(casting => casting.id === castingId)[0]
-    casting['user_id'] = actorId
-    const response = await updateServerJob(casting)
-
-    if (response >= 400) {
-      this.setState({
-        errorStatus: 'Error writing casting to server'
-      })
-    } else {
-      this.setState({
-        castings: this.state.castings.map(casting => {
-          if (casting.id === castingId) {
-            return { ...response.data, editOpen: false};
-          } else {
-            return casting;
-          }
-        })
-      })
-    }
-  }
-
-  handleActorChange(selected, castingId) {
-    this.setState({
-        castings: this.state.castings.map(casting => {
-          if (casting.id === castingId) {
-            return { ...casting, editOpen: false, user: { id: selected.value, preferred_name: selected.label} };
-          } else {
-            return casting;
-          }
-        })
-      })
-      this.updateJobOnServer(selected.value, castingId)
-    }
-
   handleActorClick(castingId) {
     this.setState({
       castings: this.state.castings.map(casting => {
@@ -149,9 +131,13 @@ async loadActorsAndAuditionersFromServer(){
     this.createJobOnServer(casting)
   }
 
+  onDeleteClick = (castingId) => {
+    this.deleteCasting(castingId)
+  }
+
   render() {
     let availableActors = this.state.availableActors.map(actor => ({
-      value: actor.id,
+      id: actor.id,
       label: `${actor.preferred_name || actor.first_name} ${actor.last_name}`
     }))
     availableActors.unshift({value: null, label: ''})
@@ -159,24 +145,11 @@ async loadActorsAndAuditionersFromServer(){
       <li
         key={casting.id}
       >
-        {
-          casting.editOpen
-          ?
-          <span>
-            <Select
-              isClearable={true}
-              value={casting.user ? casting.user.id : ''}
-              onChange={(selected) => this.handleActorChange(selected, casting.id)}
-              options={availableActors}
-            />
-            :{casting.character.name}</span>
-          :
-          <span
-            onClick={() => this.handleActorClick(casting.id)}
-          >
-            {casting.user ? casting.user.preferred_name || casting.user.first_name : 'Click to cast'} {casting.user ? casting.user.last_name : ''}: {casting.character.name}
-          </span>
-        }
+        <CastingShow
+          availableActors={availableActors}
+          casting={casting}
+          onDeleteClick={this.onDeleteClick}
+        />
       </li>
     )
     return (

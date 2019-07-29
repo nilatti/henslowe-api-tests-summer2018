@@ -1,28 +1,28 @@
 import PropTypes from 'prop-types';
+
 import React, {
   Component
 } from 'react'
+
 import {
   Button,
   Col,
   Form,
+  Row
 } from 'react-bootstrap'
 import {
   Typeahead
 } from 'react-bootstrap-typeahead';
 
-class NewCasting extends Component {
+class NewOnStageForm extends Component {
   constructor(props) {
     super(props)
+    console.log('play', this.props.play)
     this.state = {
-      characters: this.props.production.play.characters,
-      end_date: this.props.production.end_date || '',
-      production: this.props.production,
-      specialization: 2,
-      theater: this.props.production.theater,
+      characters: this.props.play.characters,
+      description: '',
+      nonspeaking: false,
       selectedCharacter: [],
-      selectedUser: [],
-      start_date: this.props.production.start_date || '',
       validated: false,
     }
   }
@@ -41,15 +41,8 @@ class NewCasting extends Component {
     }
   }
 
-  handleChangeUser = (e) => {
-    if (e.length > 0) {
-      this.setState({
-        selectedUser: [e[0]]
-      })
-    }
-  }
-
   handleSubmit = (event) => {
+    event.preventDefault()
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -63,16 +56,13 @@ class NewCasting extends Component {
   }
 
   processSubmit = () => {
-    console.log('selected user', this.state.selectedUser[0])
     this.props.onFormSubmit({
       character_id: this.state.selectedCharacter[0].id,
-      end_date: this.state.end_date,
-      production_id: this.state.production.id,
-      start_date: this.state.start_date,
-      specialization_id: this.state.specialization,
-      theater_id: this.state.theater.id,
-      user_id: this.state.selectedUser[0].id,
-    }, "job")
+      character_name: this.state.selectedCharacter[0].label,
+      description: this.state.description,
+      french_scene_id: this.props.frenchSceneId,
+      nonspeaking: this.state.nonspeaking,
+    }, "on_stage")
   }
 
   render() {
@@ -89,24 +79,6 @@ class NewCasting extends Component {
         onSubmit={e => this.handleSubmit(e)}
         validated={validated}
       >
-      <Form.Group>
-        <Form.Label>
-          Actor
-        </Form.Label>
-        <Typeahead
-          id="user"
-          required
-          options={this.props.users}
-          onChange={(selected) => {
-            this.handleChangeUser(selected)
-          }}
-          selected={this.state.selectedUser}
-          placeholder="Choose the user"
-        />
-        <Form.Control.Feedback type="invalid">
-            Actor is required
-        </Form.Control.Feedback>
-      </Form.Group>
       <Form.Group>
         <Form.Label>
           Character/Role
@@ -126,6 +98,18 @@ class NewCasting extends Component {
             Character/Role is required
         </Form.Control.Feedback>
       </Form.Group>
+      <Form.Group>
+        <Form.Label>
+          Description
+        </Form.Label>
+        <Form.Control
+          type="text"
+          name="description"
+          value={this.state.description}
+          onChange={this.handleChange}
+        >
+        </Form.Control>
+      </Form.Group>
       <Button type="submit" variant="primary" block>Submit</Button>
       <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
     </Form> <hr />
@@ -133,11 +117,13 @@ class NewCasting extends Component {
   }
 }
 
-NewCasting.propTypes = {
+NewOnStageForm.propTypes = {
+  characters: PropTypes.array.isRequired,
+  frenchSceneId: PropTypes.number.isRequired,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  production: PropTypes.object.isRequired,
-  users: PropTypes.array.isRequired,
+  play: PropTypes.object.isRequired,
 }
 
-export default NewCasting
+
+export default NewOnStageForm

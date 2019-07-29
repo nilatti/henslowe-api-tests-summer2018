@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.18.0",
+    "@attently/riek": "^2.0.1",
+    "axios": "^0.19.0",
     "babel-cli": "^6.26.0",
     "bootstrap": "^4.3.1",
     "immutability-helper": "^2.9.1",
     "jquery": "^3.4.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
@@ -27,7 +28,6 @@
     "react-select-us-states": "^0.1.2",
     "react-timezone": "^2.4.0",
     "rest": "^2.0.0",
-    "riek": "^1.1.0",
     "typescript": "^3.4.5"
   },
   "proxy": "http://localhost:3001",

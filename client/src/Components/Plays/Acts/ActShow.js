@@ -112,7 +112,7 @@ class ActShow extends Component {
             act_number={this.props.act.number}
             handleEditSubmit={this.handleEditSceneSubmit}
             onDeleteClick={this.handleSceneDeleteClick}
-            play_id={this.props.play_id}
+            play={this.props.play}
           />
         </Tab>
       )
@@ -156,12 +156,12 @@ class ActShow extends Component {
           <SceneFormToggle act_id={this.props.act.id} isOpen={false} onFormSubmit={this.handleSceneCreateClick} />
         </Row>
         <Tabs
-        activeKey={this.state.key}
-        onSelect={this.handleSelect}
-        id="scene-info-tabs"
-      >
-        {sceneTabs}
-      </Tabs>
+          activeKey={this.state.key}
+          onSelect={this.handleSelect}
+          id="scene-info-tabs"
+        >
+          {sceneTabs}
+        </Tabs>
       </div>
     )
   }
@@ -177,7 +177,7 @@ ActShow.propTypes = {
   act: PropTypes.object.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
 }
 
 export default ActShow

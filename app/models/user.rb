@@ -16,4 +16,6 @@ class User < ApplicationRecord
   has_many :theaters, through: :jobs
   has_many :specializations, through: :jobs
   has_many :entrance_exits
+
+  default_scope {order(:last_name, :first_name, :email)}
 end

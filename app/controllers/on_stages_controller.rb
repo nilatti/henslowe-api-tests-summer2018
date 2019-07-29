@@ -1,11 +1,12 @@
 class OnStagesController < ApiController
+  before_action :set_french_scene, only: [:index]
   before_action :set_on_stage, only: [:show, :update, :destroy]
 
   # GET /on_stages
   def index
-    @on_stages = OnStage.all
+    @on_stages = @french_scene.on_stages
 
-    render json: @on_stages
+    json_response(@on_stages.as_json(include: [:character, :user]))
   end
 
   # GET /on_stages/1
@@ -40,6 +41,10 @@ class OnStagesController < ApiController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def set_french_scene
+      @french_scene = FrenchScene.find(params[:french_scene])
+    end
+
     def set_on_stage
       @on_stage = OnStage.find(params[:id])
     end

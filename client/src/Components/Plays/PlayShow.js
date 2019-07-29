@@ -184,8 +184,17 @@ class PlayShow extends Component {
     let characterTabs
     if (this.state.acts[0]) {
       actTabs = this.state.acts.map((act) =>
-        <Tab eventKey={`act-${act.id}`} title={`Act ${act.number}`} key={`act-${act.id}`}>
-        <ActInfoTab act={act} play_id={this.props.play.id} onDeleteClick={this.handleActDeleteClick} handleEditSubmit={this.handleEditActSubmit}/>
+        <Tab
+          eventKey={`act-${act.id}`}
+          key={`act-${act.id}`}
+          title={`Act ${act.number}`}
+        >
+        <ActInfoTab
+          act={act}
+          handleEditSubmit={this.handleEditActSubmit}
+          play={this.props.play}
+          onDeleteClick={this.handleActDeleteClick}
+        />
       </Tab>
       )
     } else {
@@ -193,8 +202,18 @@ class PlayShow extends Component {
     }
     if (this.state.characters[0]) {
       characterTabs = this.state.characters.map((character) =>
-        <Tab eventKey={`character-${character.id}`} title={`${character.name}`} key={`character-${character.id}`}>
-        <CharacterInfoTab character={character} play_id={this.props.play.id} onDeleteClick={this.handleCharacterDeleteClick} handleEditSubmit={this.handleEditCharacterSubmit}/>
+        <Tab
+          eventKey={`character-${character.id}`}
+          key={`character-${character.id}`}
+          play={this.props.play}
+          title={`${character.name}`}
+        >
+        <CharacterInfoTab
+          character={character}
+          play={this.props.play}
+          onDeleteClick={this.handleCharacterDeleteClick}
+          handleEditSubmit={this.handleEditCharacterSubmit}
+        />
       </Tab>
       )
     } else {
@@ -227,28 +246,36 @@ class PlayShow extends Component {
           <h2>Characters</h2>
         </Row>
         <Row>
-          <CharacterFormToggle play_id={this.props.play.id} isOpen={false} onFormSubmit={this.handleCharacterCreateClick} />
+          <CharacterFormToggle
+            isOpen={false}
+            onFormSubmit={this.handleCharacterCreateClick}
+            play_id={this.props.play.id}
+          />
         </Row>
         <Tabs
-        activeKey={this.state.key}
-        onSelect={this.handleSelect}
-        id="character-info-tabs"
-      >
+          activeKey={this.state.key}
+          onSelect={this.handleSelect}
+          id="character-info-tabs"
+        >
         {characterTabs}
       </Tabs>
         <Row>
         <h2>Acts</h2>
         </Row>
         <Row>
-          <ActFormToggle play_id={this.props.play.id} isOpen={false} onFormSubmit={this.handleActCreateClick} />
+          <ActFormToggle
+            isOpen={false}
+            onFormSubmit={this.handleActCreateClick}
+            play={this.props.play}
+          />
         </Row>
         <Tabs
-        activeKey={this.state.key}
-        onSelect={this.handleSelect}
-        id="act-info-tabs"
-      >
-        {actTabs}
-      </Tabs>
+          activeKey={this.state.key}
+          onSelect={this.handleSelect}
+          id="act-info-tabs"
+        >
+          {actTabs}
+        </Tabs>
       </div>
     )
   }

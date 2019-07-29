@@ -17,15 +17,10 @@ class NewStageExitForm extends Component {
     name: '',
   }
 
-  handleSubmit = (stageExit) => {
-    this.props.onFormClose()
-    this.props.onFormSubmit(stageExit)
-  }
-
   handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     } else {
       this.processSubmit()

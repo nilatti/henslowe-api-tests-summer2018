@@ -89,10 +89,10 @@ class CharacterForm extends Component {
               value={this.state.gender}
             >
               <option></option>
-              <option>Female</option>
-              <option>Male</option>
-              <option>Neutral</option>
-              <option>Nonbinary/other</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="neutral">Neutral</option>
+              <option value="nonbinary">Nonbinary/other</option>
             </Form.Control>
           </Form.Group>
           <Form.Group controlId="age">
@@ -106,12 +106,12 @@ class CharacterForm extends Component {
               value={this.state.age}
             >
               <option></option>
-              <option>Baby</option>
-              <option>Child</option>
-              <option>Teenager</option>
-              <option>Young Adult</option>
-              <option>Adult</option>
-              <option>Senior</option>
+              <option value="baby">Baby</option>
+              <option value="child">Child</option>
+              <option value="teenager">Teenager</option>
+              <option value="young adult">Young Adult</option>
+              <option value="adult">Adult</option>
+              <option value="senior">Senior</option>
             </Form.Control>
           </Form.Group>
           <Form.Group controlId="description">

@@ -63,5 +63,6 @@ Rails.application.routes.draw do
       resources :entrance_exits
     end
     resources :on_stages
+    resources :entrance_exits
   end
 end

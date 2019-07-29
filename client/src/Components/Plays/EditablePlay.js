@@ -251,7 +251,7 @@ class EditablePlay extends Component {
         <div>Loading!</div>
       )
     }
-
+    console.log('play is ', this.state.play)
     return (
       <PlayShow
         handleActCreateFormSubmit={this.onActCreateFormSubmit}

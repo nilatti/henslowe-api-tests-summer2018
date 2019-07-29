@@ -5,12 +5,12 @@ class EntranceExitsController < ApiController
   # GET /entrance_exits
   def index
     @entrance_exits = @french_scene.entrance_exits
-    render json: @entrance_exits
+    render json: @entrance_exits.as_json(include: [:stage_exit, :character])
   end
 
   # GET /entrance_exits/1
   def show
-    json_response(@entrance_exit.as_json)
+    render json: @entrance_exit.as_json(include: [:stage_exit, :character])
   end
 
   # POST /entrance_exits
@@ -18,7 +18,7 @@ class EntranceExitsController < ApiController
     @entrance_exit = EntranceExit.new(entrance_exit_params)
 
     if @entrance_exit.save
-      render json: @entrance_exit, status: :created, location: @entrance_exit
+      render json: @entrance_exit, status: :created
     else
       render json: @entrance_exit.errors, status: :unprocessable_entity
     end
@@ -49,6 +49,14 @@ class EntranceExitsController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def entrance_exit_params
-      params.require(:entrance_exit).permit(:line, :page, :french_scene_id, :user_id, :stage_exit_id)
+      params.require(:entrance_exit).permit(
+        :category,
+        :character_id,
+        :french_scene_id,
+        :line,
+        :notes,
+        :page,
+        :stage_exit_id
+      )
     end
 end

@@ -5,7 +5,6 @@ import React, {
 
 import {Button} from 'react-bootstrap'
 
-import { RIEInput} from 'riek'
 import _ from 'lodash'
 
 import {
@@ -16,14 +15,15 @@ import {
 } from '../../../../../../api/entrance_exits'
 
 import {
-  getActorsForProduction
-} from '../../../../../../api/jobs'
+  getStageExits
+} from '../../../../../../api/stage_exits'
 
+import EntranceExitShow from './EntranceExitShow'
 import NewEntranceExitForm from './NewEntranceExitForm'
 
 class EntranceExitsList extends Component {
   state = {
-    availableActors: [],
+    characters: this.props.play.characters,
     newEntranceExitFormOpen: false,
     entranceExits: [],
     stageExits: [],
@@ -31,28 +31,28 @@ class EntranceExitsList extends Component {
 
   componentDidMount() {
     this.loadEntranceExitsFromServer()
-    // this.loadStageExitsFromServer()
-    this.loadActorsFromServer()
+    this.loadStageExitsFromServer()
   }
 
   createNewEntranceExit = (entranceExit) => {
     this.createServerEntranceExit(entranceExit)
+    this.handleToggleClick()
   }
 
   handleToggleClick = () => {
-    this.setState({newEntranceExitFormOpen: true})
+    this.setState({newEntranceExitFormOpen: !this.state.newEntranceExitFormOpen})
   }
 
   onDeleteClick = (entranceExitId) => {
     this.deleteEntranceExit(entranceExitId)
   }
 
-  onSave = (nameObj, entranceExitId) => {
-    let entranceExitObj = {
-      id: entranceExitId,
-      name: nameObj['name']
-    }
-    this.updateServerEntranceExit(entranceExitObj)
+  onSave = (formObj, entranceExitId) => {
+    const k = Object.keys(formObj)[0]
+    let entranceExitObj = {}
+    entranceExitObj[k] = formObj[k]
+    entranceExitObj['id'] = entranceExitId
+    this.updateServerEntranceExit(entranceExitObj, entranceExitId)
   }
 
   async createServerEntranceExit(entranceExit) {
@@ -62,8 +62,23 @@ class EntranceExitsList extends Component {
         errorStatus: 'Error creating stage exit'
       })
     } else {
+      let newEntranceExit = {
+        category: entranceExit.category,
+        character: {
+          id: entranceExit.character_id,
+          name: entranceExit.character_name,
+        },
+        id: response.data.id,
+        line: entranceExit.line,
+        notes: entranceExit.notes,
+        page: entranceExit.page,
+        stage_exit: {
+          id: entranceExit.stage_exit_id,
+          name: entranceExit.stage_exit_name,
+        }
+      }
       this.setState({
-        entranceExits: [...this.state.entranceExits, response.data].sort((a, b) => (a.name > b.name) - (a.name < b.name))
+        entranceExits: _.sortBy([...this.state.entranceExits, newEntranceExit], ['line', 'page','character'], ['asc', 'asc','asc'])
       })
     }
   }
@@ -83,19 +98,6 @@ class EntranceExitsList extends Component {
     }
   }
 
-  async loadActorsFromServer() {
-    const response = await getActorsForProduction(47)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching actors'
-      })
-    } else {
-      this.setState({
-        availableActors: response.data
-      })
-    }
-  }
-
   async loadEntranceExitsFromServer() {
     const response = await getEntranceExits(this.props.frenchSceneId)
     if (response.status >= 400) {
@@ -109,22 +111,37 @@ class EntranceExitsList extends Component {
     }
   }
 
-  async updateServerEntranceExit(entranceExitAttrs) {
-    const response = await updateServerEntranceExit(entranceExitAttrs)
+  async loadStageExitsFromServer() {
+    const response = await getStageExits(this.props.play.production_id)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error fetching stage exits'
+      })
+    } else {
+      this.setState({
+        stageExits: response.data
+      })
+    }
+  }
+
+  async updateServerEntranceExit(entranceExitAttrs, entranceExitId) {
+    const response = await updateServerEntranceExit(entranceExitAttrs, entranceExitId)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error updating stage exits'
       })
     } else {
+      console.log('inside async', entranceExitAttrs)
       this.setState(state => {
         const entranceExitList = state.entranceExits.map((entranceExit) => {
           if (entranceExit.id === entranceExitAttrs.id) {
-            return entranceExitAttrs
+            let newEntranceExit = Object.assign(entranceExit, entranceExitAttrs)
+            return newEntranceExit
           } else {
             return entranceExit
           }
         })
-        const entranceExitListSorted = entranceExitList.sort((a, b) => (a.name > b.name) - (a.name < b.name))
+        const entranceExitListSorted = _.sortBy(entranceExitList, ['line', 'page','character'], ['asc', 'asc','asc'])
         return {
           entranceExits: entranceExitListSorted
         }
@@ -135,23 +152,30 @@ class EntranceExitsList extends Component {
   render() {
     let entranceExits = this.state.entranceExits.map(entranceExit =>
       <li key={entranceExit.id}>
-          {entranceExit.id}
-          <span className='right floated trash icon'
-          onClick={() => this.onDeleteClick(entranceExit.id)}
-        >
-          <i className="fas fa-trash-alt"></i>
-        </span>
+        <EntranceExitShow
+          characters={this.props.play.characters}
+          entranceExit={entranceExit}
+          onDeleteClick={this.onDeleteClick}
+          onSave={this.onSave}
+          stageExits={this.state.stageExits}
+        />
       </li>
     )
     return (
       <div>
-        <h3>Stage Exits</h3>
+        <h3>Entrance Exits</h3>
         <p><em>Click to edit name</em></p>
         <ul>
           {entranceExits}
         </ul>
         { this.state.newEntranceExitFormOpen ?
-          <NewEntranceExitForm frenchSceneId={this.props.frenchSceneId} onFormClose={this.handleToggleClick} onFormSubmit={this.createNewEntranceExit}/>
+          <NewEntranceExitForm
+            characters={this.state.characters}
+            frenchSceneId={this.props.frenchSceneId}
+            onFormClose={this.handleToggleClick}
+            onFormSubmit={this.createNewEntranceExit}
+            stageExits={this.state.stageExits}
+          />
           :
           <Button
             onClick={this.handleToggleClick}
@@ -167,6 +191,7 @@ class EntranceExitsList extends Component {
 
 EntranceExitsList.propTypes = {
   frenchSceneId: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
 }
 
 export default EntranceExitsList

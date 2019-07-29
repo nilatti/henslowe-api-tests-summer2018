@@ -37,7 +37,7 @@ class ActFormToggle extends Component { //opens form for create action
     if (this.state.isOpen) {
       return (
         <ActForm
-          play_id={this.props.play_id}
+          play={this.props.play}
           onFormSubmit={this.handleFormSubmit}
           onFormClose={this.handleFormClose}
         />
@@ -57,7 +57,7 @@ class ActFormToggle extends Component { //opens form for create action
 }
 
 ActFormToggle.propTypes = {
-  play_id: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
 }

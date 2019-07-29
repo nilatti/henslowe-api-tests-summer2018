@@ -39,12 +39,22 @@ class ActInfoTab extends Component {
   render() {
     if (this.state.editFormOpen) {
       return (
-        <ActForm act={this.props.act} play_id={this.props.play_id} onFormClose={this.handleFormClose} onFormSubmit={this.handleSubmit} />
+        <ActForm
+          act={this.props.act}
+          onFormClose={this.handleFormClose}
+          onFormSubmit={this.handleSubmit}
+          play={this.props.play} 
+        />
       )
     }
     return (
       <div>
-        <ActShow act={this.props.act} handleEditClick={this.handleEditClick} handleDeleteClick={this.handleDeleteClick} play_id={this.props.play_id}/>
+        <ActShow
+          act={this.props.act}
+          handleDeleteClick={this.handleDeleteClick}
+          handleEditClick={this.handleEditClick}
+          play={this.props.play}
+        />
       </div>
     )
   }
@@ -53,7 +63,7 @@ class ActInfoTab extends Component {
 ActInfoTab.propTypes = {
   act: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
 }
 
 export default ActInfoTab
