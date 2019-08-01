@@ -5,7 +5,10 @@ class EntranceExitsController < ApiController
   # GET /entrance_exits
   def index
     @entrance_exits = @french_scene.entrance_exits
-    render json: @entrance_exits.as_json(include: [:stage_exit, :character])
+    render json: @entrance_exits.as_json(include: [
+      :stage_exit,
+      :character,
+    ])
   end
 
   # GET /entrance_exits/1

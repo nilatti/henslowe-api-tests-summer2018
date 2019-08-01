@@ -26,7 +26,15 @@ class ActorTrack extends Component {
     let actorEntranceExits = allEntranceExits.filter(function(entranceExit) {
       return actorRoles.includes(entranceExit.character_id)
     })
-    actorEntranceExits = _.sortBy(actorEntranceExits, ['line', 'page', 'category'])
+    actorEntranceExits = _.uniq(actorEntranceExits)
+    actorEntranceExits = actorEntranceExits.map(entranceExit =>
+      ({...entranceExit,
+        frenchScene: entranceExit.french_scene.number,
+        scene: entranceExit.french_scene.scene.number,
+        act: entranceExit.french_scene.scene.act.number
+      })
+    )
+    actorEntranceExits = _.orderBy(actorEntranceExits, ['act', 'scene', 'frenchScene', 'line', 'category'])
     return actorEntranceExits
   }
 
@@ -40,9 +48,16 @@ class ActorTrack extends Component {
 
   render() {
     const actorEntranceExits = this.getActorEntranceExits()
+    console.log(actorEntranceExits)
     let actorTrackInfo = actorEntranceExits.map(entranceExit =>
       (
         <tr key={entranceExit.id}>
+          <td>
+            {entranceExit.act}
+          </td>
+          <td>
+            {entranceExit.scene}
+          </td>
           <td>
             {entranceExit.line ? entranceExit.line : ''}
           </td>
@@ -69,6 +84,12 @@ class ActorTrack extends Component {
         <Table striped bordered hover>
           <thead>
             <tr>
+              <th>
+                Act
+              </th>
+              <th>
+                Scene
+              </th>
               <th>
                 Line
               </th>

@@ -204,7 +204,7 @@ class EntranceExitShow extends Component {
         />
 
       <span className='right floated trash icon'
-        onClick={() => this.props.onDeleteClick(this.state.entranceExit.id)}
+        onClick={() => this.props.onDeleteClick(entranceExit.id)}
       >
         <i className="fas fa-trash-alt"></i>
       </span>

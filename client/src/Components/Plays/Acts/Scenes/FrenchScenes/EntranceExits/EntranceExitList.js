@@ -78,7 +78,7 @@ class EntranceExitsList extends Component {
         }
       }
       this.setState({
-        entranceExits: _.sortBy([...this.state.entranceExits, newEntranceExit], ['line', 'page','character'], ['asc', 'asc','asc'])
+        entranceExits: _.orderBy([...this.state.entranceExits, newEntranceExit], ['line', 'page'], ['asc', 'asc'])
       })
     }
   }
@@ -119,7 +119,7 @@ class EntranceExitsList extends Component {
       })
     } else {
       this.setState({
-        stageExits: response.data
+        stageExits: _.orderBy(response.data, ['line', 'page'], ['asc', 'asc'])
       })
     }
   }
@@ -131,7 +131,6 @@ class EntranceExitsList extends Component {
         errorStatus: 'Error updating stage exits'
       })
     } else {
-      console.log('inside async', entranceExitAttrs)
       this.setState(state => {
         const entranceExitList = state.entranceExits.map((entranceExit) => {
           if (entranceExit.id === entranceExitAttrs.id) {
@@ -141,7 +140,7 @@ class EntranceExitsList extends Component {
             return entranceExit
           }
         })
-        const entranceExitListSorted = _.sortBy(entranceExitList, ['line', 'page','character'], ['asc', 'asc','asc'])
+        const entranceExitListSorted = _.orderBy(entranceExitList, ['line', 'page'], ['asc', 'asc'])
         return {
           entranceExits: entranceExitListSorted
         }

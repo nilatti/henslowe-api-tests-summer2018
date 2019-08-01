@@ -26,7 +26,7 @@ class PlaysController < ApiController
                     entrance_exits: {
                       include: [
                           :stage_exit,
-                          :character
+                          :character,
                         ]
                     },
                     on_stages: {
@@ -95,7 +95,7 @@ class PlaysController < ApiController
   def play_params
     params.require(:play).permit(
       :author_id,
-      :canonical, 
+      :canonical,
       :date,
       :title,
       genre: []

@@ -23,7 +23,19 @@ class ProductionsController < ApiController
                   scenes: {
                     include: [
                       french_scenes: {
-                        include: :entrance_exits
+                        include: [
+                          entrance_exits: {
+                            include: [
+                              french_scene: {
+                                include: [
+                                  scene: {
+                                    include: :act
+                                  }
+                                ]
+                                }
+                              ]
+                          }
+                        ]
                       }
                     ]
                   }
