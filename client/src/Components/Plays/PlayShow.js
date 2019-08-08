@@ -51,6 +51,9 @@ class PlayShow extends Component {
         <ActInfoTab
           act={act}
           handleEditSubmit={this.props.handleActEditFormSubmit}
+          handleSceneCreateFormSubmit={this.props.handleSceneCreateFormSubmit}
+          handleSceneDeleteClick={this.props.handleSceneDeleteClick}
+          handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
           play={this.props.play}
           onDeleteClick={this.props.handleActDeleteClick}
         />
@@ -69,9 +72,9 @@ class PlayShow extends Component {
         >
         <CharacterInfoTab
           character={character}
-          play={this.props.play}
-          onDeleteClick={this.props.handleCharacterDeleteClick}
           handleEditSubmit={this.props.handleCharacterEditFormSubmit}
+          onDeleteClick={this.props.handleCharacterDeleteClick}
+          play={this.props.play}
         />
       </Tab>
       )
@@ -146,6 +149,10 @@ PlayShow.propTypes = {
   handleActEditFormSubmit: PropTypes.func.isRequired,
   handleCharacterCreateFormSubmit: PropTypes.func.isRequired,
   handleCharacterDeleteClick: PropTypes.func.isRequired,
+  handleCharacterEditFormSubmit: PropTypes.func.isRequired,
+  handleSceneCreateFormSubmit: PropTypes.func.isRequired,
+  handleSceneDeleteClick: PropTypes.func.isRequired,
+  handleSceneEditFormSubmit: PropTypes.func.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,

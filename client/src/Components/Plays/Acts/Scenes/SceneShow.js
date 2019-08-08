@@ -70,7 +70,7 @@ class SceneShow extends Component {
   }
 
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.scene.id)
+    this.props.onDeleteClick(this.props.actId, this.props.scene.id)
   }
 
   handleFrenchSceneCreateClick = (frenchScene) => {
@@ -120,10 +120,7 @@ class SceneShow extends Component {
   }
   render() {
     let act = _.find(this.props.play.acts, {'id': this.props.actId})
-    console.log('act is', act.id)
-    console.log('act number is', act.number)
     let scene = _.find(act.scenes, {'id': this.props.scene.id})
-    console.log('scene is ', scene.number)
     let frenchSceneTabs = <div></div>
     // if (this.state.french_scenes[0]) {
     //   frenchSceneTabs = this.state.french_scenes.map((french_scene) =>

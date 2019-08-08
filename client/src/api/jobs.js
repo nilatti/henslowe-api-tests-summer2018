@@ -56,7 +56,6 @@ async function getJobs({production_id = '', specialization_id = '', theater_id =
   )
 }
 async function updateServerJob(job) {
-  console.log(job)
   return API.put(`jobs/${job.id}`, {
     job: job
   })

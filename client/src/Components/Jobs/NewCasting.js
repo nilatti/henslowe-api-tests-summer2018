@@ -63,7 +63,6 @@ class NewCasting extends Component {
   }
 
   processSubmit = () => {
-    console.log('selected user', this.state.selectedUser[0])
     this.props.onFormSubmit({
       character_id: this.state.selectedCharacter[0].id,
       end_date: this.state.end_date,

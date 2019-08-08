@@ -23,79 +23,14 @@ class ActShow extends Component {
     super(props, context);
     this.handleSelect = this.handleSelect.bind(this);
     this.state = {
-      scenes: this.props.act.scenes,
       key: ''
     };
   }
 
-  async createScene(actId, scene) {
-    const response = await createScene(actId, scene)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating scene'
-      })
-    } else {
-      this.setState({
-        scenes: [...this.state.scenes, response.data].sort((a, b) => (a.number - b.number))
-      })
-      this.setState({
-        key: response.data.id
-      })
-    }
-  }
-
-  async deleteScene(sceneId) {
-    const response = await deleteScene(sceneId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting scene'
-      })
-    } else {
-      this.setState({
-        scenes: this.state.scenes.filter(scene =>
-          scene.id !== sceneId
-        )
-      })
-    }
-  }
-
-  async updateServerScene(sceneAttrs) {
-    const response = await updateServerScene(sceneAttrs)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating scene'
-      })
-    } else {
-      this.setState(state => {
-        const sceneList = state.scenes.map((scene) => {
-          if (scene.id === sceneAttrs.id) {
-            return sceneAttrs
-          } else {
-            return scene
-          }
-        })
-        return {
-          scenes: sceneList
-        }
-      })
-    }
-  }
-  
   handleDeleteClick = () => {
     this.props.handleDeleteClick(this.props.act.id)
   }
 
-  handleSceneCreateClick = (scene) => {
-    this.createScene(this.props.act.id, scene)
-  }
-
-  handleSceneDeleteClick = (sceneId) => {
-    this.deleteScene(sceneId)
-  }
-
-  handleEditSceneSubmit = (scene) => {
-    this.updateServerScene(scene)
-  }
   handleSelect(key) {
     this.setState({
       key
@@ -104,14 +39,14 @@ class ActShow extends Component {
 
   render() {
     let sceneTabs
-    if (this.state.scenes[0]) {
-      sceneTabs = this.state.scenes.map((scene) =>
+    if (this.props.act.scenes[0]) {
+      sceneTabs = this.props.act.scenes.map((scene) =>
         <Tab eventKey={`scene-${scene.id}`} title={`Scene ${scene.number}`} key={`scene-${scene.id}`}>
           <SceneInfoTab
             scene={scene}
             actId={this.props.act.id}
-            handleEditSubmit={this.handleEditSceneSubmit}
-            onDeleteClick={this.handleSceneDeleteClick}
+            handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
+            onDeleteClick={this.props.handleSceneDeleteClick}
             play={this.props.play}
           />
         </Tab>
@@ -156,7 +91,7 @@ class ActShow extends Component {
           <SceneFormToggle
             actId={this.props.act.id}
             isOpen={false}
-            onFormSubmit={this.handleSceneCreateClick}
+            onFormSubmit={this.props.handleSceneCreateFormSubmit}
           />
         </Row>
         <Tabs
@@ -181,6 +116,8 @@ ActShow.propTypes = {
   act: PropTypes.object.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
+  handleSceneCreateFormSubmit: PropTypes.func.isRequired,
+  handleSceneEditFormSubmit: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
 }
 

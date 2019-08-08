@@ -48,7 +48,6 @@ class ActorTrack extends Component {
 
   render() {
     const actorEntranceExits = this.getActorEntranceExits()
-    console.log(actorEntranceExits)
     let actorTrackInfo = actorEntranceExits.map(entranceExit =>
       (
         <tr key={entranceExit.id}>

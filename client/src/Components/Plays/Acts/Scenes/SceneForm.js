@@ -12,7 +12,6 @@ class SceneForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      act_id: this.props.act_id,
       end_page: this.props.scene.end_page || '',
       number: this.props.scene.number,
       start_page: this.props.scene.start_page || '',
@@ -28,11 +27,12 @@ class SceneForm extends Component {
   }
 
   handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     } else {
+      this.props.onFormClose()
       this.processSubmit()
     }
     this.setState({
@@ -41,8 +41,9 @@ class SceneForm extends Component {
   }
 
   processSubmit = () => {
-    this.props.onFormSubmit({
-      act_id: this.state.act_id,
+    this.props.onFormSubmit(this.props.actId,
+      {
+      act_id: this.props.actId,
       end_page: this.state.end_page,
       id: this.props.scene.id,
       number: this.state.number,
@@ -144,7 +145,7 @@ SceneForm.propTypes = {
   scene: PropTypes.object,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  act_id: PropTypes.number.isRequired,
+  actId: PropTypes.number.isRequired,
 }
 
 export default SceneForm

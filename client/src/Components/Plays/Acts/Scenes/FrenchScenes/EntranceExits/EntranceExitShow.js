@@ -30,7 +30,6 @@ class EntranceExitShow extends Component {
   }
 
   handleChangeCategory = (event) => {
-    console.log('in cagetory change', event.target.value)
     this.setState({category: event.target.value})
   }
 

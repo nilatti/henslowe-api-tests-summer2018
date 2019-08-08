@@ -21,6 +21,7 @@ class ActInfoTab extends Component {
   handleEditClick = () => {
     this.toggleForm()
   }
+
   handleFormClose = () => {
     this.toggleForm()
   }
@@ -54,6 +55,9 @@ class ActInfoTab extends Component {
           act={this.props.act}
           handleDeleteClick={this.handleDeleteClick}
           handleEditClick={this.handleEditClick}
+          handleSceneCreateFormSubmit={this.props.handleSceneCreateFormSubmit}
+          handleSceneDeleteClick={this.props.handleSceneDeleteClick}
+          handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
           play={this.props.play}
         />
       </div>
@@ -64,6 +68,8 @@ class ActInfoTab extends Component {
 ActInfoTab.propTypes = {
   act: PropTypes.object.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
+  handleSceneCreateFormSubmit: PropTypes.func.isRequired,
+  handleSceneEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
 }

@@ -16,9 +16,6 @@ class SceneInfoTab extends Component {
     })
   }
 
-  handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.scene.id)
-  }
   handleEditClick = () => {
     this.openForm()
   }
@@ -26,7 +23,7 @@ class SceneInfoTab extends Component {
     this.closeForm()
   }
   handleSubmit = (scene) => {
-    this.props.handleEditSubmit(scene)
+    this.props.handleSceneEditFormSubmit(scene)
     this.closeForm()
   }
   openForm = () => {
@@ -53,7 +50,8 @@ class SceneInfoTab extends Component {
         <SceneShow
           actId={this.props.actId}
           handleEditClick={this.handleEditClick}
-          onDeleteClick={this.handleDeleteClick}
+          onSubmit={this.props.handleSceneEditFormSubmit}
+          onDeleteClick={this.props.onDeleteClick}
           play={this.props.play}
           scene={this.props.scene}
           />
@@ -64,6 +62,7 @@ class SceneInfoTab extends Component {
 
 SceneInfoTab.propTypes = {
   actId: PropTypes.number.isRequired,
+  handleSceneEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,

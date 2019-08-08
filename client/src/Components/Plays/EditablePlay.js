@@ -38,7 +38,7 @@ class EditablePlay extends Component {
         errorStatus: 'Error creating act'
       })
     } else {
-      let newActs = this.sortActs([...this.state.play.acts, response.data])
+      let newActs = _.orderBy([...this.state.play.acts, response.data], 'number')
       this.setState({
         play: {...this.state.play, acts: newActs}
       })
@@ -55,6 +55,33 @@ class EditablePlay extends Component {
       let newCharacters = _.sortBy([...this.state.play.characters, response.data], 'name')
       this.setState({
         play: {...this.state.play, characters: newCharacters}
+      })
+    }
+  }
+
+  async createScene(actId, scene) {
+    const response = await createItemWithParent('act', actId, 'scene', scene)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error creating scene'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let newScenes = _.orderBy([...workingAct.scenes, response.data], 'number')
+      workingAct = {...workingAct, scenes: newScenes}
+      let newActs = this.state.play.acts.map((act) => {
+          if (act.id === workingAct.id) {
+            return {...act, ...workingAct}
+          } else {
+            return act
+          }
+        }
+      )
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+        }
       })
     }
   }
@@ -102,6 +129,34 @@ class EditablePlay extends Component {
     }
   }
 
+  async deleteScene(actId, sceneId) {
+    const response = await deleteItem(sceneId, 'scene')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error deleting scene'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      workingAct = {
+        ...workingAct,
+        scenes: workingAct.scenes.filter(scene => scene.id !== sceneId)
+      }
+      let newActs = this.state.play.acts.map(act => {
+        if (act.id == workingAct.id) {
+          return workingAct
+        } else {
+          return act
+        }
+      })
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+          }
+      })
+    }
+  }
+
   async loadPlayFromServer(playId) {
     const response = await getItem(playId, "play")
     if (response.status >= 400) {
@@ -133,7 +188,7 @@ class EditablePlay extends Component {
     this.setState({
       play: {
         ...this.state.play,
-        acts: this.sortActs(newActs)
+        acts: _.sortBy(newActs, 'number')
       }
     })
   }
@@ -176,13 +231,27 @@ async updateCharacter(updatedCharacter) {
     }
   }
 
-  addNewCharacter = (newCharacter) => {
-    this.setState((prevState) => ({
-      play: {
-        ...prevState.play,
-        characters: [...prevState.play.characters, newCharacter]
+  async updateScene(actId, updatedScene) {
+    const response = await updateServerItem(updatedScene, 'scene')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error updating scene'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': updatedScene.act_id})
+      let updatedSceneInAct = _.find(workingAct.scenes, {'id': updatedScene.id})
+      updatedSceneInAct = {...updatedSceneInAct, ...updatedScene}
+      workingAct = {
+        ...workingAct,
+        scenes: {...workingAct.scenes, updatedSceneInAct}
       }
-    }))
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: {...this.state.play.acts, ...workingAct}
+          }
+      })
+    }
   }
 
   componentDidMount = () => {
@@ -222,16 +291,24 @@ async updateCharacter(updatedCharacter) {
     this.updateCharacter(character)
   }
 
+  onSceneCreateFormSubmit = (actId, scene) => {
+    this.createScene(actId, scene)
+  }
+
+  onSceneDeleteClick = (actId, sceneId) => {
+    this.deleteScene(actId, sceneId)
+  }
+
+  onSceneEditFormSubmit = (actId, scene) => {
+    this.updateScene(actId, scene)
+  }
+
   onDeleteClick = (playId) => {
     this.deletePlay(playId)
   }
 
   onEditClick = () => {
     this.toggleForm()
-  }
-
-  sortActs = (acts) => {
-    return _.orderBy(acts, 'number')
   }
 
   toggleForm = () => {
@@ -268,6 +345,9 @@ async updateCharacter(updatedCharacter) {
         handleCharacterCreateFormSubmit={this.onCharacterCreateFormSubmit}
         handleCharacterDeleteClick={this.onCharacterDeleteClick}
         handleCharacterEditFormSubmit={this.onCharacterEditFormSubmit}
+        handleSceneCreateFormSubmit={this.onSceneCreateFormSubmit}
+        handleSceneDeleteClick={this.onSceneDeleteClick}
+        handleSceneEditFormSubmit={this.onSceneEditFormSubmit}
         handleDeleteClick={this.onDeleteClick}
         handleEditClick={this.onEditClick}
         play={this.state.play}

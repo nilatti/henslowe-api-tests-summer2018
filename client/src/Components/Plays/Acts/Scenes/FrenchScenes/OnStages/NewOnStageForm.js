@@ -17,7 +17,6 @@ import {
 class NewOnStageForm extends Component {
   constructor(props) {
     super(props)
-    console.log('play', this.props.play)
     this.state = {
       characters: this.props.play.characters,
       description: '',
