@@ -80,6 +80,7 @@ class ActShow extends Component {
       })
     }
   }
+  
   handleDeleteClick = () => {
     this.props.handleDeleteClick(this.props.act.id)
   }
@@ -108,8 +109,7 @@ class ActShow extends Component {
         <Tab eventKey={`scene-${scene.id}`} title={`Scene ${scene.number}`} key={`scene-${scene.id}`}>
           <SceneInfoTab
             scene={scene}
-            act_id={this.props.act.id}
-            act_number={this.props.act.number}
+            actId={this.props.act.id}
             handleEditSubmit={this.handleEditSceneSubmit}
             onDeleteClick={this.handleSceneDeleteClick}
             play={this.props.play}
@@ -153,7 +153,11 @@ class ActShow extends Component {
         <h2>Scenes</h2>
         </Row>
         <Row>
-          <SceneFormToggle act_id={this.props.act.id} isOpen={false} onFormSubmit={this.handleSceneCreateClick} />
+          <SceneFormToggle
+            actId={this.props.act.id}
+            isOpen={false}
+            onFormSubmit={this.handleSceneCreateClick}
+          />
         </Row>
         <Tabs
           activeKey={this.state.key}

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types';
 import React, {
   Component
@@ -118,29 +119,35 @@ class SceneShow extends Component {
     })
   }
   render() {
-    let frenchSceneTabs
-    if (this.state.french_scenes[0]) {
-      frenchSceneTabs = this.state.french_scenes.map((french_scene) =>
-        <Tab eventKey={`french_scene-${french_scene.id}`} title={`${french_scene.number}`} key={`french_scene-${french_scene.id}`}>
-          <FrenchSceneInfoTab
-            act_number={this.props.act_number}
-            french_scene={french_scene}
-            handleEditSubmit={this.handleEditFrenchSceneSubmit}
-            onDeleteClick={this.handleFrenchSceneDeleteClick}
-            play={this.props.play}
-            scene_id={this.props.scene.id}
-            scene_number={this.props.scene.number}
-          />
-        </Tab>
-      )
-    } else {
-      frenchSceneTabs = <div>No French scenes found</div>
-    }
+    let act = _.find(this.props.play.acts, {'id': this.props.actId})
+    console.log('act is', act.id)
+    console.log('act number is', act.number)
+    let scene = _.find(act.scenes, {'id': this.props.scene.id})
+    console.log('scene is ', scene.number)
+    let frenchSceneTabs = <div></div>
+    // if (this.state.french_scenes[0]) {
+    //   frenchSceneTabs = this.state.french_scenes.map((french_scene) =>
+    //     <Tab eventKey={`french_scene-${french_scene.id}`} title={`${french_scene.number}`} key={`french_scene-${french_scene.id}`}>
+    //       <FrenchSceneInfoTab
+    //         actId={this.props.actId}
+    //         french_scene={french_scene}
+    //         handleEditSubmit={this.handleEditFrenchSceneSubmit}
+    //         onDeleteClick={this.handleFrenchSceneDeleteClick}
+    //         play={this.props.play}
+    //         sceneId={this.props.scene.id}
+    //       />
+    //     </Tab>
+    //   )
+    //   const act = _.find(this.props.play.acts, {'id': this.props.act.id})
+    //   console.log('act is', act)
+    // } else {
+    //   frenchSceneTabs = <div>No French scenes found</div>
+    // }
     return (
       <div>
         <Row>
           <Col>
-            <h2>Act {this.props.act_number}, Scene {this.props.scene.number}</h2>
+            <h2>Act {act.number}, Scene {this.props.scene.number}</h2>
             <p>
               {this.props.scene.summary}
             </p>
@@ -196,7 +203,7 @@ SceneShow.defaultProps = {
 }
 
 SceneShow.propTypes = {
-  act_number: PropTypes.number.isRequired,
+  actId: PropTypes.number.isRequired,
   handleEditClick: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,

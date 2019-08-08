@@ -57,7 +57,7 @@ class SceneFormToggle extends Component { //opens form for create action
 }
 
 SceneFormToggle.propTypes = {
-  act_id: PropTypes.number.isRequired,
+  actId: PropTypes.number.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
 }

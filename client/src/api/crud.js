@@ -2,12 +2,26 @@ import API from './api'
 
 
 async function createItem(item, itemType) {
-  
   return API.post(
     `${itemType}s`,
       {
         item
       }
+    )
+}
+
+async function createCharacter(playId, character) {
+  return API.post(
+    `plays/${playId}/characters`, {
+      character
+    }
+  )
+}
+
+async function createItemWithParent(parentType, parentId, itemType, item) {
+  return API.post(
+    `${parentType}s/${parentId}/${itemType}s`,
+      item
     )
 }
 
@@ -30,4 +44,11 @@ async function updateServerItem(item, itemType) {
   )
 }
 
-export { createItem, deleteItem, getItem, getItems, updateServerItem }
+export {
+  createItem,
+  createItemWithParent,
+  deleteItem,
+  getItem,
+  getItems,
+  updateServerItem
+}

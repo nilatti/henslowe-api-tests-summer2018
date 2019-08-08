@@ -24,9 +24,9 @@ class OnStagesList extends Component {
     onStages: [],
   }
 
-  componentDidMount() {
-    this.loadOnStagesFromServer()
-  }
+  // componentDidMount() {
+  //   this.loadOnStagesFromServer()
+  // }
 
   closeForm = () => {
     this.setState({newOnStageFormOpen: false})

@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import React, {
   Component
 } from 'react'
@@ -7,18 +9,12 @@ import {
 } from 'react-router-dom'
 
 import {
-  deleteAct
-} from '../../api/acts'
-import {
-  deleteCharacter
-} from '../../api/characters'
-import {
+  createItemWithParent,
   deleteItem,
-  getItem
+  getItem,
+  updateServerItem
 } from '../../api/crud'
 import {
-  createAct,
-  createCharacter,
   updateServerPlay
 } from '../../api/plays'
 
@@ -36,48 +32,62 @@ class EditablePlay extends Component {
   }
 
   async createAct(playId, act) {
-    const response = await createAct(playId, act)
+    const response = await createItemWithParent('play', playId, 'act', act)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error creating act'
       })
     } else {
-      this.addNewAct(response.data)
+      let newActs = this.sortActs([...this.state.play.acts, response.data])
+      this.setState({
+        play: {...this.state.play, acts: newActs}
+      })
     }
   }
 
   async createCharacter(playId, character) {
-    const response = await createCharacter(playId, character)
+    const response = await createItemWithParent('play', playId, 'character', character)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error creating character'
       })
     } else {
-      this.addNewCharacter(response.data)
+      let newCharacters = _.sortBy([...this.state.play.characters, response.data], 'name')
+      this.setState({
+        play: {...this.state.play, characters: newCharacters}
+      })
     }
   }
 
   async deleteAct(actId) {
-    const response = await deleteAct(actId)
+    const response = await deleteItem(actId, 'act')
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error deleting act'
       })
     } else {
-      this.removeAct(actId)
-      this.props.history.push(`/plays/${this.state.play.id}`)
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: this.state.play.acts.filter(act => act.id !== actId)
+          }
+      })
     }
   }
 
   async deleteCharacter(characterId) {
-    const response = await deleteCharacter(characterId)
+    const response = await deleteItem(characterId, 'character')
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error deleting character'
       })
     } else {
-      this.removeCharacter(characterId)
-      this.props.history.push(`/plays/${this.state.play.id}`)
+      this.setState({
+        play: {
+          ...this.state.play,
+          characters: this.state.play.characters.filter(character => character.id !== characterId)
+          }
+      })
     }
   }
 
@@ -105,6 +115,54 @@ class EditablePlay extends Component {
     }
   }
 
+  async updateAct(updatedAct) {
+    const response = await updateServerItem(updatedAct, 'act')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error updating act'
+      })
+    } else {
+      let newActs = this.state.play.acts.map((act) => {
+        if (act.id === updatedAct.id) {
+          return {...act, ...updatedAct}
+        } else {
+          return act
+        }
+      }
+    )
+    this.setState({
+      play: {
+        ...this.state.play,
+        acts: this.sortActs(newActs)
+      }
+    })
+  }
+}
+
+async updateCharacter(updatedCharacter) {
+  const response = await updateServerItem(updatedCharacter, 'character')
+  if (response.status >= 400) {
+    this.setState({
+      errorStatus: 'Error updating character'
+    })
+  } else {
+    let newCharacters = this.state.play.characters.map((character) => {
+      if (character.id === updatedCharacter.id) {
+        return {...character, ...updatedCharacter}
+      } else {
+        return character
+      }
+    }
+  )
+  this.setState({
+    play: {
+      ...this.state.play,
+      characters: newCharacters
+      }
+    })
+  }
+}
+
   async updatePlayOnServer(play) {
     const response = await updateServerPlay(play)
     if (response.status >= 400) {
@@ -118,30 +176,6 @@ class EditablePlay extends Component {
     }
   }
 
-  static getDerivedStateFromProps(props, state) {
-    // Store prevId in state so we can compare when props change.
-    // Clear out previously-loaded data (so we don't render stale stuff).
-    if (props.id !== state.prevId) {
-      return {
-        play: null,
-        prevId: props.id,
-      };
-    }
-    // No state update necessary
-    return null;
-  }
-
-  addNewAct = (newAct) => {
-    let newActs = [...this.state.play.acts, newAct]
-    let sortedNewActs = this.sortActs(newActs)
-    this.setState((prevState) => ({
-      play: {
-        ...prevState.play,
-        acts: sortedNewActs,
-      }
-    }))
-  }
-
   addNewCharacter = (newCharacter) => {
     this.setState((prevState) => ({
       play: {
@@ -151,29 +185,17 @@ class EditablePlay extends Component {
     }))
   }
 
-  closeForm = () => {
-    this.setState({
-      editFormOpen: false
-    })
-  }
-
   componentDidMount = () => {
     this.loadPlayFromServer(this.props.match.params.playId)
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.play === null || prevProps.match.params.playId !== this.props.match.params.playId) {
-      this.loadPlayFromServer(this.props.match.params.playId);
-    }
-  }
-
   handleFormClose = () => {
-    this.closeForm()
+    this.toggleeForm()
   }
 
   handleSubmit = (play) => {
     this.updatePlayOnServer(play)
-    this.closeForm()
+    this.toggleForm()
   }
 
   onActCreateFormSubmit = (act) => {
@@ -184,6 +206,10 @@ class EditablePlay extends Component {
     this.deleteAct(actId)
   }
 
+  onActEditFormSubmit = (act) => {
+    this.updateAct(act)
+  }
+
   onCharacterCreateFormSubmit = (character) => {
     this.createCharacter(this.state.play.id, character)
   }
@@ -192,44 +218,26 @@ class EditablePlay extends Component {
     this.deleteCharacter(characterId)
   }
 
+  onCharacterEditFormSubmit = (character) => {
+    this.updateCharacter(character)
+  }
+
   onDeleteClick = (playId) => {
     this.deletePlay(playId)
   }
 
   onEditClick = () => {
-    this.openForm()
-  }
-
-  openForm = () => {
-    this.setState({
-      editFormOpen: true
-    })
-  }
-
-  removeAct = (actId) => {
-    let newActs = this.state.play.acts.filter(act => act.id !== actId)
-    let sortedNewActs = this.sortActs(newActs)
-    this.setState((prevState) => ({
-      play: {
-        ...prevState.play,
-        acts: sortedNewActs,
-      }
-    }))
-  }
-
-  removeCharacter = (characterId) => {
-    this.setState((prevState) => ({
-      play: {
-        ...prevState.play,
-        characters: this.state.play.characters.filter(character => character.id !== characterId)
-      }
-    }))
+    this.toggleForm()
   }
 
   sortActs = (acts) => {
-    return acts.sort(function (a, b) {
-      return (a.number > b.number) ? 1 : ((b.number > a.number) ? -1 : 0);
-    });
+    return _.orderBy(acts, 'number')
+  }
+
+  toggleForm = () => {
+    this.setState({
+      editFormOpen: !this.state.editFormOpen
+    })
   }
 
   render() {
@@ -256,8 +264,10 @@ class EditablePlay extends Component {
       <PlayShow
         handleActCreateFormSubmit={this.onActCreateFormSubmit}
         handleActDeleteClick={this.onActDeleteClick}
+        handleActEditFormSubmit={this.onActEditFormSubmit}
         handleCharacterCreateFormSubmit={this.onCharacterCreateFormSubmit}
         handleCharacterDeleteClick={this.onCharacterDeleteClick}
+        handleCharacterEditFormSubmit={this.onCharacterEditFormSubmit}
         handleDeleteClick={this.onDeleteClick}
         handleEditClick={this.onEditClick}
         play={this.state.play}

@@ -11,27 +11,28 @@ class ActInfoTab extends Component {
   }
 
   closeForm = () => {
-    this.setState({
-      editFormOpen: false
-    })
+    this.toggleForm()
   }
 
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.act.id)
   }
+
   handleEditClick = () => {
-    this.openForm()
+    this.toggleForm()
   }
   handleFormClose = () => {
-    this.closeForm()
+    this.toggleForm()
   }
+
   handleSubmit = (act) => {
     this.props.handleEditSubmit(act)
-    this.closeForm()
+    this.toggleForm()
   }
-  openForm = () => {
+
+  toggleForm = () => {
     this.setState({
-      editFormOpen: true
+      editFormOpen: !this.state.editFormOpen
     })
   }
 
@@ -43,7 +44,7 @@ class ActInfoTab extends Component {
           act={this.props.act}
           onFormClose={this.handleFormClose}
           onFormSubmit={this.handleSubmit}
-          play={this.props.play} 
+          play={this.props.play}
         />
       )
     }
@@ -62,6 +63,7 @@ class ActInfoTab extends Component {
 
 ActInfoTab.propTypes = {
   act: PropTypes.object.isRequired,
+  handleEditSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
 }

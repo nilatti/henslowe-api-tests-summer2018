@@ -30,7 +30,7 @@ class EntranceExitsList extends Component {
   }
 
   componentDidMount() {
-    this.loadEntranceExitsFromServer()
+    // this.loadEntranceExitsFromServer()
     this.loadStageExitsFromServer()
   }
 
