@@ -134,7 +134,7 @@ class OnStagesList extends Component {
   }
 
   render() {
-    let onStages = this.state.onStages.map(onStage =>
+    let onStages = this.props.frenchScene.onStages.map(onStage =>
       <li key={onStage.id}>
         <OnStageShow
           onDeleteClick={this.onDeleteClick}
@@ -173,7 +173,9 @@ class OnStagesList extends Component {
 }
 
 OnStagesList.propTypes = {
+  actId: PropTypes.number.isRequired,
   frenchSceneId: PropTypes.number.isRequired,
+  sceneId: PropTypes.number.isRequired,
   play: PropTypes.object.isRequired,
 }
 

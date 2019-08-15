@@ -10,14 +10,6 @@ async function createItem(item, itemType) {
     )
 }
 
-async function createCharacter(playId, character) {
-  return API.post(
-    `plays/${playId}/characters`, {
-      character
-    }
-  )
-}
-
 async function createItemWithParent(parentType, parentId, itemType, item) {
   return API.post(
     `${parentType}s/${parentId}/${itemType}s`,

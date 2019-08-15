@@ -20,7 +20,7 @@ import ActorTrack from './ActorTrack'
 
 class ActorsList extends Component {
   getActorJobs() {
-    return this.props.production.jobs.filter(job => job.specialization.title == 'Actor').filter(job => job.user)
+    return this.props.production.jobs.filter(job => job.specialization.title === 'Actor').filter(job => job.user)
   }
 
   getUniqActors() {

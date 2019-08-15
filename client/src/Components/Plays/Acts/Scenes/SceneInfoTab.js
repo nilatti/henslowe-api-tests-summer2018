@@ -22,8 +22,8 @@ class SceneInfoTab extends Component {
   handleFormClose = () => {
     this.closeForm()
   }
-  handleSubmit = (scene) => {
-    this.props.handleSceneEditFormSubmit(scene)
+  handleSubmit = (actId, scene) => {
+    this.props.handleSceneEditFormSubmit(actId, scene)
     this.closeForm()
   }
   openForm = () => {
@@ -50,8 +50,10 @@ class SceneInfoTab extends Component {
         <SceneShow
           actId={this.props.actId}
           handleEditClick={this.handleEditClick}
-          onSubmit={this.props.handleSceneEditFormSubmit}
           onDeleteClick={this.props.onDeleteClick}
+          handleFrenchSceneCreateFormSubmit={this.props.handleFrenchSceneCreateFormSubmit}
+          handleFrenchSceneDeleteClick={this.props.handleFrenchSceneDeleteClick}
+          handleFrenchSceneEditFormSubmit={this.props.handleFrenchSceneEditFormSubmit}
           play={this.props.play}
           scene={this.props.scene}
           />
@@ -63,6 +65,9 @@ class SceneInfoTab extends Component {
 SceneInfoTab.propTypes = {
   actId: PropTypes.number.isRequired,
   handleSceneEditFormSubmit: PropTypes.func.isRequired,
+  handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
+  handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
+  handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,

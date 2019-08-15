@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types';
 import React, {
   Component
@@ -27,14 +28,16 @@ class FrenchSceneShow extends Component {
   }
 
   render() {
-
+    let act = _.find(this.props.play.acts, {'id': this.props.actId})
+    let scene = _.find(act.scenes, {'id': this.props.sceneId})
+    let frenchScene = _.find(scene.french_scenes, {'id': this.props.frenchScene.id})
     return (
       <div>
         <Row>
           <Col>
-            <h2>{this.props.act_number}.{this.props.scene_number}.{this.props.french_scene.number}</h2>
+            <h2>{this.props.actNumber}.{this.props.sceneNumber}.{this.props.frenchScene.number}</h2>
             <p>
-              {this.props.french_scene.summary}
+              {this.props.frenchScene.summary}
             </p>
             <span
               className='right floated edit icon'
@@ -52,9 +55,9 @@ class FrenchSceneShow extends Component {
         </Row>
         <Row>
           {
-            this.props.french_scene.start_page ?
+            this.props.frenchScene.start_page ?
               <p>
-                Pages {this.props.french_scene.start_page} - {this.props.french_scene.end_page}
+                Pages {this.props.frenchScene.start_page} - {this.props.frenchScene.end_page}
               </p>
             :
             <br />
@@ -66,9 +69,10 @@ class FrenchSceneShow extends Component {
         <Row>
           <ul>
             <OnStagesList
-              frenchSceneId={this.props.french_scene.id}
-              on_stages={this.props.on_stages}
+              actId={this.props.actId}
+              frenchSceneId={this.props.frenchScene.id}
               play={this.props.play}
+              scene={this.props.sceneId}
             />
           </ul>
         </Row>
@@ -76,7 +80,7 @@ class FrenchSceneShow extends Component {
           !this.props.play.canonical
           ? <Row>
             <EntranceExitList
-              frenchSceneId={this.props.french_scene.id}
+              frenchSceneId={this.props.frenchScene.id}
               play={this.props.play}
             />
           </Row>
@@ -96,12 +100,16 @@ FrenchSceneShow.defaultProps = {
 }
 
 FrenchSceneShow.propTypes = {
-  act_number: PropTypes.number.isRequired,
-  french_scene: PropTypes.object.isRequired,
+  actId: PropTypes.number.isRequired,
+  actNumber: PropTypes.number.isRequired,
+  frenchScene: PropTypes.object.isRequired,
   handleNonspeakingClick: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
+  handleEditClick: PropTypes.func.isRequired,
+  handleEditSubmit: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
-  scene_number: PropTypes.number.isRequired,
+  sceneId: PropTypes.number.isRequired,
+  sceneNumber: PropTypes.number.isRequired,
 }
 
 export default FrenchSceneShow
