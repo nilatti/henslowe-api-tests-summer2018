@@ -1,6 +1,4 @@
-import {
-  uniqBy
-} from 'lodash'
+import _ from 'lodash'
 
 import {
   Link
@@ -79,8 +77,10 @@ async loadActorsAndAuditionersFromServer(){
         errorStatus: 'Error fetching actors and auditioners'
       })
     } else {
+      let availableActors = _.uniqBy(response.data.map(item => item.user), 'id')
+      let sortedAvailableActors = _.orderBy(availableActors, 'last_name')
       this.setState({
-        availableActors: uniqBy(response.data.map(item => item.user), 'id')
+        availableActors: sortedAvailableActors,
       })
     }
   }
@@ -98,8 +98,9 @@ async loadActorsAndAuditionersFromServer(){
       })
     } else {
       let legalCastings = response.data.filter(obj => obj.character !== undefined)
+      let sortedLegalCastings = _.orderBy(legalCastings.map(obj=> ({ ...obj, editOpen: false })), 'character.name')
       this.setState({
-        castings: legalCastings.map(obj=> ({ ...obj, editOpen: false })),
+        castings: sortedLegalCastings,
       })
     }
   }

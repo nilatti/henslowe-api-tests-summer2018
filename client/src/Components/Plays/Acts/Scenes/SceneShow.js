@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, {
   Component
@@ -112,6 +113,7 @@ class SceneShow extends Component {
           return french_scene
         }
       })
+      frenchSceneList = _.orderBy(frenchSceneList, 'number')
       return {
         french_scenes: frenchSceneList
       }

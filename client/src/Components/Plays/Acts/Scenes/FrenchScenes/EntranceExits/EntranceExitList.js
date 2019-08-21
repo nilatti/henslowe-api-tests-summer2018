@@ -148,7 +148,13 @@ class EntranceExitsList extends Component {
     }
   }
 
+  // groupEntranceExits(entranceExits) {
+  //   let grouped = entranceExits.groupBy((entranceExit) => `${entranceExit.line}--${entranceExit.page}--${entranceExit.stage_exit_id}`)
+  //   console.log(grouped)
+  // }
+
   render() {
+    // this.groupEntranceExits(this.state.entranceExits)
     let entranceExits = this.state.entranceExits.map(entranceExit =>
       <li key={entranceExit.id}>
         <EntranceExitShow
@@ -157,7 +163,7 @@ class EntranceExitsList extends Component {
           onDeleteClick={this.onDeleteClick}
           onSave={this.onSave}
           stageExits={this.state.stageExits}
-        />
+        /><br /><hr /><br />
       </li>
     )
     return (
