@@ -54,8 +54,11 @@ class SceneInfoTab extends Component {
           handleFrenchSceneCreateFormSubmit={this.props.handleFrenchSceneCreateFormSubmit}
           handleFrenchSceneDeleteClick={this.props.handleFrenchSceneDeleteClick}
           handleFrenchSceneEditFormSubmit={this.props.handleFrenchSceneEditFormSubmit}
+          handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+          handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
+          handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
           play={this.props.play}
-          scene={this.props.scene}
+          sceneId={this.props.sceneId}
           />
       </div>
     )
@@ -68,9 +71,12 @@ SceneInfoTab.propTypes = {
   handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
   handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
   handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
+  sceneId: PropTypes.number.isRequired,
 }
 
 export default SceneInfoTab

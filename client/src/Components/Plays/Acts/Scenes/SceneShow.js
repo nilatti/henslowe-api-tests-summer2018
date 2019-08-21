@@ -27,7 +27,7 @@ class SceneShow extends Component {
   }
 
   handleFrenchSceneCreateClick = (frenchScene) => {
-    this.props.handleFrenchSceneCreateFormSubmit(this.props.actId, this.props.scene.id, frenchScene)
+    this.props.handleFrenchSceneCreateFormSubmit(this.props.actId, this.props.sceneId, frenchScene)
   }
 
   handleSelect(key) {
@@ -46,28 +46,36 @@ class SceneShow extends Component {
 
   render() {
     let act = _.find(this.props.play.acts, {'id': this.props.actId})
-    let scene = _.find(act.scenes, {'id': this.props.scene.id})
-    let frenchSceneTabs = scene.french_scenes.map((french_scene) =>
-        <Tab eventKey={`french_scene-${french_scene.id}`} title={`${french_scene.number}`} key={`french_scene-${french_scene.id}`}>
-          <FrenchSceneInfoTab
-            actId={act.id}
-            actNumber={act.number}
-            french_scene={french_scene}
-            handleEditSubmit={this.props.handleFrenchSceneEditFormSubmit}
-            onDeleteClick={this.props.handleFrenchSceneDeleteClick}
-            play={this.props.play}
-            sceneId={scene.id}
-            sceneNumber={scene.number}
-          />
-        </Tab>
-      )
+    let scene = _.find(act.scenes, {'id': this.props.sceneId})
+    let frenchSceneTabs
+    if (scene.french_scenes[0] ) {
+      frenchSceneTabs = scene.french_scenes.map((french_scene) =>
+          <Tab eventKey={`french_scene-${french_scene.id}`} title={`${french_scene.number}`} key={`french_scene-${french_scene.id}`}>
+            <FrenchSceneInfoTab
+              actId={act.id}
+              actNumber={act.number}
+              french_scene={french_scene}
+              handleEditSubmit={this.props.handleFrenchSceneEditFormSubmit}
+              handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+              handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
+              handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
+              onDeleteClick={this.props.handleFrenchSceneDeleteClick}
+              play={this.props.play}
+              sceneId={scene.id}
+              sceneNumber={scene.number}
+            />
+          </Tab>
+        )
+      } else {
+        frenchSceneTabs = <div>Nothing to show here</div>
+      }
     return (
       <div>
         <Row>
           <Col>
-            <h2>Act {act.number}, Scene {this.props.scene.number}</h2>
+            <h2>Act {act.number}, Scene {scene.number}</h2>
             <p>
-              {this.props.scene.summary}
+              {scene.summary}
             </p>
             <span
               className='right floated edit icon'
@@ -84,9 +92,9 @@ class SceneShow extends Component {
           </Col>
         </Row>
         {
-          this.props.scene.start_page ?
+          scene.start_page ?
             <p>
-              Pages {this.props.scene.start_page} - {this.props.scene.end_page}
+              Pages {scene.start_page} - {scene.end_page}
             </p>
           :
           <br />
@@ -98,8 +106,8 @@ class SceneShow extends Component {
           <FrenchSceneFormToggle
             isOpen={false}
             onFormSubmit={this.handleFrenchSceneCreateClick}
-            play_id={this.props.play.id}
-            scene_id={this.props.scene.id}
+            play={this.props.play}
+            sceneId={scene.id}
           />
         </Row>
         <Tabs
@@ -114,21 +122,18 @@ class SceneShow extends Component {
   }
 }
 
-SceneShow.defaultProps = {
-  scene: {
-    french_scenes: []
-  },
-}
-
 SceneShow.propTypes = {
   actId: PropTypes.number.isRequired,
   handleEditClick: PropTypes.func.isRequired,
   handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
   handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
   handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
+  sceneId: PropTypes.number.isRequired,
 }
 
 export default SceneShow

@@ -54,6 +54,9 @@ class PlayShow extends Component {
           handleFrenchSceneCreateFormSubmit={this.props.handleFrenchSceneCreateFormSubmit}
           handleFrenchSceneDeleteClick={this.props.handleFrenchSceneDeleteClick}
           handleFrenchSceneEditFormSubmit={this.props.handleFrenchSceneEditFormSubmit}
+          handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+          handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
+          handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
           handleSceneCreateFormSubmit={this.props.handleSceneCreateFormSubmit}
           handleSceneDeleteClick={this.props.handleSceneDeleteClick}
           handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
@@ -156,6 +159,9 @@ PlayShow.propTypes = {
   handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
   handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
   handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   handleSceneCreateFormSubmit: PropTypes.func.isRequired,
   handleSceneDeleteClick: PropTypes.func.isRequired,
   handleSceneEditFormSubmit: PropTypes.func.isRequired,

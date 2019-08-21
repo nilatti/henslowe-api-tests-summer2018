@@ -34,7 +34,6 @@ class ActShow extends Component {
   render() {
     let sceneTabs
     if (this.props.act.scenes[0]) {
-      console.log('scenes are', this.props.act.scenes)
       sceneTabs = this.props.act.scenes.map((scene) =>
         <Tab eventKey={`scene-${scene.id}`} title={`Scene ${scene.number}`} key={`scene-${scene.id}`}>
           <SceneInfoTab
@@ -42,8 +41,11 @@ class ActShow extends Component {
             handleFrenchSceneCreateFormSubmit={this.props.handleFrenchSceneCreateFormSubmit}
             handleFrenchSceneDeleteClick={this.props.handleFrenchSceneDeleteClick}
             handleFrenchSceneEditFormSubmit={this.props.handleFrenchSceneEditFormSubmit}
+            handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+            handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
+            handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
             handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
-            scene={scene}
+            sceneId={scene.id}
             onDeleteClick={this.props.handleSceneDeleteClick}
             play={this.props.play}
           />
@@ -117,6 +119,9 @@ ActShow.propTypes = {
   handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
   handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
   handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   handleSceneCreateFormSubmit: PropTypes.func.isRequired,
   handleSceneDeleteClick: PropTypes.func.isRequired,
   handleSceneEditFormSubmit: PropTypes.func.isRequired,

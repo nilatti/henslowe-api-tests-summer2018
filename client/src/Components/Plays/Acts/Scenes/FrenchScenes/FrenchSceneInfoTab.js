@@ -33,8 +33,8 @@ class FrenchSceneInfoTab extends Component {
   handleOnStageEditSubmit = (onStage) => {
     this.updateServerOnStage(onStage)
   }
-  handleSubmit = (actId, sceneId, frenchScene) => {
-    this.props.handleEditSubmit(actId, sceneId, frenchScene)
+  handleSubmit = (frenchScene) => {
+    this.props.handleEditSubmit(this.props.actId, this.props.sceneId, frenchScene)
     this.closeForm()
   }
   openForm = () => {
@@ -72,9 +72,12 @@ class FrenchSceneInfoTab extends Component {
         <FrenchSceneForm
           actId={this.props.actId}
           frenchScene={this.props.french_scene}
+          handleOnStageCreateFormSubmit={this.onOnStageCreateFormSubmit}
+          handleOnStageDeleteClick={this.onOnStageDeleteClick}
+          handleOnStageEditFormSubmit={this.onOnStageEditFormSubmit}
           onFormClose={this.handleFormClose}
           onFormSubmit={this.handleSubmit}
-          playId={this.props.play.id}
+          play={this.props.play}
           sceneId={this.props.sceneId}
         />
       )
@@ -88,6 +91,7 @@ class FrenchSceneInfoTab extends Component {
           handleEditClick={this.handleEditClick}
           handleEditSubmit={this.props.handleEditSubmit}
           handleNonspeakingClick={this.handleOnStageEditSubmit}
+          handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
           onDeleteClick={this.handleDeleteClick}
           play={this.props.play}
           sceneId={this.props.sceneId}
@@ -103,6 +107,9 @@ FrenchSceneInfoTab.propTypes = {
   actNumber: PropTypes.number.isRequired,
   french_scene: PropTypes.object.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
   sceneId: PropTypes.number.isRequired,

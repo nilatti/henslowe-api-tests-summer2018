@@ -15,16 +15,16 @@ import EntranceExitList from './EntranceExits/EntranceExitList'
 
 class FrenchSceneShow extends Component {
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.french_scene.id)
+    this.props.onDeleteClick(this.props.frenchScene.id)
   }
 
-  changeNonspeaking = (event, on_stage) => {
-    on_stage.nonspeaking = !on_stage.nonspeaking
-    this.props.handleNonspeakingClick(on_stage)
+  changeNonspeaking = (event, onStage) => {
+    onStage.nonspeaking = !onStage.nonspeaking
+    this.props.handleEditSubmit(onStage)
   }
 
-  handleEditSubmit = (on_stage) => {
-    this.props.handleNonspeakingClick(on_stage)
+  handleEditSubmit = (onStage) => {
+    this.props.handleEditSubmit(onStage)
   }
 
   render() {
@@ -71,8 +71,11 @@ class FrenchSceneShow extends Component {
             <OnStagesList
               actId={this.props.actId}
               frenchSceneId={this.props.frenchScene.id}
+              handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+              onDeleteClick={this.props.handleOnStageDeleteClick}
+              handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
               play={this.props.play}
-              scene={this.props.sceneId}
+              sceneId={this.props.sceneId}
             />
           </ul>
         </Row>
@@ -103,10 +106,10 @@ FrenchSceneShow.propTypes = {
   actId: PropTypes.number.isRequired,
   actNumber: PropTypes.number.isRequired,
   frenchScene: PropTypes.object.isRequired,
-  handleNonspeakingClick: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
   sceneId: PropTypes.number.isRequired,
   sceneNumber: PropTypes.number.isRequired,

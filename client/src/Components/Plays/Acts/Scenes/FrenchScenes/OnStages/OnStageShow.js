@@ -11,7 +11,6 @@ class OnStageShow extends Component {
     nonspeaking: this.props.onStage.nonspeaking,
   }
   handleToggleChange(selected, onStageId) {
-
     this.props.onSave(selected, onStageId)
   }
 
@@ -30,7 +29,7 @@ class OnStageShow extends Component {
         propName="nonspeaking"
       />
       <span className='right floated trash icon'
-      onClick={() => this.props.onDeleteClick(this.props.onStage.id)}
+      onClick={() => this.props.onDeleteClick(this.props.actId, this.props.sceneId, this.props.frenchSceneId, this.props.onStage.id)}
     >
       <i className="fas fa-trash-alt"></i>
     </span>
@@ -40,9 +39,12 @@ class OnStageShow extends Component {
 }
 
 OnStageShow.propTypes = {
+  actId: PropTypes.number.isRequired,
+  frenchSceneId: PropTypes.number.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onStage: PropTypes.object.isRequired,
+  sceneId: PropTypes.number.isRequired,
   play: PropTypes.object.isRequired,
 }
 

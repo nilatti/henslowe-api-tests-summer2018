@@ -16,21 +16,15 @@ class FrenchSceneFormToggle extends Component { //opens form for create action
     }
   }
 
-  handleFormOpen = () => {
-    this.setState({
-      isOpen: true
-    })
+  handleFormSubmit = (frenchScene) => {
+    this.toggleForm()
+    this.props.onFormSubmit(frenchScene)
   }
 
-  handleFormClose = () => {
+  toggleForm = () => {
     this.setState({
-      isOpen: false
+      isOpen: !this.state.isOpen
     })
-  }
-
-  handleFormSubmit = (act) => {
-    this.handleFormClose()
-    this.props.onFormSubmit(act)
   }
 
   render() {
@@ -38,16 +32,16 @@ class FrenchSceneFormToggle extends Component { //opens form for create action
       return (
         <FrenchSceneForm
           onFormSubmit={this.handleFormSubmit}
-          onFormClose={this.handleFormClose}
-          play_id={this.props.play_id}
-          scene_id={this.props.scene_id}
+          onFormClose={this.toggleForm}
+          play={this.props.play}
+          sceneId={this.props.sceneId}
         />
       );
     } else {
       return (
         <div>
           <Button variant="info"
-            onClick={this.handleFormOpen}
+            onClick={this.toggleForm}
           >
             Add New French Scene
           </Button>
@@ -60,8 +54,8 @@ class FrenchSceneFormToggle extends Component { //opens form for create action
 FrenchSceneFormToggle.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  play_id: PropTypes.number.isRequired,
-  scene_id: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
+  sceneId: PropTypes.number.isRequired,
 }
 
 export default FrenchSceneFormToggle

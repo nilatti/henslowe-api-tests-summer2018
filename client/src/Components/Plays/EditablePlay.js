@@ -72,8 +72,51 @@ class EditablePlay extends Component {
       let newScene = {...workingScene, french_scenes: newFrenchScenes}
       let newScenes = workingAct.scenes.map((scene) => {
         if (scene.id === newScene.id) {
-          console.log('found working scene', newScene.id)
           return {...scene, french_scenes: newScene.french_scenes}
+        } else {
+          return scene
+        }
+      })
+      let newAct = {...workingAct, scenes: newScenes}
+      let newActs = this.state.play.acts.map((act) => {
+          if (act.id === newAct.id) {
+            return {...act, ...newAct}
+          } else {
+            return act
+          }
+        }
+      )
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+        }
+      })
+    }
+  }
+
+  async createOnStage(actId, sceneId, frenchSceneId, onStage) {
+    const response = await createItemWithParent('french_scene', frenchSceneId, 'on_stage', onStage)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error creating on stage'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+      let newOnStages = _.orderBy([...workingFrenchScene.on_stages, response.data], 'number')
+      let newFrenchScene = {...workingFrenchScene, on_stages: newOnStages}
+      let newFrenchScenes = workingScene.frenchScenes.map((frenchScene) => {
+        if (frenchScene.id === newFrenchScene.id) {
+          return {...frenchScene, on_stages: newFrenchScene.onStages}
+        } else {
+          return frenchScene
+        }
+      })
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === workingScene.id) {
+          return {...scene, french_scenes: workingScene.french_scenes}
         } else {
           return scene
         }
@@ -160,6 +203,46 @@ class EditablePlay extends Component {
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error deleting scene'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      workingScene = {
+        ...workingScene,
+        french_scenes: workingScene.french_scenes.filter(french_scene => french_scene.id !== frenchSceneId)
+      }
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === workingScene.id) {
+          return {...scene, french_scenes: workingScene.french_scenes}
+        } else {
+          return scene
+        }
+      })
+      workingAct = {
+        ...workingAct,
+        scenes: newScenes
+      }
+      let newActs = this.state.play.acts.map(act => {
+        if (act.id === workingAct.id) {
+          return workingAct
+        } else {
+          return act
+        }
+      })
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+          }
+      })
+    }
+  }
+
+  async deleteOnStage(actId, sceneId, frenchSceneId, onStageId) {
+    const response = await deleteItem(onStageId, 'on_stage')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error deleting onStage'
       })
     } else {
       let workingAct = _.find(this.state.play.acts, {'id': actId})
@@ -429,8 +512,19 @@ onFrenchSceneDeleteClick = (actId, sceneId, frenchSceneId) => {
 }
 
 onFrenchSceneEditFormSubmit = (actId, sceneId, frenchScene) => {
-  console.log('inside edit form submit', actId, sceneId, frenchScene)
   this.updateFrenchScene(actId, sceneId, frenchScene)
+}
+
+onOnStageCreateFormSubmit = (actId, sceneId, frenchSceneId, onStage) => {
+  this.createOnStage(actId, sceneId, frenchSceneId, onStage)
+}
+
+onOnStageDeleteClick = (actId, sceneId, frenchSceneId, onStage) => {
+  this.deleteOnStage(actId, sceneId, frenchSceneId, onStage)
+}
+
+onOnStageEditFormSubmit = (actId, sceneId, frenchSceneId, onStage) => {
+  this.updateOnStage(actId, sceneId, frenchSceneId, onStage)
 }
 
 onSceneCreateFormSubmit = (actId, scene) => {
@@ -478,7 +572,6 @@ render() {
       <div>Loading!</div>
     )
   }
-  console.log('play is ', this.state.play)
   return (
     <PlayShow
       handleActCreateFormSubmit={this.onActCreateFormSubmit}
@@ -490,6 +583,9 @@ render() {
       handleFrenchSceneCreateFormSubmit={this.onFrenchSceneCreateFormSubmit}
       handleFrenchSceneDeleteClick={this.onFrenchSceneDeleteClick}
       handleFrenchSceneEditFormSubmit={this.onFrenchSceneEditFormSubmit}
+      handleOnStageCreateFormSubmit={this.onOnStageCreateFormSubmit}
+      handleOnStageDeleteClick={this.onOnStageDeleteClick}
+      handleOnStageEditFormSubmit={this.onOnStageEditFormSubmit}
       handleSceneCreateFormSubmit={this.onSceneCreateFormSubmit}
       handleSceneDeleteClick={this.onSceneDeleteClick}
       handleSceneEditFormSubmit={this.onSceneEditFormSubmit}
