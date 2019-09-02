@@ -68,7 +68,8 @@ class EditablePlay extends Component {
     } else {
       let workingAct = _.find(this.state.play.acts, {'id': actId})
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
-      let newFrenchScenes = _.orderBy([...workingScene.french_scenes, response.data], 'number')
+      let newFrenchScene = {...response.data, on_stages: []}
+      let newFrenchScenes = _.orderBy([...workingScene.french_scenes, newFrenchScene], 'number')
       let newScene = {...workingScene, french_scenes: newFrenchScenes}
       let newScenes = workingAct.scenes.map((scene) => {
         if (scene.id === newScene.id) {
@@ -107,16 +108,16 @@ class EditablePlay extends Component {
       let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
       let newOnStages = _.orderBy([...workingFrenchScene.on_stages, response.data], 'number')
       let newFrenchScene = {...workingFrenchScene, on_stages: newOnStages}
-      let newFrenchScenes = workingScene.frenchScenes.map((frenchScene) => {
+      let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
         if (frenchScene.id === newFrenchScene.id) {
-          return {...frenchScene, on_stages: newFrenchScene.onStages}
+          return newFrenchScene
         } else {
           return frenchScene
         }
       })
       let newScenes = workingAct.scenes.map((scene) => {
         if (scene.id === workingScene.id) {
-          return {...scene, french_scenes: workingScene.french_scenes}
+          return {...scene, french_scenes: newFrenchScenes}
         } else {
           return scene
         }
@@ -130,11 +131,9 @@ class EditablePlay extends Component {
           }
         }
       )
+      let newPlay = {...this.state.play, acts: newActs}
       this.setState({
-        play: {
-          ...this.state.play,
-          acts: newActs
-        }
+        play: newPlay
       })
     }
   }
@@ -247,13 +246,20 @@ class EditablePlay extends Component {
     } else {
       let workingAct = _.find(this.state.play.acts, {'id': actId})
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
-      workingScene = {
-        ...workingScene,
-        french_scenes: workingScene.french_scenes.filter(french_scene => french_scene.id !== frenchSceneId)
+      let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+      let newFrenchScene = {
+        ...workingFrenchScene, on_stages: workingFrenchScene.on_stages.filter(on_stage => on_stage.id !== onStageId)
       }
+      let newFrenchScenes = workingScene.french_scenes.map((french_scene) => {
+        if (french_scene.id === newFrenchScene.id) {
+          return newFrenchScene
+        } else {
+          return french_scene
+        }
+      })
       let newScenes = workingAct.scenes.map((scene) => {
         if (scene.id === workingScene.id) {
-          return {...scene, french_scenes: workingScene.french_scenes}
+          return {...scene, french_scenes: newFrenchScenes}
         } else {
           return scene
         }
@@ -519,8 +525,9 @@ onOnStageCreateFormSubmit = (actId, sceneId, frenchSceneId, onStage) => {
   this.createOnStage(actId, sceneId, frenchSceneId, onStage)
 }
 
-onOnStageDeleteClick = (actId, sceneId, frenchSceneId, onStage) => {
-  this.deleteOnStage(actId, sceneId, frenchSceneId, onStage)
+onOnStageDeleteClick = (actId, sceneId, frenchSceneId, onStageId) => {
+  console.log('args in caller', actId, sceneId, frenchSceneId, onStageId)
+  this.deleteOnStage(actId, sceneId, frenchSceneId, onStageId)
 }
 
 onOnStageEditFormSubmit = (actId, sceneId, frenchSceneId, onStage) => {

@@ -17,21 +17,8 @@ class OnStagesList extends Component {
     onStages: [],
   }
 
-  closeForm = () => {
-    this.setState({newOnStageFormOpen: false})
-  }
-
-  handleToggleClick = () => {
-    this.setState({newOnStageFormOpen: true})
-  }
-
-  onSave = (nameObj, onStageId) => {
-    let onStageObj = {
-      id: onStageId,
-      description: nameObj['description'],
-      nonspeaking: nameObj['nonspeaking']
-    }
-    this.updateServerOnStage(onStageObj)
+  toggleForm = () => {
+    this.setState({newOnStageFormOpen: !this.state.newOnStageFormOpen})
   }
 
   render() {
@@ -48,9 +35,9 @@ class OnStagesList extends Component {
             frenchSceneId={this.props.frenchSceneId}
             onDeleteClick={this.props.onDeleteClick}
             play={this.props.play}
-            onSave={this.onSave}
+            onEdit={this.props.handleOnStageEditFormSubmit}
             onStage={onStage}
-            sceneId={this.props.actId}
+            sceneId={this.props.sceneId}
           />
         </li>
       )
@@ -64,15 +51,17 @@ class OnStagesList extends Component {
         </ul>
         { this.state.newOnStageFormOpen ?
           <NewOnStageForm
+            actId={this.props.actId}
             characters={this.props.play.characters}
             frenchSceneId={this.props.frenchSceneId}
-            onFormClose={this.closeForm}
-            onFormSubmit={this.createNewOnStage}
+            onFormClose={this.toggleForm}
+            onFormSubmit={this.props.handleOnStageCreateFormSubmit}
             play={this.props.play}
+            sceneId={this.props.sceneId}
           />
           :
           <Button
-            onClick={this.handleToggleClick}
+            onClick={this.toggleForm}
           >
             Add New
           </Button>
@@ -86,6 +75,8 @@ class OnStagesList extends Component {
 OnStagesList.propTypes = {
   actId: PropTypes.number.isRequired,
   frenchSceneId: PropTypes.number.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   sceneId: PropTypes.number.isRequired,
   play: PropTypes.object.isRequired,

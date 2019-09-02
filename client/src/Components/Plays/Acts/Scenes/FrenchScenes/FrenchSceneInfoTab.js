@@ -12,34 +12,30 @@ import {
 class FrenchSceneInfoTab extends Component {
   state = {
     editFormOpen: false,
-    on_stages: this.props.french_scene.on_stages
-  }
-
-  closeForm = () => {
-    this.setState({
-      editFormOpen: false,
-    })
   }
 
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.actId, this.props.sceneId, this.props.french_scene.id)
   }
   handleEditClick = () => {
-    this.openForm()
+    this.toggleForm()
   }
   handleFormClose = () => {
-    this.closeForm()
-  }
-  handleOnStageEditSubmit = (onStage) => {
-    this.updateServerOnStage(onStage)
+    this.toggleForm()
   }
   handleSubmit = (frenchScene) => {
     this.props.handleEditSubmit(this.props.actId, this.props.sceneId, frenchScene)
-    this.closeForm()
+    this.toggleForm()
   }
   openForm = () => {
     this.setState({
       editFormOpen: true
+    })
+  }
+
+  toggleForm = () => {
+    this.setState({
+      editFormOpen: !this.state.editFormOpen
     })
   }
 
@@ -90,7 +86,8 @@ class FrenchSceneInfoTab extends Component {
           frenchScene={this.props.french_scene}
           handleEditClick={this.handleEditClick}
           handleEditSubmit={this.props.handleEditSubmit}
-          handleNonspeakingClick={this.handleOnStageEditSubmit}
+          handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+          handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
           handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
           onDeleteClick={this.handleDeleteClick}
           play={this.props.play}
