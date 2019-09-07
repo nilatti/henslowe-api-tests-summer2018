@@ -436,6 +436,67 @@ async updateFrenchScene(actId, sceneId, updatedFrenchScene) {
   }
 }
 
+async updateOnStage(actId, sceneId, frenchSceneId, updatedOnStage) {
+  const response = await updateServerItem(updatedOnStage, 'on_stage')
+  if (response.status >= 400) {
+    this.setState({
+      errorStatus: 'Error updating scene'
+    })
+  } else {
+    let workingAct = _.find(this.state.play.acts, {'id': actId})
+    let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+    let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+    let workingOnStage = _.find(workingFrenchScene.on_stages, {'id': updatedOnStage.id})
+    let newOnStage = {...workingOnStage, ...updatedOnStage}
+    let newOnStages = workingFrenchScene.on_stages.map((onStage) => {
+      if (onStage.id == newOnStage.id) {
+        return newOnStage
+      } else {
+        return onStage
+      }
+    })
+
+    workingFrenchScene = {
+      workingFrenchScene,
+      on_stages: newOnStages
+    }
+
+    workingScene = {
+      workingScene,
+      french_scenes: {...workingScene.french_scenes, workingFrenchScene}
+    }
+
+    let workingScenes = workingAct.scenes.map((scene) => {
+      if (scene.id === workingScene.id) {
+        return workingScene
+      } else {
+        return scene
+      }
+    })
+
+    workingAct = {
+      ...workingAct,
+      scenes: workingScenes
+    }
+
+    let workingActs = this.state.play.acts.map((act) => {
+      if (act.id === workingAct.id) {
+        return workingAct
+      } else {
+        return act
+      }
+    })
+    let workingPlay = {...this.state.play, acts: workingActs}
+    console.log('play', workingPlay )
+    this.setState({
+      play: {
+        ...this.state.play,
+        acts: workingActs
+        }
+    })
+  }
+}
+
 async updatePlayOnServer(play) {
   const response = await updateServerPlay(play)
   if (response.status >= 400) {

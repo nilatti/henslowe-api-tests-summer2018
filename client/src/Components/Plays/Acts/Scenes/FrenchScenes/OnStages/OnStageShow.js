@@ -9,30 +9,39 @@ import { RIEInput, RIEToggle} from '@attently/riek'
 
 class OnStageShow extends Component {
   state = {
+    description: this.props.onStage.description,
     nonspeaking: this.props.onStage.nonspeaking,
   }
+
+  handleEditClick(selected, onStageId) {
+    let workingOnStage = {
+      description: this.state.description,
+      id: this.props.onStage.id,
+      nonspeaking: this.state.nonspeaking,
+    }
+    // let workingOnStage = {...this.props.onStage, ...selected}
+    console.log('working onstage is', workingOnStage)
+    this.props.onEdit(this.props.actId, this.props.sceneId, this.props.frenchSceneId, workingOnStage)
+  }
+
   handleToggleChange(selected, onStageId) {
     this.props.onSave(selected, onStageId)
   }
 
   render() {
     let character = _.find(this.props.play.characters, {'id': this.props.onStage.character_id})
-    console.log('actId', this.props.actId)
-    console.log('sceneId', this.props.sceneId)
-    console.log('frenchSceneId', this.props.frenchSceneId)
-    console.log('onstage id', this.props.onStage.id)
     return (
 
       <div>
       {character.name}
       (<RIEInput
-        value={this.props.onStage.description || 'Click to add description'}
-        change={(selected) => this.props.onEdit(selected, this.props.onStage.id)}
+        value={this.state.description || 'Click to add description'}
+        change={(selected) => this.handleEditClick(selected, this.props.onStage.id)}
         propName='description'
       />)
       Nonspeaking role? &nbsp; <RIEToggle
-        value={this.state.nonspeaking}
-        change={(selected) => this.props.onEdit(selected, this.props.onStage.id)}
+        value={this.props.onStage.nonspeaking}
+        change={(selected) => this.handleEditClick(selected, this.props.onStage.id)}
         propName="nonspeaking"
       />
       <span className='right floated trash icon'
