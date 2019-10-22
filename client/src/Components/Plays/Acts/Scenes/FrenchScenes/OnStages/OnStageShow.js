@@ -26,8 +26,6 @@ class OnStageShow extends Component {
   }
 
   handleKeyPress = e => {
-    console.log('key', e.key)
-    // We pass the new value of the text when calling onAccept
     if (e.key === "Enter") {
       this.toggleDescriptionEdit()
       this.handleDescriptionSave()

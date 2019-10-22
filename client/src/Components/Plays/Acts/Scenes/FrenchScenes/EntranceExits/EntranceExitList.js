@@ -7,159 +7,42 @@ import {Button} from 'react-bootstrap'
 
 import _ from 'lodash'
 
-import {
-  createEntranceExit,
-  deleteEntranceExit,
-  getEntranceExits,
-  updateServerEntranceExit
-} from '../../../../../../api/entrance_exits'
-
-import {
-  getStageExits
-} from '../../../../../../api/stage_exits'
-
 import EntranceExitShow from './EntranceExitShow'
 import NewEntranceExitForm from './NewEntranceExitForm'
 
 class EntranceExitsList extends Component {
   state = {
-    characters: this.props.play.characters,
     newEntranceExitFormOpen: false,
     entranceExits: [],
-    stageExits: [],
   }
 
-  componentDidMount() {
-    // this.loadEntranceExitsFromServer()
-    this.loadStageExitsFromServer()
-  }
-
-  createNewEntranceExit = (entranceExit) => {
-    this.createServerEntranceExit(entranceExit)
-    this.handleToggleClick()
-  }
-
-  handleToggleClick = () => {
-    this.setState({newEntranceExitFormOpen: !this.state.newEntranceExitFormOpen})
-  }
-
-  onDeleteClick = (entranceExitId) => {
-    this.deleteEntranceExit(entranceExitId)
-  }
-
-  onSave = (formObj, entranceExitId) => {
-    const k = Object.keys(formObj)[0]
-    let entranceExitObj = {}
-    entranceExitObj[k] = formObj[k]
-    entranceExitObj['id'] = entranceExitId
-    this.updateServerEntranceExit(entranceExitObj, entranceExitId)
-  }
-
-  async createServerEntranceExit(entranceExit) {
-    const response = await createEntranceExit(this.props.frenchSceneId, entranceExit)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating stage exit'
-      })
-    } else {
-      let newEntranceExit = {
-        category: entranceExit.category,
-        character: {
-          id: entranceExit.character_id,
-          name: entranceExit.character_name,
-        },
-        id: response.data.id,
-        line: entranceExit.line,
-        notes: entranceExit.notes,
-        page: entranceExit.page,
-        stage_exit: {
-          id: entranceExit.stage_exit_id,
-          name: entranceExit.stage_exit_name,
-        }
-      }
-      this.setState({
-        entranceExits: _.orderBy([...this.state.entranceExits, newEntranceExit], ['line', 'page'], ['asc', 'asc'])
-      })
-    }
-  }
-
-  async deleteEntranceExit(entranceExitId) {
-    const response = await deleteEntranceExit(entranceExitId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting stage exit'
-      })
-    } else {
-      this.setState({
-        entranceExits: this.state.entranceExits.filter(entranceExit =>
-          entranceExit.id !== entranceExitId
-        )
-      })
-    }
-  }
-
-  async loadEntranceExitsFromServer() {
-    const response = await getEntranceExits(this.props.frenchSceneId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching stage exits'
-      })
-    } else {
-      this.setState({
-        entranceExits: response.data
-      })
-    }
-  }
-
-  async loadStageExitsFromServer() {
-    const response = await getStageExits(this.props.play.production_id)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching stage exits'
-      })
-    } else {
-      this.setState({
-        stageExits: _.orderBy(response.data, ['line', 'page'], ['asc', 'asc'])
-      })
-    }
-  }
-
-  async updateServerEntranceExit(entranceExitAttrs, entranceExitId) {
-    const response = await updateServerEntranceExit(entranceExitAttrs, entranceExitId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating stage exits'
-      })
-    } else {
-      this.setState(state => {
-        const entranceExitList = state.entranceExits.map((entranceExit) => {
-          if (entranceExit.id === entranceExitAttrs.id) {
-            let newEntranceExit = Object.assign(entranceExit, entranceExitAttrs)
-            return newEntranceExit
-          } else {
-            return entranceExit
-          }
-        })
-        const entranceExitListSorted = _.orderBy(entranceExitList, ['line', 'page'], ['asc', 'asc'])
-        return {
-          entranceExits: entranceExitListSorted
-        }
-      })
-    }
+  toggleForm = () => {
+    this.setState({newEntranceExitFormOpen: !this.state.newOnStageFormOpen})
   }
 
   render() {
-    let entranceExits = this.state.entranceExits.map(entranceExit =>
-      <li key={entranceExit.id}>
-        <EntranceExitShow
-          characters={this.props.play.characters}
-          entranceExit={entranceExit}
-          onDeleteClick={this.onDeleteClick}
-          onSave={this.onSave}
-          stageExits={this.state.stageExits}
-        />
-      </li>
-    )
+    console.log('prod is', this.props.production)
+    let act = _.find(this.props.play.acts, {'id': this.props.actId})
+    let scene = _.find(act.scenes, {'id': this.props.sceneId})
+    let frenchScene = _.find(scene.french_scenes, {'id': this.props.frenchSceneId})
+    let entranceExits = <div>No entrances or exits listed</div>
+    if (frenchScene.entrance_exits) {
+      let orderedEntranceExits = _.orderBy(frenchScene.entrance_exits, 'line')
+      entranceExits = orderedEntranceExits.map(entranceExit =>
+        <li key={entranceExit.id}>
+          <EntranceExitShow
+            actId={this.props.actId}
+            frenchSceneId={this.props.frenchSceneId}
+            onDeleteClick={this.props.onDeleteClick}
+            play={this.props.play}
+            production={this.props.production}
+            onEdit={this.props.handleEntranceExitEditFormSubmit}
+            entranceExit={entranceExit}
+            sceneId={this.props.sceneId}
+          />
+        </li>
+      )
+    }
     return (
       <div>
         <h3>Entrance Exits</h3>
@@ -169,15 +52,17 @@ class EntranceExitsList extends Component {
         </ul>
         { this.state.newEntranceExitFormOpen ?
           <NewEntranceExitForm
-            characters={this.state.characters}
+            actId={this.props.actId}
+            characters={this.props.play.characters}
             frenchSceneId={this.props.frenchSceneId}
-            onFormClose={this.handleToggleClick}
-            onFormSubmit={this.createNewEntranceExit}
-            stageExits={this.state.stageExits}
+            onFormClose={this.toggleForm}
+            onFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+            sceneId={this.props.sceneId}
+            stageExits={this.props.production.stage_exits}
           />
           :
           <Button
-            onClick={this.handleToggleClick}
+            onClick={this.toggleForm}
           >
             Add New
           </Button>
@@ -189,8 +74,14 @@ class EntranceExitsList extends Component {
 }
 
 EntranceExitsList.propTypes = {
+  actId: PropTypes.number.isRequired,
   frenchSceneId: PropTypes.number.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
+  onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
+  production: PropTypes.object.isRequired,
+  sceneId: PropTypes.number.isRequired,
 }
 
 export default EntranceExitsList

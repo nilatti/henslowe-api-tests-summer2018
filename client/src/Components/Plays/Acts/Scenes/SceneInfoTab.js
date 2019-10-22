@@ -10,25 +10,20 @@ class SceneInfoTab extends Component {
     editFormOpen: false
   }
 
-  closeForm = () => {
-    this.setState({
-      editFormOpen: false
-    })
-  }
-
   handleEditClick = () => {
-    this.openForm()
+    this.toggleForm()
   }
   handleFormClose = () => {
-    this.closeForm()
+    this.toggleForm()
   }
   handleSubmit = (actId, scene) => {
     this.props.handleSceneEditFormSubmit(actId, scene)
-    this.closeForm()
+    this.toggleForm()
   }
-  openForm = () => {
+
+  toggleForm = () => {
     this.setState({
-      editFormOpen: true
+      editFormOpen: !this.state.editFormOpen
     })
   }
 
@@ -61,6 +56,7 @@ class SceneInfoTab extends Component {
           handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
           handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
           play={this.props.play}
+          production={this.props.production}
           sceneId={this.props.sceneId}
           />
       </div>

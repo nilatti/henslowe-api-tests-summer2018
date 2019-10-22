@@ -34,7 +34,6 @@ class PlaysController < ApiController
             ]
           ]
         ).find(params[:id])
-    puts "play is #{@play.author.first_name}"
     render json: @play.as_json(include:
       [
         :author,

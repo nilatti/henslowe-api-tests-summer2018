@@ -68,6 +68,7 @@ class ActInfoTab extends Component {
           handleSceneDeleteClick={this.props.handleSceneDeleteClick}
           handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
           play={this.props.play}
+          production={this.props.production}
         />
       </div>
     )

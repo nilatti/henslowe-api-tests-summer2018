@@ -64,6 +64,7 @@ class PlayShow extends Component {
           handleSceneDeleteClick={this.props.handleSceneDeleteClick}
           handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
           play={this.props.play}
+          production={this.props.production}
           onDeleteClick={this.props.handleActDeleteClick}
         />
       </Tab>

@@ -89,6 +89,7 @@ class FrenchSceneShow extends Component {
               onDeleteClick={this.props.handleEntranceExitDeleteClick}
               handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
               play={this.props.play}
+              production={this.props.production}
               sceneId={this.props.sceneId}
             />
           </Row>

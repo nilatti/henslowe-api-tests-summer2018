@@ -81,11 +81,11 @@ class EntranceExitShow extends Component {
 
   render() {
     const entranceExit = this.props.entranceExit
-    var characters = this.props.characters.map((character) => ({
+    var characters = this.props.play.characters.map((character) => ({
       id: character.id,
       label: String(character.name)
     }))
-    var stageExits = this.props.stageExits.map((stageExit) => ({
+    var stageExits = this.props.production.stage_exits.map((stageExit) => ({
       id: stageExit.id,
       label: String(stageExit.name)
     }))
@@ -213,10 +213,10 @@ class EntranceExitShow extends Component {
 }
 
 EntranceExitShow.propTypes = {
-  characters: PropTypes.array.isRequired,
   entranceExit: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
-  stageExits: PropTypes.array.isRequired,
+  play: PropTypes.object.isRequired,
+  production: PropTypes.object.isRequired,
 }
 
 export default EntranceExitShow

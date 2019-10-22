@@ -70,6 +70,7 @@ class FrenchSceneInfoTab extends Component {
           handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
           onDeleteClick={this.handleDeleteClick}
           play={this.props.play}
+          production={this.props.production}
           sceneId={this.props.sceneId}
           sceneNumber={this.props.sceneNumber}
         />

@@ -64,6 +64,7 @@ class SceneShow extends Component {
               handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
               onDeleteClick={this.props.handleFrenchSceneDeleteClick}
               play={this.props.play}
+              production={this.props.production}
               sceneId={scene.id}
               sceneNumber={scene.number}
             />

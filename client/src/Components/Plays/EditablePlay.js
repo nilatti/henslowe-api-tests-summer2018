@@ -27,6 +27,7 @@ class EditablePlay extends Component {
     this.state = {
       editFormOpen: false,
       play: null,
+      production: null,
       toPlaysList: false,
     }
   }
@@ -413,14 +414,37 @@ class EditablePlay extends Component {
   }
 
   async loadPlayFromServer(playId) {
+    console.log('load play called')
     const response = await getItem(playId, "play")
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error fetching play'
       })
     } else {
+      console.log('canonical is', response.data['canonical'])
+      console.log('play is', response.data)
+      if (!response.data['canonical']) {
+        console.log('play is not canonical')
+        this.loadProductionFromServer(response.data['production_id'])
+      } else {
+        console.log('play is canonical')
+      }
       this.setState({
         play: response.data
+      })
+    }
+  }
+
+  async loadProductionFromServer(productionId) {
+    console.log('load production called')
+    const response = await getItem(productionId, "production")
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error fetching production'
+      })
+    } else {
+      this.setState({
+        production: response.data
       })
     }
   }
@@ -603,7 +627,6 @@ async updateOnStage(actId, sceneId, frenchSceneId, updatedOnStage) {
     let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
     let workingOnStage = _.find(workingFrenchScene.on_stages, {'id': updatedOnStage.id})
     let newOnStage = {...workingOnStage, ...updatedOnStage}
-    console.log('new onstage is', newOnStage)
     let newOnStages = workingFrenchScene.on_stages.map((onStage) => {
       if (onStage.id == newOnStage.id) {
         return newOnStage
@@ -611,12 +634,10 @@ async updateOnStage(actId, sceneId, frenchSceneId, updatedOnStage) {
         return onStage
       }
     })
-    console.log('new onstages', newOnStages)
-    workingFrenchScene = {
+   workingFrenchScene = {
       ...workingFrenchScene,
       on_stages: newOnStages
     }
-    console.log('new fs', workingFrenchScene)
 
     let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
       if (frenchScene.id == workingFrenchScene.id) {
@@ -629,7 +650,6 @@ async updateOnStage(actId, sceneId, frenchSceneId, updatedOnStage) {
       ...workingScene,
       french_scenes: newFrenchScenes
     }
-    console.log('new scene', workingScene)
 
     let workingScenes = workingAct.scenes.map((scene) => {
       if (scene.id === workingScene.id) {
@@ -764,7 +784,6 @@ onOnStageCreateFormSubmit = (actId, sceneId, frenchSceneId, onStage) => {
 }
 
 onOnStageDeleteClick = (actId, sceneId, frenchSceneId, onStageId) => {
-  console.log('args in caller', actId, sceneId, frenchSceneId, onStageId)
   this.deleteOnStage(actId, sceneId, frenchSceneId, onStageId)
 }
 
@@ -817,6 +836,11 @@ render() {
       <div>Loading!</div>
     )
   }
+  if (!this.state.play.canonical && this.state.production === null) {
+    return(
+      <div>Loading!</div>
+    )
+  }
   return (
     <PlayShow
       handleActCreateFormSubmit={this.onActCreateFormSubmit}
@@ -840,6 +864,7 @@ render() {
       handleDeleteClick={this.onDeleteClick}
       handleEditClick={this.onEditClick}
       play={this.state.play}
+      production={this.state.production}
     />
   )
 }

@@ -51,6 +51,7 @@ class ActShow extends Component {
             sceneId={scene.id}
             onDeleteClick={this.props.handleSceneDeleteClick}
             play={this.props.play}
+            production={this.props.production}
           />
         </Tab>
       )
