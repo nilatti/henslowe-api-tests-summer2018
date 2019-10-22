@@ -83,8 +83,13 @@ class FrenchSceneShow extends Component {
           !this.props.play.canonical
           ? <Row>
             <EntranceExitList
+              actId={this.props.actId}
               frenchSceneId={this.props.frenchScene.id}
+              handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+              onDeleteClick={this.props.handleEntranceExitDeleteClick}
+              handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
               play={this.props.play}
+              sceneId={this.props.sceneId}
             />
           </Row>
           : <span></span>
@@ -109,6 +114,9 @@ FrenchSceneShow.propTypes = {
   onDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitDeleteClick: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
   handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
   handleOnStageDeleteClick: PropTypes.func.isRequired,
   handleOnStageEditFormSubmit: PropTypes.func.isRequired,

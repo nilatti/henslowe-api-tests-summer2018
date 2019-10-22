@@ -38,6 +38,9 @@ class ActShow extends Component {
         <Tab eventKey={`scene-${scene.id}`} title={`Scene ${scene.number}`} key={`scene-${scene.id}`}>
           <SceneInfoTab
             actId={this.props.act.id}
+            handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+            handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}
+            handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
             handleFrenchSceneCreateFormSubmit={this.props.handleFrenchSceneCreateFormSubmit}
             handleFrenchSceneDeleteClick={this.props.handleFrenchSceneDeleteClick}
             handleFrenchSceneEditFormSubmit={this.props.handleFrenchSceneEditFormSubmit}
@@ -116,6 +119,9 @@ ActShow.propTypes = {
   act: PropTypes.object.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitDeleteClick: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
   handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
   handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
   handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,

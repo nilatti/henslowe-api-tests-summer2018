@@ -59,6 +59,48 @@ class EditablePlay extends Component {
     }
   }
 
+  async createEntranceExit(actId, sceneId, frenchSceneId, entranceExit) {
+    const response = await createItemWithParent('french_scene', frenchSceneId, 'entrance_exit', entranceExit)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error creating entrance/exit'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+      let newEntranceExits = _.orderBy([...workingFrenchScene.entrance_exits, response.data], 'line')
+      let newFrenchScene = {...workingFrenchScene, entrance_exits: newEntranceExits}
+      let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
+        if (frenchScene.id === newFrenchScene.id) {
+          return newFrenchScene
+        } else {
+          return frenchScene
+        }
+      })
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === workingScene.id) {
+          return {...scene, french_scenes: newFrenchScenes}
+        } else {
+          return scene
+        }
+      })
+      let newAct = {...workingAct, scenes: newScenes}
+      let newActs = this.state.play.acts.map((act) => {
+          if (act.id === newAct.id) {
+            return {...act, ...newAct}
+          } else {
+            return act
+          }
+        }
+      )
+      let newPlay = {...this.state.play, acts: newActs}
+      this.setState({
+        play: newPlay
+      })
+    }
+  }
+
   async createFrenchScene(actId, sceneId, frenchScene) {
     const response = await createItemWithParent('scene', sceneId, 'french_scene', frenchScene)
     if (response.status >= 400) {
@@ -192,6 +234,53 @@ class EditablePlay extends Component {
         play: {
           ...this.state.play,
           characters: this.state.play.characters.filter(character => character.id !== characterId)
+          }
+      })
+    }
+  }
+
+  async deleteEntranceExit(actId, sceneId, frenchSceneId, entranceExitId) {
+    const response = await deleteItem(entranceExitId, 'entrance_exit')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error deleting entrance/exit'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+      let newFrenchScene = {
+        ...workingFrenchScene, entrance_exits: workingFrenchScene.entrance_exits.filter(entrance_exit => entrance_exit.id !== entranceExitId)
+      }
+      let newFrenchScenes = workingScene.french_scenes.map((french_scene) => {
+        if (french_scene.id === newFrenchScene.id) {
+          return newFrenchScene
+        } else {
+          return french_scene
+        }
+      })
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === workingScene.id) {
+          return {...scene, french_scenes: newFrenchScenes}
+        } else {
+          return scene
+        }
+      })
+      workingAct = {
+        ...workingAct,
+        scenes: newScenes
+      }
+      let newActs = this.state.play.acts.map(act => {
+        if (act.id === workingAct.id) {
+          return workingAct
+        } else {
+          return act
+        }
+      })
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
           }
       })
     }
@@ -384,6 +473,72 @@ async updateCharacter(updatedCharacter) {
   }
 }
 
+async updateEntranceExit(actId, sceneId, frenchSceneId, updatedEntranceExit) {
+  const response = await updateServerItem(updatedEntranceExit, 'entrance_exit')
+  if (response.status >= 400) {
+    this.setState({
+      errorStatus: 'Error updating entrance/exit'
+    })
+  } else {
+    let workingAct = _.find(this.state.play.acts, {'id': actId})
+    let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+    let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+    let workingEntranceExit = _.find(workingFrenchScene.entrance_exits, {'id': updatedEntranceExit.id})
+    let newEntranceExit = {...workingEntranceExit, ...updatedEntranceExit}
+    let newEntranceExits = workingFrenchScene.on_stages.map((entranceExit) => {
+      if (entranceExit.id == newEntranceExit.id) {
+        return newEntranceExit
+      } else {
+        return entranceExit
+      }
+    })
+    workingFrenchScene = {
+      ...workingFrenchScene,
+      entrance_exits: newEntranceExits
+    }
+
+    let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
+      if (frenchScene.id == workingFrenchScene.id) {
+        return workingFrenchScene
+      } else {
+        return frenchScene
+      }
+    })
+    workingScene = {
+      ...workingScene,
+      french_scenes: newFrenchScenes
+    }
+
+    let workingScenes = workingAct.scenes.map((scene) => {
+      if (scene.id === workingScene.id) {
+        return workingScene
+      } else {
+        return scene
+      }
+    })
+
+    workingAct = {
+      ...workingAct,
+      scenes: workingScenes
+    }
+
+    let workingActs = this.state.play.acts.map((act) => {
+      if (act.id === workingAct.id) {
+        return workingAct
+      } else {
+        return act
+      }
+    })
+    let workingPlay = {...this.state.play, acts: workingActs}
+    this.setState({
+      play: {
+        ...this.state.play,
+        acts: workingActs
+        }
+    })
+  }
+}
+
 async updateFrenchScene(actId, sceneId, updatedFrenchScene) {
   const response = await updateServerItem(updatedFrenchScene, 'french_scene')
   if (response.status >= 400) {
@@ -448,6 +603,7 @@ async updateOnStage(actId, sceneId, frenchSceneId, updatedOnStage) {
     let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
     let workingOnStage = _.find(workingFrenchScene.on_stages, {'id': updatedOnStage.id})
     let newOnStage = {...workingOnStage, ...updatedOnStage}
+    console.log('new onstage is', newOnStage)
     let newOnStages = workingFrenchScene.on_stages.map((onStage) => {
       if (onStage.id == newOnStage.id) {
         return newOnStage
@@ -455,16 +611,25 @@ async updateOnStage(actId, sceneId, frenchSceneId, updatedOnStage) {
         return onStage
       }
     })
-
+    console.log('new onstages', newOnStages)
     workingFrenchScene = {
-      workingFrenchScene,
+      ...workingFrenchScene,
       on_stages: newOnStages
     }
+    console.log('new fs', workingFrenchScene)
 
+    let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
+      if (frenchScene.id == workingFrenchScene.id) {
+        return workingFrenchScene
+      } else {
+        return frenchScene
+      }
+    })
     workingScene = {
-      workingScene,
-      french_scenes: {...workingScene.french_scenes, workingFrenchScene}
+      ...workingScene,
+      french_scenes: newFrenchScenes
     }
+    console.log('new scene', workingScene)
 
     let workingScenes = workingAct.scenes.map((scene) => {
       if (scene.id === workingScene.id) {
@@ -570,6 +735,18 @@ onCharacterEditFormSubmit = (character) => {
   this.updateCharacter(character)
 }
 
+onEntranceExitCreateFormSubmit = (actId, sceneId, frenchSceneId, entranceExit) => {
+  this.createEntranceExit(actId, sceneId, frenchSceneId, entranceExit)
+}
+
+onEntranceExitDeleteClick = (actId, sceneId, frenchSceneId, entranceExitId) => {
+  this.deleteEntranceExit(actId, sceneId, frenchSceneId, entranceExitId)
+}
+
+onEntranceExitEditFormSubmit = (actId, sceneId, frenchSceneId, entranceExit) => {
+  this.updateEntranceExit(actId, sceneId, frenchSceneId, entranceExit)
+}
+
 onFrenchSceneCreateFormSubmit = (actId, sceneId, frenchScene) => {
   this.createFrenchScene(actId, sceneId, frenchScene)
 }
@@ -648,6 +825,9 @@ render() {
       handleCharacterCreateFormSubmit={this.onCharacterCreateFormSubmit}
       handleCharacterDeleteClick={this.onCharacterDeleteClick}
       handleCharacterEditFormSubmit={this.onCharacterEditFormSubmit}
+      handleEntranceExitCreateFormSubmit={this.onEntranceExitCreateFormSubmit}
+      handleEntranceExitDeleteClick={this.onEntranceExitDeleteClick}
+      handleEntranceExitEditFormSubmit={this.onEntranceExitEditFormSubmit}
       handleFrenchSceneCreateFormSubmit={this.onFrenchSceneCreateFormSubmit}
       handleFrenchSceneDeleteClick={this.onFrenchSceneDeleteClick}
       handleFrenchSceneEditFormSubmit={this.onFrenchSceneEditFormSubmit}

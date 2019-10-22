@@ -5,10 +5,6 @@ import React, {
 import FrenchSceneForm from './FrenchSceneForm'
 import FrenchSceneShow from './FrenchSceneShow'
 
-import {
-  updateServerOnStage
-} from '../../../../../api/on_stages'
-
 class FrenchSceneInfoTab extends Component {
   state = {
     editFormOpen: false,
@@ -39,35 +35,15 @@ class FrenchSceneInfoTab extends Component {
     })
   }
 
-  async updateServerOnStage(onStageAttrs) {
-    const response = await updateServerOnStage(onStageAttrs)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating French scene'
-      })
-    } else {
-      this.setState(state => {
-        const onStagesList = this.state.on_stages.map((on_stage) => {
-          if (on_stage.id === onStageAttrs.id) {
-            return onStageAttrs
-          } else {
-            return on_stage
-          }
-        })
-        return {
-          on_stages: onStagesList
-        }
-      })
-    }
-  }
-
-
   render() {
     if (this.state.editFormOpen) {
       return (
         <FrenchSceneForm
           actId={this.props.actId}
           frenchScene={this.props.french_scene}
+          handleEntranceExitCreateFormSubmit={this.onEntranceExitCreateFormSubmit}
+          handleEntranceExitDeleteClick={this.onEntranceExitDeleteClick}
+          handleEntranceExitEditFormSubmit={this.onEntranceExitEditFormSubmit}
           handleOnStageCreateFormSubmit={this.onOnStageCreateFormSubmit}
           handleOnStageDeleteClick={this.onOnStageDeleteClick}
           handleOnStageEditFormSubmit={this.onOnStageEditFormSubmit}
@@ -86,6 +62,9 @@ class FrenchSceneInfoTab extends Component {
           frenchScene={this.props.french_scene}
           handleEditClick={this.handleEditClick}
           handleEditSubmit={this.props.handleEditSubmit}
+          handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+          handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
+          handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}
           handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
           handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
           handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
@@ -104,6 +83,9 @@ FrenchSceneInfoTab.propTypes = {
   actNumber: PropTypes.number.isRequired,
   french_scene: PropTypes.object.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitDeleteClick: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
   handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
   handleOnStageDeleteClick: PropTypes.func.isRequired,
   handleOnStageEditFormSubmit: PropTypes.func.isRequired,

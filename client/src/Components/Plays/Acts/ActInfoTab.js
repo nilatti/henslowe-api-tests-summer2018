@@ -55,6 +55,9 @@ class ActInfoTab extends Component {
           act={this.props.act}
           handleDeleteClick={this.handleDeleteClick}
           handleEditClick={this.handleEditClick}
+          handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+          handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}
+          handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
           handleFrenchSceneCreateFormSubmit={this.props.handleFrenchSceneCreateFormSubmit}
           handleFrenchSceneDeleteClick={this.props.handleFrenchSceneDeleteClick}
           handleFrenchSceneEditFormSubmit={this.props.handleFrenchSceneEditFormSubmit}
@@ -74,6 +77,9 @@ class ActInfoTab extends Component {
 ActInfoTab.propTypes = {
   act: PropTypes.object.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitDeleteClick: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
   handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
   handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
   handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,
