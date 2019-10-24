@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     end
     resources :french_scenes do
       resources :entrance_exits
+      resources :on_stages
     end
     resources :on_stages
     resources :entrance_exits

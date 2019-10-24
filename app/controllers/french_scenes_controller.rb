@@ -13,8 +13,10 @@ class FrenchScenesController < ApiController
   def show
     json_response(@french_scene.as_json(
       include: [
-        :entrance_exits,
         :characters,
+        :entrance_exits: {
+          include: [:characters]
+        },
         on_stages: {
           include:
             [:characters]
@@ -35,7 +37,7 @@ class FrenchScenesController < ApiController
   # PATCH/PUT /scenes/1
   def update
     if @french_scene.update(french_scene_params)
-      json_response(@french_scene.as_json(include: [:characters, on_stages: {include: :character} ]))
+      json_response(@french_scene.as_json(include: [:characters, entrace_exits: {include: :character, :stage_exit}, on_stages: {include: :character} ]))
     else
       render json: @french_scene.errors, status: :unprocessable_entity
     end
@@ -68,6 +70,16 @@ class FrenchScenesController < ApiController
         :start_page,
         :summary,
         character_ids: [],
+        entrance_exits_attributes: [
+          :french_scene_id,
+          :page,
+          :line,
+          :order,
+          :stage_exit_id,
+          :category,
+          :notes,
+          :character_id
+        ],
         on_stages_attributes: [
           :category,
           :character_id,

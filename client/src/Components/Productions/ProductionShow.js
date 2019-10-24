@@ -17,7 +17,6 @@ import ActorsList from './Actors/ActorsList'
 import CastList from '../Jobs/CastList'
 import JobsListExcludingActorsAndAuditioners from '../Jobs/JobsListExcludingActorsAndAuditioners'
 import StageExitsList from './SetDesign/StageExitsList'
-import TheaterInfoTab from '../Theaters/TheaterInfoTab'
 
 class ProductionShow extends Component {
   constructor(props, context) {

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash'
 import PropTypes from 'prop-types';
 import React, {
   Component
@@ -13,82 +13,22 @@ import {
 import FrenchSceneFormToggle from './FrenchScenes/FrenchSceneFormToggle'
 import FrenchSceneInfoTab from './FrenchScenes/FrenchSceneInfoTab'
 
-import {
-  createFrenchScene,
-  deleteFrenchScene,
-  updateServerFrenchScene,
-} from '../../../../api/french_scenes'
-
 class SceneShow extends Component {
   constructor(props, context) {
     super(props, context);
     this.handleSelect = this.handleSelect.bind(this);
     this.state = {
-      french_scenes: this.props.scene.french_scenes,
       key: ''
     };
   }
 
-  async createFrenchScene(sceneId, frenchScene) {
-    const response = await createFrenchScene(sceneId, frenchScene)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating French scene'
-      })
-    } else {
-      this.setState({
-        french_scenes: [...this.state.french_scenes, response.data]
-      })
-      this.setState({
-        key: response.data.id
-      })
-    }
-  }
-
-  async deleteFrenchScene(frenchSceneId) {
-    const response = await deleteFrenchScene(frenchSceneId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting French scene'
-      })
-    } else {
-      this.setState({
-        french_scenes: this.state.french_scenes.filter(french_scene =>
-          french_scene.id !== frenchSceneId
-        )
-      })
-    }
-  }
-
-  async updateServerFrenchScene(attrsForApi) {
-    const response = await updateServerFrenchScene(attrsForApi)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating French scene'
-      })
-    }
-  }
-
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.scene.id)
+    this.props.onDeleteClick(this.props.actId, this.props.scene.id)
   }
 
   handleFrenchSceneCreateClick = (frenchScene) => {
-    this.createFrenchScene(this.props.scene.id, frenchScene)
+    this.props.handleFrenchSceneCreateFormSubmit(this.props.actId, this.props.sceneId, frenchScene)
   }
-
-  handleFrenchSceneDeleteClick = (frenchSceneId) => {
-    this.deleteFrenchScene(frenchSceneId)
-  }
-
-  handleEditFrenchSceneSubmit = (frenchScene) => {
-    this.updateServerFrenchScene(this.updateFrenchSceneAttrsForServer(frenchScene))
-    this.updateFrenchSceneAttrsForState(frenchScene)
-  }
-
-  // handleEditOnStageSubmit = (onStage) => {
-  //   this.updateServerOnStage(onStage)
-  // }
 
   handleSelect(key) {
     this.setState({
@@ -103,7 +43,6 @@ class SceneShow extends Component {
     } = frenchSceneAttrs
     return attrsForApi
   }
-
   async updateFrenchSceneAttrsForState(frenchSceneAttrs) {
     this.setState(state => {
       const frenchSceneList = this.state.french_scenes.map((french_scene) => {
@@ -119,32 +58,43 @@ class SceneShow extends Component {
       }
     })
   }
+
   render() {
+    let act = _.find(this.props.play.acts, {'id': this.props.actId})
+    let scene = _.find(act.scenes, {'id': this.props.sceneId})
     let frenchSceneTabs
-    if (this.state.french_scenes[0]) {
-      frenchSceneTabs = this.state.french_scenes.map((french_scene) =>
-        <Tab eventKey={`french_scene-${french_scene.id}`} title={`${french_scene.number}`} key={`french_scene-${french_scene.id}`}>
-          <FrenchSceneInfoTab
-            act_number={this.props.act_number}
-            french_scene={french_scene}
-            handleEditSubmit={this.handleEditFrenchSceneSubmit}
-            onDeleteClick={this.handleFrenchSceneDeleteClick}
-            play={this.props.play}
-            scene_id={this.props.scene.id}
-            scene_number={this.props.scene.number}
-          />
-        </Tab>
-      )
-    } else {
-      frenchSceneTabs = <div>No French scenes found</div>
-    }
+    if (scene.french_scenes[0] ) {
+      frenchSceneTabs = scene.french_scenes.map((french_scene) =>
+          <Tab eventKey={`french_scene-${french_scene.id}`} title={`${french_scene.number}`} key={`french_scene-${french_scene.id}`}>
+            <FrenchSceneInfoTab
+              actId={act.id}
+              actNumber={act.number}
+              french_scene={french_scene}
+              handleEditSubmit={this.props.handleFrenchSceneEditFormSubmit}
+              handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+              handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}
+              handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
+              handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+              handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
+              handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
+              onDeleteClick={this.props.handleFrenchSceneDeleteClick}
+              play={this.props.play}
+              production={this.props.production}
+              sceneId={scene.id}
+              sceneNumber={scene.number}
+            />
+          </Tab>
+        )
+      } else {
+        frenchSceneTabs = <div>Nothing to show here</div>
+      }
     return (
       <div>
         <Row>
           <Col>
-            <h2>Act {this.props.act_number}, Scene {this.props.scene.number}</h2>
+            <h2>Act {act.number}, Scene {scene.number}</h2>
             <p>
-              {this.props.scene.summary}
+              {scene.summary}
             </p>
             <span
               className='right floated edit icon'
@@ -161,9 +111,9 @@ class SceneShow extends Component {
           </Col>
         </Row>
         {
-          this.props.scene.start_page ?
+          scene.start_page ?
             <p>
-              Pages {this.props.scene.start_page} - {this.props.scene.end_page}
+              Pages {scene.start_page} - {scene.end_page}
             </p>
           :
           <br />
@@ -175,8 +125,8 @@ class SceneShow extends Component {
           <FrenchSceneFormToggle
             isOpen={false}
             onFormSubmit={this.handleFrenchSceneCreateClick}
-            play_id={this.props.play.id}
-            scene_id={this.props.scene.id}
+            play={this.props.play}
+            sceneId={scene.id}
           />
         </Row>
         <Tabs
@@ -191,18 +141,21 @@ class SceneShow extends Component {
   }
 }
 
-SceneShow.defaultProps = {
-  scene: {
-    french_scenes: []
-  },
-}
-
 SceneShow.propTypes = {
-  act_number: PropTypes.number.isRequired,
+  actId: PropTypes.number.isRequired,
   handleEditClick: PropTypes.func.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitDeleteClick: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
+  handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
+  handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
+  handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
+  sceneId: PropTypes.number.isRequired,
 }
 
 export default SceneShow

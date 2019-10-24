@@ -5,37 +5,23 @@ import React, {
 import FrenchSceneForm from './FrenchSceneForm'
 import FrenchSceneShow from './FrenchSceneShow'
 
-import {
-  updateServerOnStage
-} from '../../../../../api/on_stages'
-
 class FrenchSceneInfoTab extends Component {
   state = {
     editFormOpen: false,
-    on_stages: this.props.french_scene.on_stages
-  }
-
-  closeForm = () => {
-    this.setState({
-      editFormOpen: false,
-    })
   }
 
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.french_scene.id)
+    this.props.onDeleteClick(this.props.actId, this.props.sceneId, this.props.french_scene.id)
   }
   handleEditClick = () => {
-    this.openForm()
+    this.toggleForm()
   }
   handleFormClose = () => {
-    this.closeForm()
-  }
-  handleOnStageEditSubmit = (onStage) => {
-    this.updateServerOnStage(onStage)
+    this.toggleForm()
   }
   handleSubmit = (frenchScene) => {
-    this.props.handleEditSubmit(frenchScene)
-    this.closeForm()
+    this.props.handleEditSubmit(this.props.actId, this.props.sceneId, frenchScene)
+    this.toggleForm()
   }
   openForm = () => {
     this.setState({
@@ -43,51 +29,50 @@ class FrenchSceneInfoTab extends Component {
     })
   }
 
-  async updateServerOnStage(onStageAttrs) {
-    const response = await updateServerOnStage(onStageAttrs)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating French scene'
-      })
-    } else {
-      this.setState(state => {
-        const onStagesList = this.state.on_stages.map((on_stage) => {
-          if (on_stage.id === onStageAttrs.id) {
-            return onStageAttrs
-          } else {
-            return on_stage
-          }
-        })
-        return {
-          on_stages: onStagesList
-        }
-      })
-    }
+  toggleForm = () => {
+    this.setState({
+      editFormOpen: !this.state.editFormOpen
+    })
   }
-
 
   render() {
     if (this.state.editFormOpen) {
       return (
         <FrenchSceneForm
-          french_scene={this.props.french_scene}
+          actId={this.props.actId}
+          frenchScene={this.props.french_scene}
+          handleEntranceExitCreateFormSubmit={this.onEntranceExitCreateFormSubmit}
+          handleEntranceExitDeleteClick={this.onEntranceExitDeleteClick}
+          handleEntranceExitEditFormSubmit={this.onEntranceExitEditFormSubmit}
+          handleOnStageCreateFormSubmit={this.onOnStageCreateFormSubmit}
+          handleOnStageDeleteClick={this.onOnStageDeleteClick}
+          handleOnStageEditFormSubmit={this.onOnStageEditFormSubmit}
           onFormClose={this.handleFormClose}
           onFormSubmit={this.handleSubmit}
-          play_id={this.props.play.id}
-          scene_id={this.props.scene_id}
+          play={this.props.play}
+          sceneId={this.props.sceneId}
         />
       )
     }
     return (
       <div>
         <FrenchSceneShow
-          act_number={this.props.act_number}
-          french_scene={this.props.french_scene}
+          actId={this.props.actId}
+          actNumber={this.props.actNumber}
+          frenchScene={this.props.french_scene}
           handleEditClick={this.handleEditClick}
-          handleNonspeakingClick={this.handleOnStageEditSubmit}
+          handleEditSubmit={this.props.handleEditSubmit}
+          handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+          handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
+          handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}
+          handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+          handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
+          handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
           onDeleteClick={this.handleDeleteClick}
           play={this.props.play}
-          scene_number={this.props.scene_number}
+          production={this.props.production}
+          sceneId={this.props.sceneId}
+          sceneNumber={this.props.sceneNumber}
         />
       </div>
     )
@@ -95,13 +80,20 @@ class FrenchSceneInfoTab extends Component {
 }
 
 FrenchSceneInfoTab.propTypes = {
-  act_number: PropTypes.number.isRequired,
+  actId: PropTypes.number.isRequired,
+  actNumber: PropTypes.number.isRequired,
   french_scene: PropTypes.object.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitDeleteClick: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
-  scene_id: PropTypes.number.isRequired,
-  scene_number: PropTypes.number.isRequired,
+  sceneId: PropTypes.number.isRequired,
+  sceneNumber: PropTypes.number.isRequired,
 }
 
 export default FrenchSceneInfoTab

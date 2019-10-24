@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types';
 import React, {
   Component
@@ -14,27 +15,29 @@ import EntranceExitList from './EntranceExits/EntranceExitList'
 
 class FrenchSceneShow extends Component {
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.french_scene.id)
+    this.props.onDeleteClick(this.props.frenchScene.id)
   }
 
-  changeNonspeaking = (event, on_stage) => {
-    on_stage.nonspeaking = !on_stage.nonspeaking
-    this.props.handleNonspeakingClick(on_stage)
+  changeNonspeaking = (event, onStage) => {
+    onStage.nonspeaking = !onStage.nonspeaking
+    this.props.handleEditSubmit(onStage)
   }
 
-  handleEditSubmit = (on_stage) => {
-    this.props.handleNonspeakingClick(on_stage)
+  handleEditSubmit = (onStage) => {
+    this.props.handleEditSubmit(onStage)
   }
 
   render() {
-
+    let act = _.find(this.props.play.acts, {'id': this.props.actId})
+    let scene = _.find(act.scenes, {'id': this.props.sceneId})
+    let frenchScene = _.find(scene.french_scenes, {'id': this.props.frenchScene.id})
     return (
       <div>
         <Row>
           <Col>
-            <h2>{this.props.act_number}.{this.props.scene_number}.{this.props.french_scene.number}</h2>
+            <h2>{this.props.actNumber}.{this.props.sceneNumber}.{this.props.frenchScene.number}</h2>
             <p>
-              {this.props.french_scene.summary}
+              {this.props.frenchScene.summary}
             </p>
             <span
               className='right floated edit icon'
@@ -52,9 +55,9 @@ class FrenchSceneShow extends Component {
         </Row>
         <Row>
           {
-            this.props.french_scene.start_page ?
+            this.props.frenchScene.start_page ?
               <p>
-                Pages {this.props.french_scene.start_page} - {this.props.french_scene.end_page}
+                Pages {this.props.frenchScene.start_page} - {this.props.frenchScene.end_page}
               </p>
             :
             <br />
@@ -66,9 +69,13 @@ class FrenchSceneShow extends Component {
         <Row>
           <ul>
             <OnStagesList
-              frenchSceneId={this.props.french_scene.id}
-              on_stages={this.props.on_stages}
+              actId={this.props.actId}
+              frenchSceneId={this.props.frenchScene.id}
+              handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+              onDeleteClick={this.props.handleOnStageDeleteClick}
+              handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
               play={this.props.play}
+              sceneId={this.props.sceneId}
             />
           </ul>
         </Row>
@@ -76,8 +83,14 @@ class FrenchSceneShow extends Component {
           !this.props.play.canonical
           ? <Row>
             <EntranceExitList
-              frenchSceneId={this.props.french_scene.id}
+              actId={this.props.actId}
+              frenchSceneId={this.props.frenchScene.id}
+              handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+              onDeleteClick={this.props.handleEntranceExitDeleteClick}
+              handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
               play={this.props.play}
+              production={this.props.production}
+              sceneId={this.props.sceneId}
             />
           </Row>
           : <span></span>
@@ -96,12 +109,21 @@ FrenchSceneShow.defaultProps = {
 }
 
 FrenchSceneShow.propTypes = {
-  act_number: PropTypes.number.isRequired,
-  french_scene: PropTypes.object.isRequired,
-  handleNonspeakingClick: PropTypes.func.isRequired,
+  actId: PropTypes.number.isRequired,
+  actNumber: PropTypes.number.isRequired,
+  frenchScene: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
+  handleEditClick: PropTypes.func.isRequired,
+  handleEditSubmit: PropTypes.func.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitDeleteClick: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
-  scene_number: PropTypes.number.isRequired,
+  sceneId: PropTypes.number.isRequired,
+  sceneNumber: PropTypes.number.isRequired,
 }
 
 export default FrenchSceneShow

@@ -1,7 +1,6 @@
 import API from './api'
 
 async function createProduction(production) {
-  console.log('inside api call', production)
   return API.post(
     'productions', {
       production

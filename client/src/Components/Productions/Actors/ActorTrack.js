@@ -39,16 +39,15 @@ class ActorTrack extends Component {
   }
 
   getCharacter(characterId) {
-    return this.props.production.play.characters.find(x => x.id == characterId)
+    return this.props.production.play.characters.find(x => x.id === characterId)
   }
 
   getStageExit(stageExitId) {
-    return this.props.production.stage_exits.find(x => x.id == stageExitId)
+    return this.props.production.stage_exits.find(x => x.id === stageExitId)
   }
 
   render() {
     const actorEntranceExits = this.getActorEntranceExits()
-    console.log(actorEntranceExits)
     let actorTrackInfo = actorEntranceExits.map(entranceExit =>
       (
         <tr key={entranceExit.id}>

@@ -17,7 +17,6 @@ async function getEntranceExits(frenchSceneId) {
 }
 
 async function updateServerEntranceExit(entranceExit, entranceExitId) {
-  console.log('inside api call', entranceExitId)
   return API.put(`entrance_exits/${entranceExitId}`, {
     entrance_exit: entranceExit
   })

@@ -11,27 +11,29 @@ class ActInfoTab extends Component {
   }
 
   closeForm = () => {
-    this.setState({
-      editFormOpen: false
-    })
+    this.toggleForm()
   }
 
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.act.id)
   }
+
   handleEditClick = () => {
-    this.openForm()
+    this.toggleForm()
   }
+
   handleFormClose = () => {
-    this.closeForm()
+    this.toggleForm()
   }
+
   handleSubmit = (act) => {
     this.props.handleEditSubmit(act)
-    this.closeForm()
+    this.toggleForm()
   }
-  openForm = () => {
+
+  toggleForm = () => {
     this.setState({
-      editFormOpen: true
+      editFormOpen: !this.state.editFormOpen
     })
   }
 
@@ -43,7 +45,7 @@ class ActInfoTab extends Component {
           act={this.props.act}
           onFormClose={this.handleFormClose}
           onFormSubmit={this.handleSubmit}
-          play={this.props.play} 
+          play={this.props.play}
         />
       )
     }
@@ -53,7 +55,20 @@ class ActInfoTab extends Component {
           act={this.props.act}
           handleDeleteClick={this.handleDeleteClick}
           handleEditClick={this.handleEditClick}
+          handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+          handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}
+          handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
+          handleFrenchSceneCreateFormSubmit={this.props.handleFrenchSceneCreateFormSubmit}
+          handleFrenchSceneDeleteClick={this.props.handleFrenchSceneDeleteClick}
+          handleFrenchSceneEditFormSubmit={this.props.handleFrenchSceneEditFormSubmit}
+          handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+          handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
+          handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
+          handleSceneCreateFormSubmit={this.props.handleSceneCreateFormSubmit}
+          handleSceneDeleteClick={this.props.handleSceneDeleteClick}
+          handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
           play={this.props.play}
+          production={this.props.production}
         />
       </div>
     )
@@ -62,6 +77,19 @@ class ActInfoTab extends Component {
 
 ActInfoTab.propTypes = {
   act: PropTypes.object.isRequired,
+  handleEditSubmit: PropTypes.func.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitDeleteClick: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
+  handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
+  handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
+  handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
+  handleSceneCreateFormSubmit: PropTypes.func.isRequired,
+  handleSceneDeleteClick: PropTypes.func.isRequired,
+  handleSceneEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
 }

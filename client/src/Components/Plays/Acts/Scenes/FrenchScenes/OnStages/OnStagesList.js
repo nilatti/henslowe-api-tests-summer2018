@@ -8,13 +8,6 @@ import {Button} from 'react-bootstrap'
 import { RIEInput} from '@attently/riek'
 import _ from 'lodash'
 
-import {
-  createOnStage,
-  deleteOnStage,
-  getOnStages,
-  updateServerOnStage
-} from '../../../../../../api/on_stages'
-
 import NewOnStageForm from './NewOnStageForm'
 import OnStageShow from './OnStageShow'
 
@@ -24,126 +17,31 @@ class OnStagesList extends Component {
     onStages: [],
   }
 
-  componentDidMount() {
-    this.loadOnStagesFromServer()
-  }
-
-  closeForm = () => {
-    this.setState({newOnStageFormOpen: false})
-  }
-
-  createNewOnStage = (onStage) => {
-    this.createServerOnStage(onStage)
-    this.closeForm()
-  }
-
-  handleToggleClick = () => {
-    this.setState({newOnStageFormOpen: true})
-  }
-
-  onDeleteClick = (onStageId) => {
-    this.deleteOnStage(onStageId)
-  }
-
-  onSave = (nameObj, onStageId) => {
-    let onStageObj = {
-      id: onStageId,
-      description: nameObj['description'],
-      nonspeaking: nameObj['nonspeaking']
-    }
-    this.updateServerOnStage(onStageObj)
-  }
-
-  async createServerOnStage(onStage) {
-    const response = await createOnStage(onStage)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating stage exit'
-      })
-    } else {
-      let newOnStage = {
-        category: "Character",
-        character: {
-          id: onStage.character_id,
-          name: onStage.character_name,
-        },
-        id: response.data.id,
-        character_id: onStage.character_id,
-        description: onStage.description,
-        nonspeaking: onStage.nonspeaking,
-      }
-      this.setState({
-        onStages: [...this.state.onStages, newOnStage].sort((a, b) => (a.name > b.name) - (a.name < b.name))
-      })
-    }
-  }
-
-  async deleteOnStage(onStageId) {
-    const response = await deleteOnStage(onStageId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting stage exit'
-      })
-    } else {
-      this.setState({
-        onStages: this.state.onStages.filter(onStage =>
-          onStage.id !== onStageId
-        )
-      })
-    }
-  }
-
-  async loadOnStagesFromServer() {
-    const response = await getOnStages(this.props.frenchSceneId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching stage exits'
-      })
-    } else {
-      this.setState({
-        onStages: _.orderBy(response.data, ['nonspeaking', 'character.name'])
-      })
-    }
-  }
-
-  async updateServerOnStage(onStageAttrs) {
-    const response = await updateServerOnStage(onStageAttrs)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating stage exits'
-      })
-    } else {
-      this.setState(state => {
-        const onStageList = state.onStages.map((onStage) => {
-          if (onStage.id === onStageAttrs.id) {
-            return {
-              id: onStage.id,
-              description: onStage.description,
-              character: onStage.character
-            }
-          } else {
-            return onStage
-          }
-        })
-        const onStageListSorted = _.orderBy(onStageList, ['nonspeaking', 'character.name'])
-        return {
-          onStages: onStageListSorted
-        }
-      })
-    }
+  toggleForm = () => {
+    this.setState({newOnStageFormOpen: !this.state.newOnStageFormOpen})
   }
 
   render() {
-    let onStages = this.state.onStages.map(onStage =>
-      <li key={onStage.id}>
-        <OnStageShow
-          onDeleteClick={this.onDeleteClick}
-          play={this.props.play}
-          onSave={this.onSave}
-          onStage={onStage}
-        />
-      </li>
-    )
+    let act = _.find(this.props.play.acts, {'id': this.props.actId})
+    let scene = _.find(act.scenes, {'id': this.props.sceneId})
+    let frenchScene = _.find(scene.french_scenes, {'id': this.props.frenchSceneId})
+    let onStages = <div>No onstage characters</div>
+    if (frenchScene.on_stages) {
+      let orderedOnStages = _.orderBy(frenchScene.on_stages, 'character.name')
+      onStages = orderedOnStages.map(onStage =>
+        <li key={onStage.id}>
+          <OnStageShow
+            actId={this.props.actId}
+            frenchSceneId={this.props.frenchSceneId}
+            onDeleteClick={this.props.onDeleteClick}
+            play={this.props.play}
+            onEdit={this.props.handleOnStageEditFormSubmit}
+            onStage={onStage}
+            sceneId={this.props.sceneId}
+          />
+        </li>
+      )
+    }
     return (
       <div>
         <h3>On Stages</h3>
@@ -153,15 +51,17 @@ class OnStagesList extends Component {
         </ul>
         { this.state.newOnStageFormOpen ?
           <NewOnStageForm
+            actId={this.props.actId}
             characters={this.props.play.characters}
             frenchSceneId={this.props.frenchSceneId}
-            onFormClose={this.closeForm}
-            onFormSubmit={this.createNewOnStage}
+            onFormClose={this.toggleForm}
+            onFormSubmit={this.props.handleOnStageCreateFormSubmit}
             play={this.props.play}
+            sceneId={this.props.sceneId}
           />
           :
           <Button
-            onClick={this.handleToggleClick}
+            onClick={this.toggleForm}
           >
             Add New
           </Button>
@@ -173,7 +73,12 @@ class OnStagesList extends Component {
 }
 
 OnStagesList.propTypes = {
+  actId: PropTypes.number.isRequired,
   frenchSceneId: PropTypes.number.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
+  onDeleteClick: PropTypes.func.isRequired,
+  sceneId: PropTypes.number.isRequired,
   play: PropTypes.object.isRequired,
 }
 

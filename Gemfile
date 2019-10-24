@@ -31,8 +31,7 @@ gem 'sidekiq'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
-gem 'rubocop'
-gem 'rubocop-performance'
+gem 'rubocop-rails'
 gem 'activerecord-import'
 
 group :development, :test do

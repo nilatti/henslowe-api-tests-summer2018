@@ -10,7 +10,7 @@ import _ from 'lodash'
 
 class JobsListExcludingActorsAndAuditioners extends Component {
   excludeActorsAndAuditioners() {
-    return this.props.production.jobs.filter(job => job.specialization.title != 'Actor' && job.specialization.title != 'Auditioner')
+    return this.props.production.jobs.filter(job => job.specialization.title !== 'Actor' && job.specialization.title !== 'Auditioner')
   }
   render() {
     let productionSet = this.props.production !== undefined ? true : false

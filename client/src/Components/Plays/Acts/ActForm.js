@@ -12,11 +12,11 @@ class ActForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      end_page: this.props.act.end_page,
-      number: this.props.act.number,
+      end_page: this.props.act.end_page || '',
+      number: this.props.act.number || '',
       play: this.props.play,
-      start_page: this.props.act.start_page,
-      summary: this.props.act.summary,
+      start_page: this.props.act.start_page || '',
+      summary: this.props.act.summary || '',
       validated: false,
     }
   }
@@ -28,9 +28,9 @@ class ActForm extends Component {
   }
 
   handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     } else {
       this.processSubmit()

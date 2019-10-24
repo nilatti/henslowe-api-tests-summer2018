@@ -18,155 +18,14 @@ import ActInfoTab from './Acts/ActInfoTab'
 import CharacterFormToggle from './Characters/CharacterFormToggle'
 import CharacterInfoTab from './Characters/CharacterInfoTab'
 
-import {
-  createAct,
-  deleteAct,
-  updateServerAct,
-} from '../../api/acts'
-
-import {
-  createCharacter,
-  deleteCharacter,
-  updateServerCharacter,
-} from '../../api/characters'
-
-
 class PlayShow extends Component {
   constructor(props, context) {
     super(props, context);
     this.handleSelect = this.handleSelect.bind(this);
 
     this.state = {
-      acts: this.props.play.acts,
-      characters: this.props.play.characters,
       key: ''
     };
-  }
-
-  async createAct(playId, act) {
-    const response = await createAct(playId, act)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating act'
-      })
-    } else {
-      this.setState({
-        acts: [...this.state.acts, response.data].sort((a, b) => (a.number - b.number)),
-        key: response.data.id,
-      })
-    }
-  }
-
-  async deleteAct(actId) {
-    const response = await deleteAct(actId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting act'
-      })
-    } else {
-      this.setState({
-        acts: this.state.acts.filter(act =>
-          act.id !== actId
-        )
-      })
-    }
-  }
-
-  async updateServerAct(actAttrs) {
-    const response = await updateServerAct(actAttrs)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating act'
-      })
-    } else {
-      this.setState(state => {
-        const actList = state.acts.map((act) => {
-          if (act.id === actAttrs.id) {
-            return actAttrs
-          } else {
-            return act
-          }
-        })
-        return {
-          acts: actList
-        }
-      })
-    }
-  }
-
-  async createCharacter(playId, character) {
-    const response = await createCharacter(playId, character)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating character'
-      })
-    } else {
-      this.setState({
-        characters: [...this.state.characters, response.data].sort((a, b) => (a.name > b.name) - (a.name < b.name))
-      })
-    }
-  }
-
-  async deleteCharacter(characterId) {
-    const response = await deleteCharacter(characterId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting character'
-      })
-    } else {
-      this.setState({
-        characters: this.state.characters.filter(character =>
-          character.id !== characterId
-        )
-      })
-    }
-  }
-
-  async updateServerCharacter(characterAttrs) {
-    const response = await updateServerCharacter(characterAttrs)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating character'
-      })
-    } else {
-      this.setState(state => {
-        let characterList = state.characters.map((character) => {
-          if (character.id === characterAttrs.id) {
-            return characterAttrs
-          } else {
-            return character
-          }
-        })
-        let characterListSorted = characterList.sort((a, b) => (a.name > b.name) - (a.name < b.name));
-        return {
-          characters: characterListSorted
-        }
-      })
-    }
-  }
-
-  handleActCreateClick = (act) => {
-    this.createAct(this.props.play.id, act)
-  }
-
-  handleActDeleteClick = (actId) => {
-    this.deleteAct(actId)
-  }
-
-  handleEditActSubmit = (act) => {
-    this.updateServerAct(act)
-  }
-
-  handleCharacterCreateClick = (character) => {
-    this.createCharacter(this.props.play.id, character)
-  }
-
-  handleCharacterDeleteClick = (characterId) => {
-    this.deleteCharacter(characterId)
-  }
-
-  handleEditCharacterSubmit = (character) => {
-    this.updateServerCharacter(character)
   }
 
   handleDeleteClick = () => {
@@ -182,8 +41,8 @@ class PlayShow extends Component {
   render() {
     let actTabs
     let characterTabs
-    if (this.state.acts[0]) {
-      actTabs = this.state.acts.map((act) =>
+    if (this.props.play.acts) {
+      actTabs = this.props.play.acts.map((act) =>
         <Tab
           eventKey={`act-${act.id}`}
           key={`act-${act.id}`}
@@ -191,17 +50,30 @@ class PlayShow extends Component {
         >
         <ActInfoTab
           act={act}
-          handleEditSubmit={this.handleEditActSubmit}
+          handleEditSubmit={this.props.handleActEditFormSubmit}
+          handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+          handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}
+          handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
+          handleFrenchSceneCreateFormSubmit={this.props.handleFrenchSceneCreateFormSubmit}
+          handleFrenchSceneDeleteClick={this.props.handleFrenchSceneDeleteClick}
+          handleFrenchSceneEditFormSubmit={this.props.handleFrenchSceneEditFormSubmit}
+          handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+          handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
+          handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
+          handleSceneCreateFormSubmit={this.props.handleSceneCreateFormSubmit}
+          handleSceneDeleteClick={this.props.handleSceneDeleteClick}
+          handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
           play={this.props.play}
-          onDeleteClick={this.handleActDeleteClick}
+          production={this.props.production}
+          onDeleteClick={this.props.handleActDeleteClick}
         />
       </Tab>
       )
     } else {
       actTabs = <div>No acts found</div>
     }
-    if (this.state.characters[0]) {
-      characterTabs = this.state.characters.map((character) =>
+    if (this.props.play.characters) {
+      characterTabs = this.props.play.characters.map((character) =>
         <Tab
           eventKey={`character-${character.id}`}
           key={`character-${character.id}`}
@@ -210,9 +82,9 @@ class PlayShow extends Component {
         >
         <CharacterInfoTab
           character={character}
+          handleEditSubmit={this.props.handleCharacterEditFormSubmit}
+          onDeleteClick={this.props.handleCharacterDeleteClick}
           play={this.props.play}
-          onDeleteClick={this.handleCharacterDeleteClick}
-          handleEditSubmit={this.handleEditCharacterSubmit}
         />
       </Tab>
       )
@@ -248,7 +120,7 @@ class PlayShow extends Component {
         <Row>
           <CharacterFormToggle
             isOpen={false}
-            onFormSubmit={this.handleCharacterCreateClick}
+            onFormSubmit={this.props.handleCharacterCreateFormSubmit}
             play_id={this.props.play.id}
           />
         </Row>
@@ -265,7 +137,7 @@ class PlayShow extends Component {
         <Row>
           <ActFormToggle
             isOpen={false}
-            onFormSubmit={this.handleActCreateClick}
+            onFormSubmit={this.props.handleActCreateFormSubmit}
             play={this.props.play}
           />
         </Row>
@@ -284,8 +156,22 @@ class PlayShow extends Component {
 PlayShow.propTypes = {
   handleActCreateFormSubmit: PropTypes.func.isRequired,
   handleActDeleteClick: PropTypes.func.isRequired,
+  handleActEditFormSubmit: PropTypes.func.isRequired,
   handleCharacterCreateFormSubmit: PropTypes.func.isRequired,
   handleCharacterDeleteClick: PropTypes.func.isRequired,
+  handleCharacterEditFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
+  handleEntranceExitDeleteClick: PropTypes.func.isRequired,
+  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
+  handleFrenchSceneCreateFormSubmit: PropTypes.func.isRequired,
+  handleFrenchSceneDeleteClick: PropTypes.func.isRequired,
+  handleFrenchSceneEditFormSubmit: PropTypes.func.isRequired,
+  handleOnStageCreateFormSubmit: PropTypes.func.isRequired,
+  handleOnStageDeleteClick: PropTypes.func.isRequired,
+  handleOnStageEditFormSubmit: PropTypes.func.isRequired,
+  handleSceneCreateFormSubmit: PropTypes.func.isRequired,
+  handleSceneDeleteClick: PropTypes.func.isRequired,
+  handleSceneEditFormSubmit: PropTypes.func.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleEditClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
