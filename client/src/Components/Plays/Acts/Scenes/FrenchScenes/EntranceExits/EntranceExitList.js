@@ -42,6 +42,7 @@ class EntranceExitsList extends Component {
         </li>
       )
     }
+
     return (
       <div>
         <h3>Entrance Exits {this.props.frenchSceneId}</h3>

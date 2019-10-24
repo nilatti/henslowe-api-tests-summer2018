@@ -43,6 +43,21 @@ class SceneShow extends Component {
     } = frenchSceneAttrs
     return attrsForApi
   }
+  async updateFrenchSceneAttrsForState(frenchSceneAttrs) {
+    this.setState(state => {
+      const frenchSceneList = this.state.french_scenes.map((french_scene) => {
+        if (french_scene.id === frenchSceneAttrs.id) {
+          return frenchSceneAttrs
+        } else {
+          return french_scene
+        }
+      })
+      frenchSceneList = _.orderBy(frenchSceneList, 'number')
+      return {
+        french_scenes: frenchSceneList
+      }
+    })
+  }
 
   render() {
     let act = _.find(this.props.play.acts, {'id': this.props.actId})

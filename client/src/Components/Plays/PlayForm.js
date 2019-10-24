@@ -28,6 +28,7 @@ class PlayForm extends Component {
       author_id: this.props.play.author.id || this.props.author_id,
       author_name: this.props.play.author.first_name + ' ' + this.props.play.author.last_name,
       authors: null,
+      canonical: this.props.play.canonical || false,
       date: props_date,
       genre: this.props.play.genre || [],
       title: this.props.play.title || '',
@@ -46,8 +47,15 @@ class PlayForm extends Component {
   }
 
   handleChange = (event) => {
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     this.setState({
       [event.target.name]: event.target.value
+    })
+  }
+
+  handleChangeCheckbox = (event) => {
+    this.setState({
+      [event.target.name]: event.target.checked
     })
   }
 
@@ -90,7 +98,7 @@ class PlayForm extends Component {
   processSubmit = () => {
     this.props.onFormSubmit({
       author_id: this.state.author_id,
-      canonical: true,
+      canonical: this.state.canonical,
       date: this.state.date,
       genre: this.state.genre,
       title: this.state.title,
@@ -194,7 +202,16 @@ class PlayForm extends Component {
               :
               <br/>
             }
-
+            <Form.Group controlId="canonical">
+              <Form.Check
+                id="canonical"
+                name="canonical"
+                label="Canonical?"
+                checked={this.state.canonical}
+                onChange={this.handleChangeCheckbox}
+                type="checkbox"
+              />
+            </Form.Group>
             <Form.Group
               controlId="genre" >
             <Form.Label>
