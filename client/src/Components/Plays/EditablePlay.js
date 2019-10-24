@@ -414,20 +414,14 @@ class EditablePlay extends Component {
   }
 
   async loadPlayFromServer(playId) {
-    console.log('load play called')
     const response = await getItem(playId, "play")
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error fetching play'
       })
     } else {
-      console.log('canonical is', response.data['canonical'])
-      console.log('play is', response.data)
       if (!response.data['canonical']) {
-        console.log('play is not canonical')
         this.loadProductionFromServer(response.data['production_id'])
-      } else {
-        console.log('play is canonical')
       }
       this.setState({
         play: response.data
@@ -436,7 +430,6 @@ class EditablePlay extends Component {
   }
 
   async loadProductionFromServer(productionId) {
-    console.log('load production called')
     const response = await getItem(productionId, "production")
     if (response.status >= 400) {
       this.setState({
@@ -509,7 +502,7 @@ async updateEntranceExit(actId, sceneId, frenchSceneId, updatedEntranceExit) {
     let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
     let workingEntranceExit = _.find(workingFrenchScene.entrance_exits, {'id': updatedEntranceExit.id})
     let newEntranceExit = {...workingEntranceExit, ...updatedEntranceExit}
-    let newEntranceExits = workingFrenchScene.on_stages.map((entranceExit) => {
+    let newEntranceExits = workingFrenchScene.entrance_exits.map((entranceExit) => {
       if (entranceExit.id == newEntranceExit.id) {
         return newEntranceExit
       } else {
@@ -672,7 +665,6 @@ async updateOnStage(actId, sceneId, frenchSceneId, updatedOnStage) {
       }
     })
     let workingPlay = {...this.state.play, acts: workingActs}
-    console.log('play', workingPlay )
     this.setState({
       play: {
         ...this.state.play,

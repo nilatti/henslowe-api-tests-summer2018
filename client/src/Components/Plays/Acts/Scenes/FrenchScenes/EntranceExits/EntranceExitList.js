@@ -17,11 +17,10 @@ class EntranceExitsList extends Component {
   }
 
   toggleForm = () => {
-    this.setState({newEntranceExitFormOpen: !this.state.newOnStageFormOpen})
+    this.setState({newEntranceExitFormOpen: !this.state.newEntranceExitFormOpen})
   }
 
   render() {
-    console.log('prod is', this.props.production)
     let act = _.find(this.props.play.acts, {'id': this.props.actId})
     let scene = _.find(act.scenes, {'id': this.props.sceneId})
     let frenchScene = _.find(scene.french_scenes, {'id': this.props.frenchSceneId})
@@ -45,7 +44,7 @@ class EntranceExitsList extends Component {
     }
     return (
       <div>
-        <h3>Entrance Exits</h3>
+        <h3>Entrance Exits {this.props.frenchSceneId}</h3>
         <p><em>Click to edit name</em></p>
         <ul>
           {entranceExits}

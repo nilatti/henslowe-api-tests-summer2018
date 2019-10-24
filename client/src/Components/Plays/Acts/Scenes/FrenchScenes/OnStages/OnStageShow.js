@@ -5,9 +5,6 @@ import React, {
 } from 'react'
 import { Form } from 'react-bootstrap'
 
-
-import { RIEInput, RIEToggle} from '@attently/riek'
-
 class OnStageShow extends Component {
   state = {
     description: '',

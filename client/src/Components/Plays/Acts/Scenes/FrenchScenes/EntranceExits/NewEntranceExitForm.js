@@ -61,11 +61,11 @@ class NewEntranceExitForm extends Component {
       event.stopPropagation();
     } else {
       this.processSubmit()
+      this.props.onFormClose()
     }
     this.setState({
       validated: true
     })
-    this.props.onFormClose()
   }
 
   processSubmit = () => {
