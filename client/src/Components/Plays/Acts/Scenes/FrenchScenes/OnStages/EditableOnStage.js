@@ -6,47 +6,16 @@ import OnStageForm from './OnStageForm'
 import OnStageShow from './OnStageShow'
 
 class EditableOnStage extends Component {
-  state = {
-    editFormOpen: false,
-  }
-
-  closeForm = () => {
-    this.setState({
-      editFormOpen: false,
-    })
-  }
-
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.french_scene.id)
-  }
-  handleEditClick = () => {
-    this.openForm()
-  }
-  handleFormClose = () => {
-    this.closeForm()
   }
 
   handleSubmit = (onStage) => {
     this.props.handleEditSubmit(onStage)
     this.closeForm()
   }
-  openForm = () => {
-    this.setState({
-      editFormOpen: true
-    })
-  }
 
   render() {
-    if (this.state.editFormOpen) {
-      return (
-        <OnStageForm
-          french_scene_id={this.props.french_scene_id}
-          onFormClose={this.handleFormClose}
-          onFormSubmit={this.handleSubmit}
-          on_stage={this.props.on_stage}
-        />
-      )
-    }
     return (
       <div>
         <OnStageShow

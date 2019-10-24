@@ -5,15 +5,12 @@ class EntranceExitsController < ApiController
   # GET /entrance_exits
   def index
     @entrance_exits = @french_scene.entrance_exits
-    render json: @entrance_exits.as_json(include: [
-      :stage_exit,
-      :character,
-    ])
+    json_response(@on_stages.as_json(include: [:character, :stage_exit]))
   end
 
   # GET /entrance_exits/1
   def show
-    render json: @entrance_exit.as_json(include: [:stage_exit, :character])
+    render json: @entrance_exit
   end
 
   # POST /entrance_exits
@@ -21,7 +18,7 @@ class EntranceExitsController < ApiController
     @entrance_exit = EntranceExit.new(entrance_exit_params)
 
     if @entrance_exit.save
-      render json: @entrance_exit, status: :created
+      render json: @entrance_exit, status: :created, location: @entrance_exit
     else
       render json: @entrance_exit.errors, status: :unprocessable_entity
     end

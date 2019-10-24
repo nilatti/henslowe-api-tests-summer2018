@@ -16,15 +16,18 @@ import {
 } from 'react-bootstrap-typeahead';
 
 class NewEntranceExitForm extends Component {
-  state={
-    characters: this.props.characters,
-    line: '',
-    page: '',
-    notes: '',
-    selectedCharacter: [],
-    selectedStageExit: [],
-    stageExits: this.props.stageExits,
-    validated: false,
+  constructor(props) {
+    super(props)
+    this.state = {
+      characters: this.props.characters,
+      line: '',
+      page: '',
+      notes: '',
+      selectedCharacter: [],
+      selectedStageExit: [],
+      stageExits: this.props.stageExits,
+      validated: false,
+    }
   }
 
   handleChange = (event) => {
@@ -51,12 +54,14 @@ class NewEntranceExitForm extends Component {
   }
 
   handleSubmit = (event) => {
+    event.preventDefault()
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     } else {
       this.processSubmit()
+      this.props.onFormClose()
     }
     this.setState({
       validated: true
@@ -64,7 +69,7 @@ class NewEntranceExitForm extends Component {
   }
 
   processSubmit = () => {
-    this.props.onFormSubmit({
+    this.props.onFormSubmit(this.props.actId, this.props.sceneId, this.props.frenchSceneId, {
       category: this.state.category,
       character_id: this.state.selectedCharacter[0].id,
       character_name: this.state.selectedCharacter[0].label,
@@ -90,7 +95,7 @@ class NewEntranceExitForm extends Component {
       label: String(stageExit.name)
     }))
     return (
-      <div>
+      <Col md= {{span:8, offset: 2}}>
       <Form
         noValidate
         onSubmit={e => this.handleSubmit(e)}
@@ -192,17 +197,19 @@ class NewEntranceExitForm extends Component {
         <Button type="submit" variant="primary" block>Submit</Button>
         <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
       </Form>
-      </div>
+      </Col>
     )
   }
 }
 
 NewEntranceExitForm.propTypes = {
+  actId: PropTypes.number.isRequired,
   characters: PropTypes.array.isRequired,
   frenchSceneId: PropTypes.number.isRequired,
-  stageExits: PropTypes.array.isRequired,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
+  sceneId: PropTypes.number.isRequired,
+  stageExits: PropTypes.array.isRequired,
 }
 
 

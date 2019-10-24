@@ -17,7 +17,6 @@ import {
 class NewOnStageForm extends Component {
   constructor(props) {
     super(props)
-    console.log('play', this.props.play)
     this.state = {
       characters: this.props.play.characters,
       description: '',
@@ -53,10 +52,11 @@ class NewOnStageForm extends Component {
     this.setState({
       validated: true
     })
+    this.props.onFormClose()
   }
 
   processSubmit = () => {
-    this.props.onFormSubmit({
+    this.props.onFormSubmit(this.props.actId, this.props.sceneId, this.props.frenchSceneId, {
       character_id: this.state.selectedCharacter[0].id,
       character_name: this.state.selectedCharacter[0].label,
       description: this.state.description,
@@ -118,11 +118,13 @@ class NewOnStageForm extends Component {
 }
 
 NewOnStageForm.propTypes = {
+  actId: PropTypes.number.isRequired,
   characters: PropTypes.array.isRequired,
   frenchSceneId: PropTypes.number.isRequired,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
+  sceneId: PropTypes.number.isRequired,
 }
 
 

@@ -11,31 +11,28 @@ class CharacterInfoTab extends Component {
     editFormOpen: false
   }
 
-  closeForm = () => {
-    this.setState({
-      editFormOpen: false
-    })
-  }
-
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.character.id)
   }
-  handleEditClick = () => {
-    this.openForm()
-  }
+
   handleFormClose = () => {
-    this.closeForm()
-  }
-  handleSubmit = (character) => {
-    this.props.handleEditSubmit(character)
-    this.closeForm()
-  }
-  openForm = () => {
-    this.setState({
-      editFormOpen: true
-    })
+    this.toggleForm()
   }
 
+  handleEditClick = () => {
+    this.toggleForm()
+  }
+
+  handleSubmit = (character) => {
+    this.props.handleEditSubmit(character)
+    this.toggleForm()
+  }
+
+  toggleForm = () => {
+    this.setState({
+      editFormOpen: !this.state.editFormOpen
+    })
+  }
 
   render() {
     if (this.state.editFormOpen) {
@@ -44,7 +41,7 @@ class CharacterInfoTab extends Component {
           character={this.props.character}
            onFormClose={this.handleFormClose}
            onFormSubmit={this.handleSubmit}
-           play_id={this.props.play.id} 
+           play_id={this.props.play.id}
           />
       )
     }
@@ -62,8 +59,9 @@ class CharacterInfoTab extends Component {
 
 CharacterInfoTab.propTypes = {
   character: PropTypes.object.isRequired,
-  play: PropTypes.object.isRequired,
+  handleEditSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
+  play: PropTypes.object.isRequired,
 }
 
 export default CharacterInfoTab

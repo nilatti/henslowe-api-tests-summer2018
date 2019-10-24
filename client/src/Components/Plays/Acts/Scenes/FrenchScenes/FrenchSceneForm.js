@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types';
 import React, {
   Component
@@ -11,28 +12,38 @@ import {
   Typeahead
 } from 'react-bootstrap-typeahead';
 
-import {
-  getCharacters
-} from '../../../../../api/plays'
-
 class FrenchSceneForm extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      available_characters: [],
-      end_page: this.props.french_scene.end_page || '',
-      number: this.props.french_scene.number,
-      scene_id: this.props.scene_id,
-      selected_characters: this.props.french_scene.characters || [],
-      start_page: this.props.french_scene.start_page || '',
-      summary: this.props.french_scene.summary,
-      validated: false,
+    if (this.props.frenchScene) {
+      this.state = {
+        available_characters: [],
+        end_page: this.props.frenchScene.end_page || '',
+        id: this.props.frenchScene.id,
+        number: this.props.frenchScene.number,
+        scene_id: this.props.sceneId,
+        selected_characters: this.props.frenchScene.characters || [],
+        start_page: this.props.frenchScene.start_page || '',
+        summary: this.props.frenchScene.summary,
+        validated: false,
+      }
+    } else {
+      this.state = {
+        available_characters: [],
+        end_page: '',
+        number: '',
+        scene_id: this.props.sceneId,
+        selected_characters: [],
+        start_page: '',
+        summary: '',
+        validated: false,
     }
   }
+}
 
-  componentDidMount = () => {
-    this.loadCharactersFromServer()
-  }
+componentDidMount = () => {
+  this.loadCharacters(this.props.play)
+}
 
   handleChange = (event) => {
     this.setState({
@@ -47,15 +58,21 @@ class FrenchSceneForm extends Component {
   }
 
   handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     } else {
       this.processSubmit()
     }
     this.setState({
       validated: true
+    })
+  }
+
+  loadCharacters = (play) => {
+    this.setState({
+      available_characters: _.orderBy(play.characters, 'name')
     })
   }
 
@@ -66,26 +83,13 @@ class FrenchSceneForm extends Component {
       character_ids: character_ids,
       characters: characters,
       end_page: this.state.end_page,
-      id: this.props.french_scene.id,
+      id: this.state.id || '',
       number: this.state.number,
-      on_stages: this.props.french_scene.on_stages,
+      // on_stages: this.props.frenchScene.on_stages,
       scene_id: this.state.scene_id,
       start_page: this.state.start_page,
       summary: this.state.summary,
     })
-  }
-
-  async loadCharactersFromServer() {
-    const response = await getCharacters(this.props.play_id)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching characters'
-      })
-    } else {
-      this.setState({
-        available_characters: response.data
-      })
-    }
   }
 
   render() {
@@ -198,19 +202,12 @@ class FrenchSceneForm extends Component {
   }
 }
 
-FrenchSceneForm.defaultProps = {
-  french_scene: {
-    number: '',
-    summary: ''
-  }
-}
-
 FrenchSceneForm.propTypes = {
-  french_scene: PropTypes.object,
+  frenchScene: PropTypes.object,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  scene_id: PropTypes.number.isRequired,
-  play_id: PropTypes.number.isRequired,
+  sceneId: PropTypes.number.isRequired,
+  play: PropTypes.object.isRequired,
 }
 
 export default FrenchSceneForm

@@ -7,7 +7,6 @@ function buildUserName(user) {
 }
 
 function sortUsers(usersArray) {
-  console.log(usersArray)
   return  _.sortBy(usersArray, 'last_name', 'first_name', 'email')
 }
 

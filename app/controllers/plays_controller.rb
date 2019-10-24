@@ -12,6 +12,28 @@ class PlaysController < ApiController
 
   # GET /plays/1
   def show
+    @play = Play.includes(
+      :author,
+      :characters,
+        [
+          acts: [
+            scenes: [
+              french_scenes:
+                [
+                  :characters,
+                  entrance_exits:
+                  [
+                    :stage_exit,
+                    :character
+                  ],
+                  on_stages: [
+                    :character
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ).find(params[:id])
     render json: @play.as_json(include:
       [
         :author,
@@ -40,7 +62,6 @@ class PlaysController < ApiController
         }
         ]
       )
-    # json_response(@play.as_json(include: [:acts, :author, :characters]))
   end
 
   # POST /plays

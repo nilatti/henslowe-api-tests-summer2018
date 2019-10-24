@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import React, {
   Component
 } from 'react'
@@ -7,18 +9,12 @@ import {
 } from 'react-router-dom'
 
 import {
-  deleteAct
-} from '../../api/acts'
-import {
-  deleteCharacter
-} from '../../api/characters'
-import {
+  createItemWithParent,
   deleteItem,
-  getItem
+  getItem,
+  updateServerItem
 } from '../../api/crud'
 import {
-  createAct,
-  createCharacter,
   updateServerPlay
 } from '../../api/plays'
 
@@ -31,53 +27,350 @@ class EditablePlay extends Component {
     this.state = {
       editFormOpen: false,
       play: null,
+      production: null,
       toPlaysList: false,
     }
   }
 
   async createAct(playId, act) {
-    const response = await createAct(playId, act)
+    const response = await createItemWithParent('play', playId, 'act', act)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error creating act'
       })
     } else {
-      this.addNewAct(response.data)
+      let newActs = _.orderBy([...this.state.play.acts, response.data], 'number')
+      this.setState({
+        play: {...this.state.play, acts: newActs}
+      })
     }
   }
 
   async createCharacter(playId, character) {
-    const response = await createCharacter(playId, character)
+    const response = await createItemWithParent('play', playId, 'character', character)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error creating character'
       })
     } else {
-      this.addNewCharacter(response.data)
+      let newCharacters = _.sortBy([...this.state.play.characters, response.data], 'name')
+      this.setState({
+        play: {...this.state.play, characters: newCharacters}
+      })
+    }
+  }
+
+  async createEntranceExit(actId, sceneId, frenchSceneId, entranceExit) {
+    const response = await createItemWithParent('french_scene', frenchSceneId, 'entrance_exit', entranceExit)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error creating entrance/exit'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+      let newEntranceExits = _.orderBy([...workingFrenchScene.entrance_exits, response.data], 'line')
+      let newFrenchScene = {...workingFrenchScene, entrance_exits: newEntranceExits}
+      let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
+        if (frenchScene.id === newFrenchScene.id) {
+          return newFrenchScene
+        } else {
+          return frenchScene
+        }
+      })
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === workingScene.id) {
+          return {...scene, french_scenes: newFrenchScenes}
+        } else {
+          return scene
+        }
+      })
+      let newAct = {...workingAct, scenes: newScenes}
+      let newActs = this.state.play.acts.map((act) => {
+          if (act.id === newAct.id) {
+            return {...act, ...newAct}
+          } else {
+            return act
+          }
+        }
+      )
+      let newPlay = {...this.state.play, acts: newActs}
+      this.setState({
+        play: newPlay
+      })
+    }
+  }
+
+  async createFrenchScene(actId, sceneId, frenchScene) {
+    const response = await createItemWithParent('scene', sceneId, 'french_scene', frenchScene)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error creating scene'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      let newFrenchScene = {...response.data, on_stages: []}
+      let newFrenchScenes = _.orderBy([...workingScene.french_scenes, newFrenchScene], 'number')
+      let newScene = {...workingScene, french_scenes: newFrenchScenes}
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === newScene.id) {
+          return {...scene, french_scenes: newScene.french_scenes}
+        } else {
+          return scene
+        }
+      })
+      let newAct = {...workingAct, scenes: newScenes}
+      let newActs = this.state.play.acts.map((act) => {
+          if (act.id === newAct.id) {
+            return {...act, ...newAct}
+          } else {
+            return act
+          }
+        }
+      )
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+        }
+      })
+    }
+  }
+
+  async createOnStage(actId, sceneId, frenchSceneId, onStage) {
+    const response = await createItemWithParent('french_scene', frenchSceneId, 'on_stage', onStage)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error creating on stage'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+      let newOnStages = _.orderBy([...workingFrenchScene.on_stages, response.data], 'number')
+      let newFrenchScene = {...workingFrenchScene, on_stages: newOnStages}
+      let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
+        if (frenchScene.id === newFrenchScene.id) {
+          return newFrenchScene
+        } else {
+          return frenchScene
+        }
+      })
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === workingScene.id) {
+          return {...scene, french_scenes: newFrenchScenes}
+        } else {
+          return scene
+        }
+      })
+      let newAct = {...workingAct, scenes: newScenes}
+      let newActs = this.state.play.acts.map((act) => {
+          if (act.id === newAct.id) {
+            return {...act, ...newAct}
+          } else {
+            return act
+          }
+        }
+      )
+      let newPlay = {...this.state.play, acts: newActs}
+      this.setState({
+        play: newPlay
+      })
+    }
+  }
+
+  async createScene(actId, scene) {
+    const response = await createItemWithParent('act', actId, 'scene', scene)
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error creating scene'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let newScenes = _.orderBy([...workingAct.scenes, response.data], 'number')
+      workingAct = {...workingAct, scenes: newScenes}
+      let newActs = this.state.play.acts.map((act) => {
+          if (act.id === workingAct.id) {
+            return {...act, ...workingAct}
+          } else {
+            return act
+          }
+        }
+      )
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+        }
+      })
     }
   }
 
   async deleteAct(actId) {
-    const response = await deleteAct(actId)
+    const response = await deleteItem(actId, 'act')
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error deleting act'
       })
     } else {
-      this.removeAct(actId)
-      this.props.history.push(`/plays/${this.state.play.id}`)
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: this.state.play.acts.filter(act => act.id !== actId)
+          }
+      })
     }
   }
 
   async deleteCharacter(characterId) {
-    const response = await deleteCharacter(characterId)
+    const response = await deleteItem(characterId, 'character')
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error deleting character'
       })
     } else {
-      this.removeCharacter(characterId)
-      this.props.history.push(`/plays/${this.state.play.id}`)
+      this.setState({
+        play: {
+          ...this.state.play,
+          characters: this.state.play.characters.filter(character => character.id !== characterId)
+          }
+      })
+    }
+  }
+
+  async deleteEntranceExit(actId, sceneId, frenchSceneId, entranceExitId) {
+    const response = await deleteItem(entranceExitId, 'entrance_exit')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error deleting entrance/exit'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+      let newFrenchScene = {
+        ...workingFrenchScene, entrance_exits: workingFrenchScene.entrance_exits.filter(entrance_exit => entrance_exit.id !== entranceExitId)
+      }
+      let newFrenchScenes = workingScene.french_scenes.map((french_scene) => {
+        if (french_scene.id === newFrenchScene.id) {
+          return newFrenchScene
+        } else {
+          return french_scene
+        }
+      })
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === workingScene.id) {
+          return {...scene, french_scenes: newFrenchScenes}
+        } else {
+          return scene
+        }
+      })
+      workingAct = {
+        ...workingAct,
+        scenes: newScenes
+      }
+      let newActs = this.state.play.acts.map(act => {
+        if (act.id === workingAct.id) {
+          return workingAct
+        } else {
+          return act
+        }
+      })
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+          }
+      })
+    }
+  }
+
+  async deleteFrenchScene(actId, sceneId, frenchSceneId) {
+    const response = await deleteItem(frenchSceneId, 'french_scene')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error deleting scene'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      workingScene = {
+        ...workingScene,
+        french_scenes: workingScene.french_scenes.filter(french_scene => french_scene.id !== frenchSceneId)
+      }
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === workingScene.id) {
+          return {...scene, french_scenes: workingScene.french_scenes}
+        } else {
+          return scene
+        }
+      })
+      workingAct = {
+        ...workingAct,
+        scenes: newScenes
+      }
+      let newActs = this.state.play.acts.map(act => {
+        if (act.id === workingAct.id) {
+          return workingAct
+        } else {
+          return act
+        }
+      })
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+          }
+      })
+    }
+  }
+
+  async deleteOnStage(actId, sceneId, frenchSceneId, onStageId) {
+    const response = await deleteItem(onStageId, 'on_stage')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error deleting onStage'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+      let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+      let newFrenchScene = {
+        ...workingFrenchScene, on_stages: workingFrenchScene.on_stages.filter(on_stage => on_stage.id !== onStageId)
+      }
+      let newFrenchScenes = workingScene.french_scenes.map((french_scene) => {
+        if (french_scene.id === newFrenchScene.id) {
+          return newFrenchScene
+        } else {
+          return french_scene
+        }
+      })
+      let newScenes = workingAct.scenes.map((scene) => {
+        if (scene.id === workingScene.id) {
+          return {...scene, french_scenes: newFrenchScenes}
+        } else {
+          return scene
+        }
+      })
+      workingAct = {
+        ...workingAct,
+        scenes: newScenes
+      }
+      let newActs = this.state.play.acts.map(act => {
+        if (act.id === workingAct.id) {
+          return workingAct
+        } else {
+          return act
+        }
+      })
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+          }
+      })
     }
   }
 
@@ -92,6 +385,34 @@ class EditablePlay extends Component {
     }
   }
 
+  async deleteScene(actId, sceneId) {
+    const response = await deleteItem(sceneId, 'scene')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error deleting scene'
+      })
+    } else {
+      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      workingAct = {
+        ...workingAct,
+        scenes: workingAct.scenes.filter(scene => scene.id !== sceneId)
+      }
+      let newActs = this.state.play.acts.map(act => {
+        if (act.id === workingAct.id) {
+          return workingAct
+        } else {
+          return act
+        }
+      })
+      this.setState({
+        play: {
+          ...this.state.play,
+          acts: newActs
+          }
+      })
+    }
+  }
+
   async loadPlayFromServer(playId) {
     const response = await getItem(playId, "play")
     if (response.status >= 400) {
@@ -99,171 +420,446 @@ class EditablePlay extends Component {
         errorStatus: 'Error fetching play'
       })
     } else {
+      if (!response.data['canonical']) {
+        this.loadProductionFromServer(response.data['production_id'])
+      }
       this.setState({
         play: response.data
       })
     }
   }
 
-  async updatePlayOnServer(play) {
-    const response = await updateServerPlay(play)
+  async loadProductionFromServer(productionId) {
+    const response = await getItem(productionId, "production")
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error updating play'
+        errorStatus: 'Error fetching production'
       })
     } else {
       this.setState({
-        play: response.data
+        production: response.data
       })
     }
   }
 
-  static getDerivedStateFromProps(props, state) {
-    // Store prevId in state so we can compare when props change.
-    // Clear out previously-loaded data (so we don't render stale stuff).
-    if (props.id !== state.prevId) {
-      return {
-        play: null,
-        prevId: props.id,
-      };
-    }
-    // No state update necessary
-    return null;
-  }
-
-  addNewAct = (newAct) => {
-    let newActs = [...this.state.play.acts, newAct]
-    let sortedNewActs = this.sortActs(newActs)
-    this.setState((prevState) => ({
-      play: {
-        ...prevState.play,
-        acts: sortedNewActs,
+  async updateAct(updatedAct) {
+    const response = await updateServerItem(updatedAct, 'act')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error updating act'
+      })
+    } else {
+      let newActs = this.state.play.acts.map((act) => {
+        if (act.id === updatedAct.id) {
+          return {...act, ...updatedAct}
+        } else {
+          return act
+        }
       }
-    }))
-  }
-
-  addNewCharacter = (newCharacter) => {
-    this.setState((prevState) => ({
-      play: {
-        ...prevState.play,
-        characters: [...prevState.play.characters, newCharacter]
-      }
-    }))
-  }
-
-  closeForm = () => {
+    )
     this.setState({
-      editFormOpen: false
+      play: {
+        ...this.state.play,
+        acts: _.sortBy(newActs, 'number')
+      }
     })
   }
+}
 
-  componentDidMount = () => {
-    this.loadPlayFromServer(this.props.match.params.playId)
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.play === null || prevProps.match.params.playId !== this.props.match.params.playId) {
-      this.loadPlayFromServer(this.props.match.params.playId);
-    }
-  }
-
-  handleFormClose = () => {
-    this.closeForm()
-  }
-
-  handleSubmit = (play) => {
-    this.updatePlayOnServer(play)
-    this.closeForm()
-  }
-
-  onActCreateFormSubmit = (act) => {
-    this.createAct(this.state.play.id, act)
-  }
-
-  onActDeleteClick = (actId) => {
-    this.deleteAct(actId)
-  }
-
-  onCharacterCreateFormSubmit = (character) => {
-    this.createCharacter(this.state.play.id, character)
-  }
-
-  onCharacterDeleteClick = (characterId) => {
-    this.deleteCharacter(characterId)
-  }
-
-  onDeleteClick = (playId) => {
-    this.deletePlay(playId)
-  }
-
-  onEditClick = () => {
-    this.openForm()
-  }
-
-  openForm = () => {
+async updateCharacter(updatedCharacter) {
+  const response = await updateServerItem(updatedCharacter, 'character')
+  if (response.status >= 400) {
     this.setState({
-      editFormOpen: true
+      errorStatus: 'Error updating character'
+    })
+  } else {
+    let newCharacters = this.state.play.characters.map((character) => {
+      if (character.id === updatedCharacter.id) {
+        return {...character, ...updatedCharacter}
+      } else {
+        return character
+      }
+    }
+  )
+  this.setState({
+    play: {
+      ...this.state.play,
+      characters: newCharacters
+      }
     })
   }
+}
 
-  removeAct = (actId) => {
-    let newActs = this.state.play.acts.filter(act => act.id !== actId)
-    let sortedNewActs = this.sortActs(newActs)
-    this.setState((prevState) => ({
-      play: {
-        ...prevState.play,
-        acts: sortedNewActs,
+async updateEntranceExit(actId, sceneId, frenchSceneId, updatedEntranceExit) {
+  const response = await updateServerItem(updatedEntranceExit, 'entrance_exit')
+  if (response.status >= 400) {
+    this.setState({
+      errorStatus: 'Error updating entrance/exit'
+    })
+  } else {
+    let workingAct = _.find(this.state.play.acts, {'id': actId})
+    let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+    let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+    let workingEntranceExit = _.find(workingFrenchScene.entrance_exits, {'id': updatedEntranceExit.id})
+    let newEntranceExit = {...workingEntranceExit, ...updatedEntranceExit}
+    let newEntranceExits = workingFrenchScene.entrance_exits.map((entranceExit) => {
+      if (entranceExit.id == newEntranceExit.id) {
+        return newEntranceExit
+      } else {
+        return entranceExit
       }
-    }))
-  }
+    })
+    workingFrenchScene = {
+      ...workingFrenchScene,
+      entrance_exits: newEntranceExits
+    }
 
-  removeCharacter = (characterId) => {
-    this.setState((prevState) => ({
-      play: {
-        ...prevState.play,
-        characters: this.state.play.characters.filter(character => character.id !== characterId)
+    let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
+      if (frenchScene.id == workingFrenchScene.id) {
+        return workingFrenchScene
+      } else {
+        return frenchScene
       }
-    }))
-  }
+    })
+    workingScene = {
+      ...workingScene,
+      french_scenes: newFrenchScenes
+    }
 
-  sortActs = (acts) => {
-    return acts.sort(function (a, b) {
-      return (a.number > b.number) ? 1 : ((b.number > a.number) ? -1 : 0);
-    });
-  }
+    let workingScenes = workingAct.scenes.map((scene) => {
+      if (scene.id === workingScene.id) {
+        return workingScene
+      } else {
+        return scene
+      }
+    })
 
-  render() {
-    if (this.state.toPlaysList === true) {
-      return <Redirect to='/plays' />
+    workingAct = {
+      ...workingAct,
+      scenes: workingScenes
     }
-    if (this.state.editFormOpen) {
-      return (
-        <PlayForm
-          isOnAuthorPage={false}
-          onFormClose={this.handleFormClose}
-          onFormSubmit={this.handleSubmit}
-          play={this.state.play}
-        />
-      )
+
+    let workingActs = this.state.play.acts.map((act) => {
+      if (act.id === workingAct.id) {
+        return workingAct
+      } else {
+        return act
+      }
+    })
+    let workingPlay = {...this.state.play, acts: workingActs}
+    this.setState({
+      play: {
+        ...this.state.play,
+        acts: workingActs
+        }
+    })
+  }
+}
+
+async updateFrenchScene(actId, sceneId, updatedFrenchScene) {
+  const response = await updateServerItem(updatedFrenchScene, 'french_scene')
+  if (response.status >= 400) {
+    this.setState({
+      errorStatus: 'Error updating scene'
+    })
+  } else {
+    let workingAct = _.find(this.state.play.acts, {'id': actId})
+    let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+    let workingFrenchScene = _.find(workingScene.french_scenes, {'id': updatedFrenchScene})
+    let newFrenchScene = {...workingFrenchScene, ...updatedFrenchScene}
+    let workingFrenchScenes = workingScene.french_scenes.map((frenchScene =>{
+      if (frenchScene.id === newFrenchScene.id) {
+        return newFrenchScene
+      } else {
+        return frenchScene
+      }}
+    ))
+    workingScene = {
+      ...workingScene,
+      french_scenes: workingFrenchScenes
     }
-    if (this.state.play === null) {
-      return (
-        <div>Loading!</div>
-      )
+
+    let workingScenes = workingAct.scenes.map((scene) => {
+      if (scene.id === workingScene.id) {
+        return workingScene
+      } else {
+        return scene
+      }
+    })
+
+    workingAct = {
+      ...workingAct,
+      scenes: workingScenes
     }
-    console.log('play is ', this.state.play)
+
+    let workingActs = this.state.play.acts.map((act) => {
+      if (act.id === actId) {
+        return workingAct
+      } else {
+        return act
+      }
+    })
+    this.setState({
+      play: {
+        ...this.state.play,
+        acts: workingActs
+        }
+    })
+  }
+}
+
+async updateOnStage(actId, sceneId, frenchSceneId, updatedOnStage) {
+  const response = await updateServerItem(updatedOnStage, 'on_stage')
+  if (response.status >= 400) {
+    this.setState({
+      errorStatus: 'Error updating scene'
+    })
+  } else {
+    let workingAct = _.find(this.state.play.acts, {'id': actId})
+    let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+    let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
+    let workingOnStage = _.find(workingFrenchScene.on_stages, {'id': updatedOnStage.id})
+    let newOnStage = {...workingOnStage, ...updatedOnStage}
+    let newOnStages = workingFrenchScene.on_stages.map((onStage) => {
+      if (onStage.id == newOnStage.id) {
+        return newOnStage
+      } else {
+        return onStage
+      }
+    })
+   workingFrenchScene = {
+      ...workingFrenchScene,
+      on_stages: newOnStages
+    }
+
+    let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
+      if (frenchScene.id == workingFrenchScene.id) {
+        return workingFrenchScene
+      } else {
+        return frenchScene
+      }
+    })
+    workingScene = {
+      ...workingScene,
+      french_scenes: newFrenchScenes
+    }
+
+    let workingScenes = workingAct.scenes.map((scene) => {
+      if (scene.id === workingScene.id) {
+        return workingScene
+      } else {
+        return scene
+      }
+    })
+
+    workingAct = {
+      ...workingAct,
+      scenes: workingScenes
+    }
+
+    let workingActs = this.state.play.acts.map((act) => {
+      if (act.id === workingAct.id) {
+        return workingAct
+      } else {
+        return act
+      }
+    })
+    let workingPlay = {...this.state.play, acts: workingActs}
+    this.setState({
+      play: {
+        ...this.state.play,
+        acts: workingActs
+        }
+    })
+  }
+}
+
+async updatePlayOnServer(play) {
+  const response = await updateServerPlay(play)
+  if (response.status >= 400) {
+    this.setState({
+      errorStatus: 'Error updating play'
+    })
+  } else {
+    this.setState({
+      play: response.data
+    })
+  }
+}
+
+async updateScene(actId, updatedScene) {
+  const response = await updateServerItem(updatedScene, 'scene')
+  if (response.status >= 400) {
+    this.setState({
+      errorStatus: 'Error updating scene'
+    })
+  } else {
+    let workingAct = _.find(this.state.play.acts, {'id': updatedScene.act_id})
+    let updatedSceneInAct = _.find(workingAct.scenes, {'id': updatedScene.id})
+    updatedSceneInAct = {...updatedSceneInAct, ...updatedScene}
+    workingAct = {
+      ...workingAct,
+      scenes: {...workingAct.scenes, updatedSceneInAct}
+    }
+    this.setState({
+      play: {
+        ...this.state.play,
+        acts: {...this.state.play.acts, ...workingAct}
+        }
+    })
+  }
+}
+
+componentDidMount = () => {
+  this.loadPlayFromServer(this.props.match.params.playId)
+}
+
+handleFormClose = () => {
+  this.toggleeForm()
+}
+
+handleSubmit = (play) => {
+  this.updatePlayOnServer(play)
+  this.toggleForm()
+}
+
+onActCreateFormSubmit = (act) => {
+  this.createAct(this.state.play.id, act)
+}
+
+onActDeleteClick = (actId) => {
+  this.deleteAct(actId)
+}
+
+onActEditFormSubmit = (act) => {
+  this.updateAct(act)
+}
+
+onCharacterCreateFormSubmit = (character) => {
+  this.createCharacter(this.state.play.id, character)
+}
+
+onCharacterDeleteClick = (characterId) => {
+  this.deleteCharacter(characterId)
+}
+
+onCharacterEditFormSubmit = (character) => {
+  this.updateCharacter(character)
+}
+
+onEntranceExitCreateFormSubmit = (actId, sceneId, frenchSceneId, entranceExit) => {
+  this.createEntranceExit(actId, sceneId, frenchSceneId, entranceExit)
+}
+
+onEntranceExitDeleteClick = (actId, sceneId, frenchSceneId, entranceExitId) => {
+  this.deleteEntranceExit(actId, sceneId, frenchSceneId, entranceExitId)
+}
+
+onEntranceExitEditFormSubmit = (actId, sceneId, frenchSceneId, entranceExit) => {
+  this.updateEntranceExit(actId, sceneId, frenchSceneId, entranceExit)
+}
+
+onFrenchSceneCreateFormSubmit = (actId, sceneId, frenchScene) => {
+  this.createFrenchScene(actId, sceneId, frenchScene)
+}
+
+onFrenchSceneDeleteClick = (actId, sceneId, frenchSceneId) => {
+  this.deleteFrenchScene(actId, sceneId, frenchSceneId)
+}
+
+onFrenchSceneEditFormSubmit = (actId, sceneId, frenchScene) => {
+  this.updateFrenchScene(actId, sceneId, frenchScene)
+}
+
+onOnStageCreateFormSubmit = (actId, sceneId, frenchSceneId, onStage) => {
+  this.createOnStage(actId, sceneId, frenchSceneId, onStage)
+}
+
+onOnStageDeleteClick = (actId, sceneId, frenchSceneId, onStageId) => {
+  this.deleteOnStage(actId, sceneId, frenchSceneId, onStageId)
+}
+
+onOnStageEditFormSubmit = (actId, sceneId, frenchSceneId, onStage) => {
+  this.updateOnStage(actId, sceneId, frenchSceneId, onStage)
+}
+
+onSceneCreateFormSubmit = (actId, scene) => {
+  this.createScene(actId, scene)
+}
+
+onSceneDeleteClick = (actId, sceneId) => {
+  this.deleteScene(actId, sceneId)
+}
+
+onSceneEditFormSubmit = (actId, scene) => {
+  this.updateScene(actId, scene)
+}
+
+onDeleteClick = (playId) => {
+  this.deletePlay(playId)
+}
+
+onEditClick = () => {
+  this.toggleForm()
+}
+
+toggleForm = () => {
+  this.setState({
+    editFormOpen: !this.state.editFormOpen
+  })
+}
+
+render() {
+  if (this.state.toPlaysList === true) {
+    return <Redirect to='/plays' />
+  }
+  if (this.state.editFormOpen) {
     return (
-      <PlayShow
-        handleActCreateFormSubmit={this.onActCreateFormSubmit}
-        handleActDeleteClick={this.onActDeleteClick}
-        handleCharacterCreateFormSubmit={this.onCharacterCreateFormSubmit}
-        handleCharacterDeleteClick={this.onCharacterDeleteClick}
-        handleDeleteClick={this.onDeleteClick}
-        handleEditClick={this.onEditClick}
+      <PlayForm
+        isOnAuthorPage={false}
+        onFormClose={this.handleFormClose}
+        onFormSubmit={this.handleSubmit}
         play={this.state.play}
       />
     )
   }
+  if (this.state.play === null) {
+    return (
+      <div>Loading!</div>
+    )
+  }
+  if (!this.state.play.canonical && this.state.production === null) {
+    return(
+      <div>Loading!</div>
+    )
+  }
+  return (
+    <PlayShow
+      handleActCreateFormSubmit={this.onActCreateFormSubmit}
+      handleActDeleteClick={this.onActDeleteClick}
+      handleActEditFormSubmit={this.onActEditFormSubmit}
+      handleCharacterCreateFormSubmit={this.onCharacterCreateFormSubmit}
+      handleCharacterDeleteClick={this.onCharacterDeleteClick}
+      handleCharacterEditFormSubmit={this.onCharacterEditFormSubmit}
+      handleEntranceExitCreateFormSubmit={this.onEntranceExitCreateFormSubmit}
+      handleEntranceExitDeleteClick={this.onEntranceExitDeleteClick}
+      handleEntranceExitEditFormSubmit={this.onEntranceExitEditFormSubmit}
+      handleFrenchSceneCreateFormSubmit={this.onFrenchSceneCreateFormSubmit}
+      handleFrenchSceneDeleteClick={this.onFrenchSceneDeleteClick}
+      handleFrenchSceneEditFormSubmit={this.onFrenchSceneEditFormSubmit}
+      handleOnStageCreateFormSubmit={this.onOnStageCreateFormSubmit}
+      handleOnStageDeleteClick={this.onOnStageDeleteClick}
+      handleOnStageEditFormSubmit={this.onOnStageEditFormSubmit}
+      handleSceneCreateFormSubmit={this.onSceneCreateFormSubmit}
+      handleSceneDeleteClick={this.onSceneDeleteClick}
+      handleSceneEditFormSubmit={this.onSceneEditFormSubmit}
+      handleDeleteClick={this.onDeleteClick}
+      handleEditClick={this.onEditClick}
+      play={this.state.play}
+      production={this.state.production}
+    />
+  )
+}
 }
 
 export default EditablePlay

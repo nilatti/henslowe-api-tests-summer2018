@@ -16,37 +16,31 @@ class SceneFormToggle extends Component { //opens form for create action
     }
   }
 
-  handleFormOpen = () => {
-    this.setState({
-      isOpen: true
-    })
-  }
-
-  handleFormClose = () => {
-    this.setState({
-      isOpen: false
-    })
-  }
-
   handleFormSubmit = (act) => {
-    this.handleFormClose()
+    this.toggleForm()
     this.props.onFormSubmit(act)
+  }
+
+  toggleForm = () => {
+    this.setState({
+      isOpen: !this.state.isOpen
+    })
   }
 
   render() {
     if (this.state.isOpen) {
       return (
         <SceneForm
-          act_id={this.props.act_id}
-          onFormSubmit={this.handleFormSubmit}
-          onFormClose={this.handleFormClose}
+          actId={this.props.actId}
+          onFormSubmit={this.props.onFormSubmit}
+          onFormClose={this.toggleForm}
         />
       );
     } else {
       return (
         <div>
           <Button variant="info"
-            onClick={this.handleFormOpen}
+            onClick={this.toggleForm}
           >
             Add New Scene
           </Button>
@@ -57,7 +51,7 @@ class SceneFormToggle extends Component { //opens form for create action
 }
 
 SceneFormToggle.propTypes = {
-  act_id: PropTypes.number.isRequired,
+  actId: PropTypes.number.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
 }
