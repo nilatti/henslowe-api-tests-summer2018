@@ -67,37 +67,18 @@ class EditablePlay extends Component {
         errorStatus: 'Error creating entrance/exit'
       })
     } else {
-      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingPlay = this.state.play
+      let workingAct = _.find(workingPlay.acts, {'id': actId})
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
       let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
       let newEntranceExits = _.orderBy([...workingFrenchScene.entrance_exits, response.data], 'line')
       let newFrenchScene = {...workingFrenchScene, entrance_exits: newEntranceExits}
-      let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
-        if (frenchScene.id === newFrenchScene.id) {
-          return newFrenchScene
-        } else {
-          return frenchScene
-        }
-      })
-      let newScenes = workingAct.scenes.map((scene) => {
-        if (scene.id === workingScene.id) {
-          return {...scene, french_scenes: newFrenchScenes}
-        } else {
-          return scene
-        }
-      })
-      let newAct = {...workingAct, scenes: newScenes}
-      let newActs = this.state.play.acts.map((act) => {
-          if (act.id === newAct.id) {
-            return {...act, ...newAct}
-          } else {
-            return act
-          }
-        }
-      )
-      let newPlay = {...this.state.play, acts: newActs}
+
+      workingScene = this.interpolateNewFrenchScene(newFrenchScene, workingScene)
+      workingAct = this.interpolateNewScene(workingScene, workingAct)
+      workingPlay = this.interpolateNewAct(workingAct, workingPlay)
       this.setState({
-        play: newPlay
+        play: workingPlay,
       })
     }
   }
@@ -109,32 +90,19 @@ class EditablePlay extends Component {
         errorStatus: 'Error creating scene'
       })
     } else {
-      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingPlay = this.state.play
+      let workingAct = _.find(workingPlay.acts, {'id': actId})
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
-      let newFrenchScene = {...response.data, on_stages: []}
+      let newFrenchScene = {...response.data}
       let newFrenchScenes = _.orderBy([...workingScene.french_scenes, newFrenchScene], 'number')
-      let newScene = {...workingScene, french_scenes: newFrenchScenes}
-      let newScenes = workingAct.scenes.map((scene) => {
-        if (scene.id === newScene.id) {
-          return {...scene, french_scenes: newScene.french_scenes}
-        } else {
-          return scene
-        }
-      })
-      let newAct = {...workingAct, scenes: newScenes}
-      let newActs = this.state.play.acts.map((act) => {
-          if (act.id === newAct.id) {
-            return {...act, ...newAct}
-          } else {
-            return act
-          }
-        }
-      )
+      workingScene = {
+        ...workingScene,
+        french_scenes: newFrenchScenes
+      }
+      workingAct = this.interpolateNewScene(workingScene, workingAct)
+      workingPlay = this.interpolateNewAct(workingAct, workingPlay)
       this.setState({
-        play: {
-          ...this.state.play,
-          acts: newActs
-        }
+        play: workingPlay
       })
     }
   }
@@ -146,37 +114,18 @@ class EditablePlay extends Component {
         errorStatus: 'Error creating on stage'
       })
     } else {
-      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingPlay = this.state.play
+      let workingAct = _.find(workingPlay.acts, {'id': actId})
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
       let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
       let newOnStages = _.orderBy([...workingFrenchScene.on_stages, response.data], 'number')
       let newFrenchScene = {...workingFrenchScene, on_stages: newOnStages}
-      let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
-        if (frenchScene.id === newFrenchScene.id) {
-          return newFrenchScene
-        } else {
-          return frenchScene
-        }
-      })
-      let newScenes = workingAct.scenes.map((scene) => {
-        if (scene.id === workingScene.id) {
-          return {...scene, french_scenes: newFrenchScenes}
-        } else {
-          return scene
-        }
-      })
-      let newAct = {...workingAct, scenes: newScenes}
-      let newActs = this.state.play.acts.map((act) => {
-          if (act.id === newAct.id) {
-            return {...act, ...newAct}
-          } else {
-            return act
-          }
-        }
-      )
-      let newPlay = {...this.state.play, acts: newActs}
+
+      workingScene = this.interpolateNewFrenchScene(newFrenchScene, workingScene)
+      workingAct = this.interpolateNewScene(workingScene, workingAct)
+      workingPlay = this.interpolateNewAct(workingAct, workingPlay)
       this.setState({
-        play: newPlay
+        play: workingPlay,
       })
     }
   }
@@ -188,22 +137,14 @@ class EditablePlay extends Component {
         errorStatus: 'Error creating scene'
       })
     } else {
-      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingPlay = this.state.play
+      let workingAct = _.find(workingPlay.acts, {'id': actId})
       let newScenes = _.orderBy([...workingAct.scenes, response.data], 'number')
       workingAct = {...workingAct, scenes: newScenes}
-      let newActs = this.state.play.acts.map((act) => {
-          if (act.id === workingAct.id) {
-            return {...act, ...workingAct}
-          } else {
-            return act
-          }
-        }
-      )
+
+      workingPlay = this.interpolateNewAct(workingAct, workingPlay)
       this.setState({
-        play: {
-          ...this.state.play,
-          acts: newActs
-        }
+        play: workingPlay
       })
     }
   }
@@ -247,42 +188,19 @@ class EditablePlay extends Component {
         errorStatus: 'Error deleting entrance/exit'
       })
     } else {
-      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingPlay = this.state.play
+      let workingAct = _.find(workingPlay.acts, {'id': actId})
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
       let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
       let newFrenchScene = {
         ...workingFrenchScene, entrance_exits: workingFrenchScene.entrance_exits.filter(entrance_exit => entrance_exit.id !== entranceExitId)
       }
-      let newFrenchScenes = workingScene.french_scenes.map((french_scene) => {
-        if (french_scene.id === newFrenchScene.id) {
-          return newFrenchScene
-        } else {
-          return french_scene
-        }
-      })
-      let newScenes = workingAct.scenes.map((scene) => {
-        if (scene.id === workingScene.id) {
-          return {...scene, french_scenes: newFrenchScenes}
-        } else {
-          return scene
-        }
-      })
-      workingAct = {
-        ...workingAct,
-        scenes: newScenes
-      }
-      let newActs = this.state.play.acts.map(act => {
-        if (act.id === workingAct.id) {
-          return workingAct
-        } else {
-          return act
-        }
-      })
+
+      workingScene = this.interpolateNewFrenchScene(newFrenchScene, workingScene)
+      workingAct = this.interpolateNewScene(workingScene, workingAct)
+      workingPlay = this.interpolateNewAct(workingAct, workingPlay)
       this.setState({
-        play: {
-          ...this.state.play,
-          acts: newActs
-          }
+        play: workingPlay,
       })
     }
   }
@@ -294,35 +212,18 @@ class EditablePlay extends Component {
         errorStatus: 'Error deleting scene'
       })
     } else {
-      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingPlay = this.state.play
+      let workingAct = _.find(workingPlay.acts, {'id': actId})
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
+
       workingScene = {
         ...workingScene,
         french_scenes: workingScene.french_scenes.filter(french_scene => french_scene.id !== frenchSceneId)
       }
-      let newScenes = workingAct.scenes.map((scene) => {
-        if (scene.id === workingScene.id) {
-          return {...scene, french_scenes: workingScene.french_scenes}
-        } else {
-          return scene
-        }
-      })
-      workingAct = {
-        ...workingAct,
-        scenes: newScenes
-      }
-      let newActs = this.state.play.acts.map(act => {
-        if (act.id === workingAct.id) {
-          return workingAct
-        } else {
-          return act
-        }
-      })
+      workingAct = this.interpolateNewScene(workingScene, workingAct)
+      workingPlay = this.interpolateNewAct(workingAct, workingPlay)
       this.setState({
-        play: {
-          ...this.state.play,
-          acts: newActs
-          }
+        play: workingPlay
       })
     }
   }
@@ -334,42 +235,19 @@ class EditablePlay extends Component {
         errorStatus: 'Error deleting onStage'
       })
     } else {
-      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingPlay = this.state.play
+      let workingAct = _.find(workingPlay.acts, {'id': actId})
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
       let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
       let newFrenchScene = {
         ...workingFrenchScene, on_stages: workingFrenchScene.on_stages.filter(on_stage => on_stage.id !== onStageId)
       }
-      let newFrenchScenes = workingScene.french_scenes.map((french_scene) => {
-        if (french_scene.id === newFrenchScene.id) {
-          return newFrenchScene
-        } else {
-          return french_scene
-        }
-      })
-      let newScenes = workingAct.scenes.map((scene) => {
-        if (scene.id === workingScene.id) {
-          return {...scene, french_scenes: newFrenchScenes}
-        } else {
-          return scene
-        }
-      })
-      workingAct = {
-        ...workingAct,
-        scenes: newScenes
-      }
-      let newActs = this.state.play.acts.map(act => {
-        if (act.id === workingAct.id) {
-          return workingAct
-        } else {
-          return act
-        }
-      })
+
+      workingScene = this.interpolateNewFrenchScene(newFrenchScene, workingScene)
+      workingAct = this.interpolateNewScene(workingScene, workingAct)
+      workingPlay = this.interpolateNewAct(workingAct, workingPlay)
       this.setState({
-        play: {
-          ...this.state.play,
-          acts: newActs
-          }
+        play: workingPlay,
       })
     }
   }
@@ -392,23 +270,17 @@ class EditablePlay extends Component {
         errorStatus: 'Error deleting scene'
       })
     } else {
-      let workingAct = _.find(this.state.play.acts, {'id': actId})
+      let workingPlay = this.state.play
+      let workingAct = _.find(workingPlay.acts, {'id': actId})
       workingAct = {
         ...workingAct,
         scenes: workingAct.scenes.filter(scene => scene.id !== sceneId)
       }
-      let newActs = this.state.play.acts.map(act => {
-        if (act.id === workingAct.id) {
-          return workingAct
-        } else {
-          return act
-        }
-      })
+
+      workingPlay = this.interpolateNewAct(workingAct, workingPlay)
+
       this.setState({
-        play: {
-          ...this.state.play,
-          acts: newActs
-          }
+        play: workingPlay
       })
     }
   }
@@ -497,61 +369,19 @@ async updateEntranceExit(actId, sceneId, frenchSceneId, updatedEntranceExit) {
       errorStatus: 'Error updating entrance/exit'
     })
   } else {
+    let workingPlay = this.state.play
     let workingAct = _.find(this.state.play.acts, {'id': actId})
     let workingScene = _.find(workingAct.scenes, {'id': sceneId})
     let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
     let workingEntranceExit = _.find(workingFrenchScene.entrance_exits, {'id': updatedEntranceExit.id})
     let newEntranceExit = {...workingEntranceExit, ...updatedEntranceExit}
-    let newEntranceExits = workingFrenchScene.entrance_exits.map((entranceExit) => {
-      if (entranceExit.id == newEntranceExit.id) {
-        return newEntranceExit
-      } else {
-        return entranceExit
-      }
-    })
-    workingFrenchScene = {
-      ...workingFrenchScene,
-      entrance_exits: newEntranceExits
-    }
 
-    let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
-      if (frenchScene.id == workingFrenchScene.id) {
-        return workingFrenchScene
-      } else {
-        return frenchScene
-      }
-    })
-    workingScene = {
-      ...workingScene,
-      french_scenes: newFrenchScenes
-    }
-
-    let workingScenes = workingAct.scenes.map((scene) => {
-      if (scene.id === workingScene.id) {
-        return workingScene
-      } else {
-        return scene
-      }
-    })
-
-    workingAct = {
-      ...workingAct,
-      scenes: workingScenes
-    }
-
-    let workingActs = this.state.play.acts.map((act) => {
-      if (act.id === workingAct.id) {
-        return workingAct
-      } else {
-        return act
-      }
-    })
-    let workingPlay = {...this.state.play, acts: workingActs}
+    workingFrenchScene = this.interpolateNewEntranceExit(newEntranceExit, workingFrenchScene)
+    workingScene = this.interpolateNewFrenchScene(workingFrenchScene, workingScene)
+    workingAct = this.interpolateNewScene(workingScene, workingAct)
+    workingPlay = this.interpolateNewAct(workingAct, workingPlay)
     this.setState({
-      play: {
-        ...this.state.play,
-        acts: workingActs
-        }
+      play: workingPlay,
     })
   }
 }
@@ -563,47 +393,17 @@ async updateFrenchScene(actId, sceneId, updatedFrenchScene) {
       errorStatus: 'Error updating scene'
     })
   } else {
-    let workingAct = _.find(this.state.play.acts, {'id': actId})
+    let workingPlay = this.state.play
+    let workingAct = _.find(workingPlay.acts, {'id': actId})
     let workingScene = _.find(workingAct.scenes, {'id': sceneId})
     let workingFrenchScene = _.find(workingScene.french_scenes, {'id': updatedFrenchScene})
     let newFrenchScene = {...workingFrenchScene, ...updatedFrenchScene}
-    let workingFrenchScenes = workingScene.french_scenes.map((frenchScene =>{
-      if (frenchScene.id === newFrenchScene.id) {
-        return newFrenchScene
-      } else {
-        return frenchScene
-      }}
-    ))
-    workingScene = {
-      ...workingScene,
-      french_scenes: workingFrenchScenes
-    }
 
-    let workingScenes = workingAct.scenes.map((scene) => {
-      if (scene.id === workingScene.id) {
-        return workingScene
-      } else {
-        return scene
-      }
-    })
-
-    workingAct = {
-      ...workingAct,
-      scenes: workingScenes
-    }
-
-    let workingActs = this.state.play.acts.map((act) => {
-      if (act.id === actId) {
-        return workingAct
-      } else {
-        return act
-      }
-    })
+    workingScene = this.interpolateNewFrenchScene(newFrenchScene, workingScene)
+    workingAct = this.interpolateNewScene(workingScene, workingAct)
+    workingPlay = this.interpolateNewAct(workingAct, workingPlay)
     this.setState({
-      play: {
-        ...this.state.play,
-        acts: workingActs
-        }
+      play: workingPlay
     })
   }
 }
@@ -615,61 +415,19 @@ async updateOnStage(actId, sceneId, frenchSceneId, updatedOnStage) {
       errorStatus: 'Error updating scene'
     })
   } else {
-    let workingAct = _.find(this.state.play.acts, {'id': actId})
+    let workingPlay = this.state.play
+    let workingAct = _.find(workingPlay.acts, {'id': actId})
     let workingScene = _.find(workingAct.scenes, {'id': sceneId})
     let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
     let workingOnStage = _.find(workingFrenchScene.on_stages, {'id': updatedOnStage.id})
     let newOnStage = {...workingOnStage, ...updatedOnStage}
-    let newOnStages = workingFrenchScene.on_stages.map((onStage) => {
-      if (onStage.id == newOnStage.id) {
-        return newOnStage
-      } else {
-        return onStage
-      }
-    })
-   workingFrenchScene = {
-      ...workingFrenchScene,
-      on_stages: newOnStages
-    }
 
-    let newFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
-      if (frenchScene.id == workingFrenchScene.id) {
-        return workingFrenchScene
-      } else {
-        return frenchScene
-      }
-    })
-    workingScene = {
-      ...workingScene,
-      french_scenes: newFrenchScenes
-    }
-
-    let workingScenes = workingAct.scenes.map((scene) => {
-      if (scene.id === workingScene.id) {
-        return workingScene
-      } else {
-        return scene
-      }
-    })
-
-    workingAct = {
-      ...workingAct,
-      scenes: workingScenes
-    }
-
-    let workingActs = this.state.play.acts.map((act) => {
-      if (act.id === workingAct.id) {
-        return workingAct
-      } else {
-        return act
-      }
-    })
-    let workingPlay = {...this.state.play, acts: workingActs}
+    workingFrenchScene = this.interpolateNewOnStage(newOnStage, workingFrenchScene)
+    workingScene = this.interpolateNewFrenchScene(workingFrenchScene, workingScene)
+    workingAct = this.interpolateNewScene(workingScene, workingAct)
+    workingPlay = this.interpolateNewAct(workingAct, workingPlay)
     this.setState({
-      play: {
-        ...this.state.play,
-        acts: workingActs
-        }
+      play: workingPlay,
     })
   }
 }
@@ -688,24 +446,21 @@ async updatePlayOnServer(play) {
 }
 
 async updateScene(actId, updatedScene) {
+  console.log('updated scene is ', updatedScene)
   const response = await updateServerItem(updatedScene, 'scene')
   if (response.status >= 400) {
     this.setState({
       errorStatus: 'Error updating scene'
     })
   } else {
-    let workingAct = _.find(this.state.play.acts, {'id': updatedScene.act_id})
-    let updatedSceneInAct = _.find(workingAct.scenes, {'id': updatedScene.id})
-    updatedSceneInAct = {...updatedSceneInAct, ...updatedScene}
-    workingAct = {
-      ...workingAct,
-      scenes: {...workingAct.scenes, updatedSceneInAct}
-    }
+    let workingPlay = this.state.play
+    let workingAct = _.find(workingPlay.acts, {'id': updatedScene.act_id})
+    let workingScene = _.find(workingAct.scenes, {'id': updatedScene.id})
+    workingScene = {...workingScene, ...updatedScene}
+    workingAct = this.interpolateNewScene(workingScene, workingAct)
+    workingPlay = this.interpolateNewAct(workingAct, workingPlay)
     this.setState({
-      play: {
-        ...this.state.play,
-        acts: {...this.state.play.acts, ...workingAct}
-        }
+      play: workingPlay
     })
   }
 }
@@ -721,6 +476,77 @@ handleFormClose = () => {
 handleSubmit = (play) => {
   this.updatePlayOnServer(play)
   this.toggleForm()
+}
+
+interpolateNewAct = (newAct, workingPlay) => {
+  let workingActs = workingPlay.acts.map((act) => {
+    if (act.id === newAct.id) {
+      return newAct
+    } else {
+      return act
+    }
+  })
+  return {
+    ...this.state.play,
+    acts: workingActs
+  }
+}
+
+interpolateNewEntranceExit = (newEntranceExit, workingFrenchScene) => {
+  let workingEntranceExits = workingFrenchScene.entrance_exits.map((entranceExit) => {
+    if (entranceExit.id == newEntranceExit.id) {
+      return newEntranceExit
+    } else {
+      return entranceExit
+    }
+  })
+  return {
+    ...workingFrenchScene,
+    entrance_exits: workingEntranceExits
+  }
+}
+
+interpolateNewFrenchScene = (newFrenchScene, workingScene) => {
+  let workingFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
+    if (frenchScene.id == newFrenchScene.id) {
+      return newFrenchScene
+    } else {
+      return frenchScene
+    }
+  })
+  return {
+    ...workingScene,
+    french_scenes: workingFrenchScenes
+  }
+}
+
+interpolateNewOnStage = (newOnStage, workingFrenchScene) => {
+  let workingOnStages = workingFrenchScene.on_stages.map((onStage) => {
+    if (onStage.id == newOnStage.id) {
+      return newOnStage
+    } else {
+      return onStage
+    }
+  })
+  return {
+    ...workingFrenchScene,
+    on_stages: workingOnStages
+  }
+}
+
+interpolateNewScene = (newScene, workingAct) => {
+  let workingScenes = workingAct.scenes.map((scene) => {
+    if (scene.id === newScene.id) {
+      return newScene
+    } else {
+      return scene
+    }
+  })
+
+  return {
+    ...workingAct,
+    scenes: workingScenes
+  }
 }
 
 onActCreateFormSubmit = (act) => {
