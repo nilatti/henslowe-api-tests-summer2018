@@ -18,7 +18,6 @@ class SceneForm extends Component {
       summary: this.props.scene.summary,
       validated: false,
     }
-    console.log('props to scene form', this.props.scene)
   }
 
   handleChange = (event) => {

@@ -7,7 +7,7 @@ import OnStageShow from './OnStageShow'
 
 class EditableOnStage extends Component {
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.french_scene.id)
+    this.props.onDeleteClick(this.props.frenchSceneId)
   }
 
   handleSubmit = (onStage) => {
@@ -20,9 +20,9 @@ class EditableOnStage extends Component {
       <div>
         <OnStageShow
           changeNonspeaking={this.props.changeNonspeaking}
-          french_scene_id={this.props.french_scene_id}
+          frenchSceneId={this.props.frenchSceneId}
           handleEditClick={this.handleEditClick}
-          on_stage={this.props.on_stage}
+          onStage={this.props.onStage}
         />
       </div>
     )
@@ -31,9 +31,9 @@ class EditableOnStage extends Component {
 
 EditableOnStage.propTypes = {
   changeNonspeaking: PropTypes.func.isRequired,
-  french_scene_id: PropTypes.number.isRequired,
+  frenchSceneId: PropTypes.number.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
-  on_stage: PropTypes.object.isRequired,
+  onStage: PropTypes.object.isRequired,
 }
 
 export default EditableOnStage

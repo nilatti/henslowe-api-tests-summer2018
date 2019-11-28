@@ -3,7 +3,7 @@ class Character < ApplicationRecord
   belongs_to :job, optional: :true
   has_many :on_stages
   has_many :french_scenes, through: :on_stages
-  has_many :entrance_exits
+  has_and_belongs_to_many :entrance_exits
   default_scope { order('name ASC') }
   validates :name, presence: true
 

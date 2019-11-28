@@ -36,40 +36,17 @@ class SceneShow extends Component {
     });
   }
 
-  updateFrenchSceneAttrsForServer = (frenchSceneAttrs) => {
-    const {
-      characters,
-      ...attrsForApi
-    } = frenchSceneAttrs
-    return attrsForApi
-  }
-  async updateFrenchSceneAttrsForState(frenchSceneAttrs) {
-    this.setState(state => {
-      const frenchSceneList = this.state.french_scenes.map((french_scene) => {
-        if (french_scene.id === frenchSceneAttrs.id) {
-          return frenchSceneAttrs
-        } else {
-          return french_scene
-        }
-      })
-      frenchSceneList = _.orderBy(frenchSceneList, 'number')
-      return {
-        french_scenes: frenchSceneList
-      }
-    })
-  }
-
   render() {
     let act = _.find(this.props.play.acts, {'id': this.props.actId})
     let scene = _.find(act.scenes, {'id': this.props.sceneId})
     let frenchSceneTabs
     if (scene.french_scenes[0] ) {
-      frenchSceneTabs = scene.french_scenes.map((french_scene) =>
-          <Tab eventKey={`french_scene-${french_scene.id}`} title={`${french_scene.number}`} key={`french_scene-${french_scene.id}`}>
+      frenchSceneTabs = scene.french_scenes.map((frenchScene) =>
+          <Tab eventKey={`french_scene-${frenchScene.id}`} title={`${frenchScene.number}`} key={`french_scene-${frenchScene.id}`}>
             <FrenchSceneInfoTab
               actId={act.id}
               actNumber={act.number}
-              french_scene={french_scene}
+              frenchScene={frenchScene}
               handleEditSubmit={this.props.handleFrenchSceneEditFormSubmit}
               handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
               handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}

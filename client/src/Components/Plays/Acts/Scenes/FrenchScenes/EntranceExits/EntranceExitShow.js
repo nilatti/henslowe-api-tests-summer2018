@@ -12,7 +12,13 @@ import _ from 'lodash'
 class EntranceExitShow extends Component {
   constructor(props) {
     super(props)
-    var selectedCharacter = this.props.play.characters.find((character) => (character.id === this.props.entranceExit.character_id))
+    var selectedCharacterIds = this.props.entranceExit.characters.map((character) => character.id)
+    var selectedCharacters = _.filter(
+      this.props.play.characters,
+      function(character) {
+        return selectedCharacterIds.includes(character.id)
+      }
+    )
     var selectedStageExit = this.props.production.stage_exits.find((stageExit) => (stageExit.id === this.props.entranceExit.stage_exit_id))
     this.state = {
       category: this.props.entranceExit.category,
@@ -23,7 +29,9 @@ class EntranceExitShow extends Component {
       notesFormOpen: false,
       page: this.props.entranceExit.page,
       pageFormOpen: false,
-      selectedCharacter: [{id: selectedCharacter.id, label: selectedCharacter.name}],
+      selectedCharacters: selectedCharacters.map((character) => ({
+        id: character.id, label: character.name
+      })),
       selectedStageExit: [{id: selectedStageExit.id, label: selectedStageExit.name}],
       stageExit: this.props.entranceExit.stage_exit,
       stageExitFormOpen: false,
@@ -46,14 +54,16 @@ class EntranceExitShow extends Component {
   handleCharacterChange = (e) => {
     if (e.length > 0) {
       this.setState({
-        selectedCharacter: [e[0]]
+        selectedCharacters: e
       })
     }
   }
 
   handleCharacterSubmit = () => {
-    var character_id = this.state.selectedCharacter[0].id
-    var entranceExit ={ ...this.props.entranceExit, character_id}
+    var entranceExit = {
+      ...this.props.entranceExit,
+      character_ids: this.state.selectedCharacters.map((character) => character.id),
+    }
     this.processSubmit(entranceExit)
     this.toggleForm('character')
   }
@@ -108,7 +118,15 @@ class EntranceExitShow extends Component {
   }
 
   processSubmit = (entranceExit) => {
-    this.props.onEdit(this.props.actId, this.props.sceneId, this.props.frenchSceneId, entranceExit)
+    delete entranceExit["characters"]
+    delete entranceExit["stage_exit"]
+    console.log('rails-ready', entranceExit)
+    this.props.onEdit(
+      this.props.actId,
+      this.props.sceneId,
+      this.props.frenchSceneId,
+      entranceExit
+    )
   }
 
   toggleForm = (formName) => {
@@ -123,165 +141,182 @@ class EntranceExitShow extends Component {
       id: character.id,
       label: String(character.name)
     }))
+    var characterNames = _.map(this.state.selectedCharacters, 'label').join(', ')
     var stageExits = this.props.production.stage_exits.map((stageExit) => ({
       id: stageExit.id,
       label: String(stageExit.name)
     }))
     return (
-      <div>
-        {
-          this.state.lineFormOpen
-          ?
-          <Form.Group>
-            <Form.Label>
-              Line
-            </Form.Label>
-            <Form.Control
-              type="number"
-              placeholder={this.state.line || 'line'}
-              name="line"
-              onBlur={this.handleLineChange}
-              onChange={this.handleChange}
-              onKeyDown={(e) => this.handleKeyPress(e, "line")}
-              value={this.state.line || ''}
-            />
-          </Form.Group>
-          :
-          <span onClick={() => this.toggleForm('line')}>
-            Line {this.state.line}</span>
-        }
-      , {
-          this.state.pageFormOpen
-          ?
-          <Form.Group>
-            <Form.Label>
-              Page
-            </Form.Label>
-            <Form.Control
-              type="number"
-              placeholder={this.state.page || 'page'}
-              name="page"
-              onBlur={this.handlePageChange}
-              onChange={this.handleChange}
-              onKeyDown={(e) => this.handleKeyPress(e, "page")}
-              value={this.state.page || ''}
-            />
-          </Form.Group>
-          :
-          <span onClick={() => this.toggleForm('page')}>
-            Page {this.state.page}</span>
-        }
-        {
-          this.state.stageExitFormOpen
-          ?
-          <Form>
-            <Form.Group>
-              <Form.Label>
-                Stage Exit
-              </Form.Label>
-              <Typeahead
-                id="stage_exit"
-                required
-                options={stageExits}
-                onBlur={this.handleStageExitSubmit}
-                onChange={this.handleStageExitChange}
-                selected={this.state.selectedStageExit}
-                placeholder="Choose the exit"
-              />
-              <Form.Control.Feedback type="invalid">
-                  Stage Exit is required
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Form>
-          :
-          <span>
-            <span onDoubleClick={() => this.toggleForm('stageExit')}>
-              {this.state.selectedStageExit[0].label
-            }</span><br />
-          </span>
-        }&nbsp;&nbsp;
-        {
-          this.state.characterFormOpen
-          ?
-          <Form>
-            <Form.Group>
-              <Form.Label>
-                Character
-              </Form.Label>
-              <Typeahead
-                id="character"
-                required
-                options={characters}
-                onBlur={this.handleCharacterSubmit}
-                onChange={this.handleCharacterChange}
-                selected={this.state.selectedCharacter}
-                placeholder="Choose the character"
-              />
-              <Form.Control.Feedback type="invalid">
-                  Character is required
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Form>
-          :
-          <span>
-            <span onDoubleClick={() => this.toggleForm('character')}>
-              as {this.state.selectedCharacter[0].label
-            }</span><br />
-          </span>
-        }
-        {
-          this.state.categoryFormOpen
-          ?
-          <Form>
-            <Form.Group controlId="category">
-              <Form.Label>Enter or Exit?</Form.Label>
-              <Form.Control
-                as="select"
-                onBlur={(selected) => {
-                  this.handleCategoryBlur(selected)
-                }}
-                onChange={(selected) => {this.handleCategoryBlur(selected)}}
-
-              >
-                <option value="Enter">Enter</option>
-                <option value="Exit">Exit</option>
-              </Form.Control>
-            </Form.Group>
-          </Form>
-          :
-          <span>
-            <span onDoubleClick={() => this.toggleForm('category')}>
-              {entranceExit.category}
-            </span>
-          </span>
-        }&nbsp;&nbsp;
-        {
-            this.state.notesFormOpen
+      <tr>
+        <td>
+          {
+            this.state.lineFormOpen
             ?
-            <Form.Group>
+            <Form.Group className="row">
               <Form.Label>
-                Notes
+                Line
               </Form.Label>
               <Form.Control
-                type="textarea"
-                placeholder={this.state.notes || 'notes'}
-                name="notes"
-                onBlur={this.handleNotesChange}
+                type="number"
+                placeholder={this.state.line || 'line'}
+                name="line"
+                onBlur={this.handleLineChange}
                 onChange={this.handleChange}
-                onKeyDown={(e) => this.handleKeyPress(e, "notes")}
-                value={this.state.notes || ''}
+                onKeyDown={(e) => this.handleKeyPress(e, "line")}
+                value={this.state.line || ''}
               />
             </Form.Group>
             :
-            <span onClick={() => this.toggleForm('notes')}>
-              Notes {this.state.notes}</span>
+            <span onClick={() => this.toggleForm('line')}>
+              Line {this.state.line}</span>
           }
-        <span className='right floated trash icon'
-          onClick={() => this.props.onDeleteClick(this.props.actId, this.props.sceneId, this.props.frenchSceneId, entranceExit.id)}
-        >
-          <i className="fas fa-trash-alt"></i>
-        </span>
-        </div>
+        </td>
+        <td>
+          {
+            this.state.pageFormOpen
+            ?
+            <Form.Group>
+              <Form.Label>
+                Page
+              </Form.Label>
+              <Form.Control
+                type="number"
+                placeholder={this.state.page || 'page'}
+                name="page"
+                onBlur={this.handlePageChange}
+                onChange={this.handleChange}
+                onKeyDown={(e) => this.handleKeyPress(e, "page")}
+                value={this.state.page || ''}
+              />
+            </Form.Group>
+            :
+            <span onClick={() => this.toggleForm('page')}>
+              Page {this.state.page}</span>
+          }
+        </td>
+        <td>
+          {
+            this.state.characterFormOpen
+            ?
+            <Form>
+              <Form.Group>
+                <Form.Label>
+                  Characters
+                </Form.Label>
+                <Typeahead
+                  id="character"
+                  multiple
+                  options={characters}
+                  onBlur={this.handleCharacterSubmit}
+                  onChange={this.handleCharacterChange}
+                  placeholder="Choose the characters"
+                  required
+                  selected={this.state.selectedCharacters}
+                />
+                <Form.Control.Feedback type="invalid">
+                    Character is required
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Form>
+            :
+            <span>
+              <span onDoubleClick={() => this.toggleForm('character')}>
+                {characterNames}
+              </span><br />
+            </span>
+          }
+        </td>
+        <td>
+          {
+            this.state.categoryFormOpen
+            ?
+            <Form>
+              <Form.Group controlId="category">
+                <Form.Label>Enter or Exit?</Form.Label>
+                <Form.Control
+                  as="select"
+                  onBlur={(selected) => {
+                    this.handleCategoryBlur(selected)
+                  }}
+                  onChange={(selected) => {this.handleCategoryBlur(selected)}}
+
+                >
+                  <option value="Enter">Enter</option>
+                  <option value="Exit">Exit</option>
+                </Form.Control>
+              </Form.Group>
+            </Form>
+            :
+            <span>
+              <span onDoubleClick={() => this.toggleForm('category')}>
+                {entranceExit.category}
+              </span>
+            </span>
+          }
+          </td>
+          <td>
+          {
+            this.state.stageExitFormOpen
+            ?
+            <Form>
+              <Form.Group>
+                <Form.Label>
+                  Stage Exit
+                </Form.Label>
+                <Typeahead
+                  id="stage_exit"
+                  required
+                  options={stageExits}
+                  onBlur={this.handleStageExitSubmit}
+                  onChange={this.handleStageExitChange}
+                  selected={this.state.selectedStageExit}
+                  placeholder="Choose the exit"
+                />
+                <Form.Control.Feedback type="invalid">
+                    Stage Exit is required
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Form>
+            :
+            <span>
+              <span onDoubleClick={() => this.toggleForm('stageExit')}>
+                {this.state.selectedStageExit[0].label
+              }</span><br />
+            </span>
+          }
+          </td>
+          <td>
+          {
+              this.state.notesFormOpen
+              ?
+              <Form.Group>
+                <Form.Label>
+                  Notes
+                </Form.Label>
+                <Form.Control
+                  type="textarea"
+                  placeholder={this.state.notes || 'notes'}
+                  name="notes"
+                  onBlur={this.handleNotesChange}
+                  onChange={this.handleChange}
+                  onKeyDown={(e) => this.handleKeyPress(e, "notes")}
+                  value={this.state.notes || ''}
+                />
+              </Form.Group>
+              :
+              <span onClick={() => this.toggleForm('notes')}>
+                Notes {this.state.notes}</span>
+            }
+          </td>
+          <td>
+            <span className='right floated trash icon'
+              onClick={() => this.props.onDeleteClick(this.props.actId, this.props.sceneId, this.props.frenchSceneId, entranceExit.id)}
+            >
+              <i className="fas fa-trash-alt"></i>
+            </span>
+          </td>
+
+        </tr>
     )
   }
 }

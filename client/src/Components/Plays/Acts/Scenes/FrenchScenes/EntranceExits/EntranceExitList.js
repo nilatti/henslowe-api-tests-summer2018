@@ -24,32 +24,63 @@ class EntranceExitsList extends Component {
     let act = _.find(this.props.play.acts, {'id': this.props.actId})
     let scene = _.find(act.scenes, {'id': this.props.sceneId})
     let frenchScene = _.find(scene.french_scenes, {'id': this.props.frenchSceneId})
-    let entranceExits = <div>No entrances or exits listed</div>
-    if (frenchScene.entrance_exits) {
+    let entranceExits = <tr><td colSpan="6">'No entrances or exits listed'</td></tr>
+    if (frenchScene.entrance_exits[0]) {
       let orderedEntranceExits = _.orderBy(frenchScene.entrance_exits, 'line')
       entranceExits = orderedEntranceExits.map(entranceExit =>
-        <li key={entranceExit.id}>
-          <EntranceExitShow
-            actId={this.props.actId}
-            frenchSceneId={this.props.frenchSceneId}
-            onDeleteClick={this.props.onDeleteClick}
-            play={this.props.play}
-            production={this.props.production}
-            onEdit={this.props.handleEntranceExitEditFormSubmit}
-            entranceExit={entranceExit}
-            sceneId={this.props.sceneId}
-          />
-        </li>
+        <EntranceExitShow
+          actId={this.props.actId}
+          entranceExit={entranceExit}
+          frenchSceneId={this.props.frenchSceneId}
+          key={entranceExit.id}
+          onDeleteClick={this.props.onDeleteClick}
+          onEdit={this.props.handleEntranceExitEditFormSubmit}
+          play={this.props.play}
+          production={this.props.production}
+          sceneId={this.props.sceneId}
+        />
       )
     }
 
     return (
-      <div>
-        <h3>Entrance Exits {this.props.frenchSceneId}</h3>
-        <p><em>Click to edit name</em></p>
-        <ul>
-          {entranceExits}
-        </ul>
+      <div className="col">
+        {
+          entranceExits ?
+          <div className="table=responsive">
+            <table className="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>
+                    Line
+                  </th>
+                  <th>
+                    Page
+                  </th>
+                  <th>
+                    Characters
+                  </th>
+                  <th>
+                    Enter or Exit?
+                  </th>
+                  <th>
+                    Stage Exit
+                  </th>
+                  <th>
+                    Notes
+                  </th>
+                  <th>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {entranceExits}
+              </tbody>
+            </table>
+          </div>
+          :
+          <span></span>
+        }
+
         { this.state.newEntranceExitFormOpen ?
           <NewEntranceExitForm
             actId={this.props.actId}
@@ -64,7 +95,7 @@ class EntranceExitsList extends Component {
           <Button
             onClick={this.toggleForm}
           >
-            Add New
+            Add New Entrance Exit
           </Button>
         }
 

@@ -19,6 +19,7 @@ import CharacterFormToggle from './Characters/CharacterFormToggle'
 import CharacterInfoTab from './Characters/CharacterInfoTab'
 
 class PlayShow extends Component {
+
   constructor(props, context) {
     super(props, context);
     this.handleSelect = this.handleSelect.bind(this);
