@@ -11,7 +11,7 @@ class FrenchSceneInfoTab extends Component {
   }
 
   handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.actId, this.props.sceneId, this.props.french_scene.id)
+    this.props.onDeleteClick(this.props.actId, this.props.sceneId, this.props.frenchScene.id)
   }
   handleEditClick = () => {
     this.toggleForm()
@@ -40,7 +40,7 @@ class FrenchSceneInfoTab extends Component {
       return (
         <FrenchSceneForm
           actId={this.props.actId}
-          frenchScene={this.props.french_scene}
+          frenchScene={this.props.frenchScene}
           handleEntranceExitCreateFormSubmit={this.onEntranceExitCreateFormSubmit}
           handleEntranceExitDeleteClick={this.onEntranceExitDeleteClick}
           handleEntranceExitEditFormSubmit={this.onEntranceExitEditFormSubmit}
@@ -59,7 +59,7 @@ class FrenchSceneInfoTab extends Component {
         <FrenchSceneShow
           actId={this.props.actId}
           actNumber={this.props.actNumber}
-          frenchScene={this.props.french_scene}
+          frenchScene={this.props.frenchScene}
           handleEditClick={this.handleEditClick}
           handleEditSubmit={this.props.handleEditSubmit}
           handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
@@ -82,7 +82,7 @@ class FrenchSceneInfoTab extends Component {
 FrenchSceneInfoTab.propTypes = {
   actId: PropTypes.number.isRequired,
   actNumber: PropTypes.number.isRequired,
-  french_scene: PropTypes.object.isRequired,
+  frenchScene: PropTypes.object.isRequired,
   handleEditSubmit: PropTypes.func.isRequired,
   handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
   handleEntranceExitDeleteClick: PropTypes.func.isRequired,

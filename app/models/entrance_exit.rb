@@ -1,6 +1,5 @@
 class EntranceExit < ApplicationRecord
   belongs_to :french_scene
-  belongs_to :character
+  has_and_belongs_to_many :characters
   belongs_to :stage_exit
-
 end

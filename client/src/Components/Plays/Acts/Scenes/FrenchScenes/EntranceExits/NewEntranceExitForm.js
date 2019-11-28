@@ -23,7 +23,7 @@ class NewEntranceExitForm extends Component {
       line: '',
       page: '',
       notes: '',
-      selectedCharacter: [],
+      selectedCharacters: [],
       selectedStageExit: [],
       stageExits: this.props.stageExits,
       validated: false,
@@ -40,7 +40,7 @@ class NewEntranceExitForm extends Component {
   handleChangeCharacter = (e) => {
     if (e.length > 0) {
       this.setState({
-        selectedCharacter: [e[0]]
+        selectedCharacters: e
       })
     }
   }
@@ -69,17 +69,17 @@ class NewEntranceExitForm extends Component {
   }
 
   processSubmit = () => {
-    this.props.onFormSubmit(this.props.actId, this.props.sceneId, this.props.frenchSceneId, {
+    var entranceExitToSubmit = {
+      entrance_exit :{
       category: this.state.category,
-      character_id: this.state.selectedCharacter[0].id,
-      character_name: this.state.selectedCharacter[0].label,
+      character_ids: this.state.selectedCharacters.map((character) => character.id),
       french_scene_id: this.props.frenchSceneId,
       line: this.state.line,
       page: this.state.page,
       notes: this.state.notes,
       stage_exit_id: this.state.selectedStageExit[0].id,
-      stage_exit_name: this.state.selectedStageExit[0].label,
-    }, "entrance_exit")
+    }}
+    this.props.onFormSubmit(this.props.actId, this.props.sceneId, this.props.frenchSceneId, entranceExitToSubmit)
   }
 
   render() {
@@ -121,17 +121,18 @@ class NewEntranceExitForm extends Component {
         </Form.Group>
         <Form.Group>
           <Form.Label>
-            Character
+            Characters
           </Form.Label>
           <Typeahead
-            id="character"
+            id="characters"
+            multiple
             required
             options={characters}
             onChange={(selected) => {
               this.handleChangeCharacter(selected)
             }}
-            selected={this.state.selectedCharacter}
-            placeholder="Choose the character"
+            selected={this.state.selectedCharacters}
+            placeholder="Choose the characters"
           />
           <Form.Control.Feedback type="invalid">
               Character is required

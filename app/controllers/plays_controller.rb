@@ -24,7 +24,7 @@ class PlaysController < ApiController
                   entrance_exits:
                   [
                     :stage_exit,
-                    :character
+                    :characters
                   ],
                   on_stages: [
                     :character
@@ -48,7 +48,7 @@ class PlaysController < ApiController
                     entrance_exits: {
                       include: [
                           :stage_exit,
-                          :character,
+                          :characters,
                         ]
                     },
                     on_stages: {

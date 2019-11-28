@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_23_210224) do
+ActiveRecord::Schema.define(version: 2019_11_12_025433) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -78,6 +78,11 @@ ActiveRecord::Schema.define(version: 2019_07_23_210224) do
     t.index ["play_id"], name: "index_characters_on_play_id"
   end
 
+  create_table "characters_entrance_exits", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "character_id", null: false
+    t.bigint "entrance_exit_id", null: false
+  end
+
   create_table "entrance_exits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "french_scene_id"
     t.integer "page"
@@ -88,8 +93,6 @@ ActiveRecord::Schema.define(version: 2019_07_23_210224) do
     t.datetime "updated_at", null: false
     t.string "category"
     t.text "notes"
-    t.bigint "character_id"
-    t.index ["character_id"], name: "index_entrance_exits_on_character_id"
     t.index ["french_scene_id"], name: "index_entrance_exits_on_french_scene_id"
     t.index ["stage_exit_id"], name: "index_entrance_exits_on_stage_exit_id"
   end

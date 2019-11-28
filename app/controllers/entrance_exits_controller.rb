@@ -16,9 +16,9 @@ class EntranceExitsController < ApiController
   # POST /entrance_exits
   def create
     @entrance_exit = EntranceExit.new(entrance_exit_params)
-
     if @entrance_exit.save
-      render json: @entrance_exit, status: :created, location: @entrance_exit
+      json_response(@entrance_exit.as_json(include: [:characters, :stage_exit]))
+      # render json: @entrance_exit, status: :created, location: @entrance_exit
     else
       render json: @entrance_exit.errors, status: :unprocessable_entity
     end
@@ -51,12 +51,12 @@ class EntranceExitsController < ApiController
     def entrance_exit_params
       params.require(:entrance_exit).permit(
         :category,
-        :character_id,
         :french_scene_id,
         :line,
         :notes,
         :page,
-        :stage_exit_id
+        :stage_exit_id,
+        character_ids: [],
       )
     end
 end
