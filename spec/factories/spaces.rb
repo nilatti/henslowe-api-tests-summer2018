@@ -7,7 +7,7 @@ FactoryBot.define do
     zip {Faker::Address.zip}
     phone_number {Faker::PhoneNumber.phone_number}
     website {Faker::Internet.url}
-    seating_capacity {Faker::Number.within(100..1000)}
+    seating_capacity {Faker::Number.within(range: 100..1000)}
     mission_statement {Faker::TvShows::MichaelScott.quote}
 
     trait :has_theaters do

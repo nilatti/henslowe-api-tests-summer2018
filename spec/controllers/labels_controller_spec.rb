@@ -23,10 +23,10 @@ require 'rails_helper'
 # removed from Rails core in Rails 5, but can be added back in via the
 # `rails-controller-testing` gem.
 
-RSpec.describe SpecializationsController, type: :controller do
+RSpec.describe LabelsController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
-  # Specialization. As you add validations to Specialization, be sure to
+  # Label. As you add validations to Label, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
     skip("Add a hash of attributes valid for your model")
@@ -38,12 +38,12 @@ RSpec.describe SpecializationsController, type: :controller do
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
-  # SpecializationsController. Be sure to keep this updated too.
+  # LabelsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   describe "GET #index" do
     it "returns a success response" do
-      specialization = Specialization.create! valid_attributes
+      label = Label.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_successful
     end
@@ -51,33 +51,33 @@ RSpec.describe SpecializationsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      specialization = Specialization.create! valid_attributes
-      get :show, params: {id: specialization.to_param}, session: valid_session
+      label = Label.create! valid_attributes
+      get :show, params: {id: label.to_param}, session: valid_session
       expect(response).to be_successful
     end
   end
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new Specialization" do
+      it "creates a new Label" do
         expect {
-          post :create, params: {specialization: valid_attributes}, session: valid_session
-        }.to change(Specialization, :count).by(1)
+          post :create, params: {label: valid_attributes}, session: valid_session
+        }.to change(Label, :count).by(1)
       end
 
-      it "renders a JSON response with the new specialization" do
+      it "renders a JSON response with the new label" do
 
-        post :create, params: {specialization: valid_attributes}, session: valid_session
+        post :create, params: {label: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:created)
         expect(response.content_type).to eq('application/json')
-        expect(response.location).to eq(specialization_url(Specialization.last))
+        expect(response.location).to eq(label_url(Label.last))
       end
     end
 
     context "with invalid params" do
-      it "renders a JSON response with errors for the new specialization" do
+      it "renders a JSON response with errors for the new label" do
 
-        post :create, params: {specialization: invalid_attributes}, session: valid_session
+        post :create, params: {label: invalid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
       end
@@ -90,27 +90,27 @@ RSpec.describe SpecializationsController, type: :controller do
         skip("Add a hash of attributes valid for your model")
       }
 
-      it "updates the requested specialization" do
-        specialization = Specialization.create! valid_attributes
-        put :update, params: {id: specialization.to_param, specialization: new_attributes}, session: valid_session
-        specialization.reload
+      it "updates the requested label" do
+        label = Label.create! valid_attributes
+        put :update, params: {id: label.to_param, label: new_attributes}, session: valid_session
+        label.reload
         skip("Add assertions for updated state")
       end
 
-      it "renders a JSON response with the specialization" do
-        specialization = Specialization.create! valid_attributes
+      it "renders a JSON response with the label" do
+        label = Label.create! valid_attributes
 
-        put :update, params: {id: specialization.to_param, specialization: valid_attributes}, session: valid_session
+        put :update, params: {id: label.to_param, label: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to eq('application/json')
       end
     end
 
     context "with invalid params" do
-      it "renders a JSON response with errors for the specialization" do
-        specialization = Specialization.create! valid_attributes
+      it "renders a JSON response with errors for the label" do
+        label = Label.create! valid_attributes
 
-        put :update, params: {id: specialization.to_param, specialization: invalid_attributes}, session: valid_session
+        put :update, params: {id: label.to_param, label: invalid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
       end
@@ -118,11 +118,11 @@ RSpec.describe SpecializationsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    it "destroys the requested specialization" do
-      specialization = Specialization.create! valid_attributes
+    it "destroys the requested label" do
+      label = Label.create! valid_attributes
       expect {
-        delete :destroy, params: {id: specialization.to_param}, session: valid_session
-      }.to change(Specialization, :count).by(-1)
+        delete :destroy, params: {id: label.to_param}, session: valid_session
+      }.to change(Label, :count).by(-1)
     end
   end
 

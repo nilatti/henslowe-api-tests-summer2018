@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user do
     bio {Faker::Hipster.paragraph}
-    birthdate { Faker::Date.birthday(18, 65) }
+    birthdate { Faker::Date.birthday(min_age: 18, max_age: 65) }
     city { Faker::Address.city }
     description { Faker::Movies::HitchhikersGuideToTheGalaxy.quote }
     email { Faker::Internet.email }

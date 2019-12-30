@@ -4,9 +4,9 @@ class User < ApplicationRecord
     devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable,
-        jwt_revocation_strategy: JWTBlacklist
+        jwt_revocation_strategy: JwtBlacklist
 
-  validates_uniqueness_of :email
+  validates_uniqueness_of :email, case_sensitive: true
   # validates_presence_of :first_name, :last_name, :phone_number, :email
   has_many :jobs
   has_many :characters, through: :jobs

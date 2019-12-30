@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :play do
     title { Faker::Hipster.sentence }
-    date { Faker::Date.between(400.years.ago, Date.today) }
+    date { Faker::Date.between(from: 400.years.ago, to: Date.today) }
     genre {['comedy', 'musical']}
     author
 

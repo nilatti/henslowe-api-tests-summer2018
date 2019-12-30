@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :act do
-    number { Faker::Number.within(1..10) }
+    number { Faker::Number.within(range: 1..10) }
     summary { Faker:: Hipster.sentence}
     play
 

@@ -1,6 +1,6 @@
 require_relative 'boot'
 
-require "rails"
+require "rails/all"
 # Pick the frameworks you want:
 require "active_model/railtie"
 require "active_job/railtie"
@@ -21,7 +21,7 @@ module June20
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
 
-    config.load_defaults 5.2
+    config.load_defaults 6.0
 
     config.middleware.use Rack::MethodOverride
     config.middleware.use ActionDispatch::Flash

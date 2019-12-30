@@ -6,6 +6,9 @@ require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
+Dir['spec/support/**/*.rb'].each do |file|
+  require Rails.root.join(file).to_s
+end
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -42,7 +45,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include DefaultFormat, type: :request
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.clean_with(:truncation, except:  %w(ar_internal_metadata))
     DatabaseCleaner.strategy = :transaction
   end
 
