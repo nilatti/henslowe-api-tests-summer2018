@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `rails
+# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_12_025433) do
+ActiveRecord::Schema.define(version: 2019_12_30_034236) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 2019_11_12_025433) do
     t.integer "end_page"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "heading"
     t.index ["play_id"], name: "index_acts_on_play_id"
   end
 
@@ -66,6 +67,16 @@ ActiveRecord::Schema.define(version: 2019_11_12_025433) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "character_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "name"
+    t.string "xml_id"
+    t.string "corresp"
+    t.bigint "play_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["play_id"], name: "index_character_groups_on_play_id"
+  end
+
   create_table "characters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "age"
@@ -75,10 +86,13 @@ ActiveRecord::Schema.define(version: 2019_11_12_025433) do
     t.datetime "updated_at", null: false
     t.bigint "play_id"
     t.string "xml_id"
+    t.string "corresp"
+    t.bigint "character_group_id"
+    t.index ["character_group_id"], name: "index_characters_on_character_group_id"
     t.index ["play_id"], name: "index_characters_on_play_id"
   end
 
-  create_table "characters_entrance_exits", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "characters_entrance_exits", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.bigint "character_id", null: false
     t.bigint "entrance_exit_id", null: false
   end
@@ -130,6 +144,32 @@ ActiveRecord::Schema.define(version: 2019_11_12_025433) do
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
   end
 
+  create_table "labels", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "xml_id"
+    t.string "line_number"
+    t.string "content"
+    t.bigint "french_scene_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["french_scene_id"], name: "index_labels_on_french_scene_id"
+  end
+
+  create_table "lines", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "ana"
+    t.bigint "character_id", null: false
+    t.string "corresp"
+    t.bigint "french_scene_id", null: false
+    t.string "next"
+    t.string "number"
+    t.string "prev"
+    t.string "kind"
+    t.string "xml_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["character_id"], name: "index_lines_on_character_id"
+    t.index ["french_scene_id"], name: "index_lines_on_french_scene_id"
+  end
+
   create_table "on_stages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "character_id"
     t.bigint "user_id"
@@ -152,6 +192,7 @@ ActiveRecord::Schema.define(version: 2019_11_12_025433) do
     t.text "text_notes"
     t.bigint "production_id"
     t.integer "original_play_id"
+    t.text "synopsis"
     t.index ["author_id"], name: "index_plays_on_author_id"
     t.index ["production_id"], name: "index_plays_on_production_id"
   end
@@ -173,7 +214,19 @@ ActiveRecord::Schema.define(version: 2019_11_12_025433) do
     t.datetime "updated_at", null: false
     t.integer "end_page"
     t.integer "start_page"
+    t.string "heading"
     t.index ["act_id"], name: "index_scenes_on_act_id"
+  end
+
+  create_table "sound_cues", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "xml_id"
+    t.string "line_number"
+    t.string "kind"
+    t.bigint "french_scene_id", null: false
+    t.text "notes"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["french_scene_id"], name: "index_sound_cues_on_french_scene_id"
   end
 
   create_table "space_agreements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -258,7 +311,20 @@ ActiveRecord::Schema.define(version: 2019_11_12_025433) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "words", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "kind"
+    t.string "content"
+    t.string "xml_id"
+    t.bigint "line_id", null: false
+    t.string "line_number"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["line_id"], name: "index_words_on_line_id"
+  end
+
   add_foreign_key "acts", "plays"
+  add_foreign_key "character_groups", "plays"
+  add_foreign_key "characters", "character_groups"
   add_foreign_key "entrance_exits", "french_scenes"
   add_foreign_key "entrance_exits", "stage_exits"
   add_foreign_key "french_scenes", "scenes"
@@ -267,9 +333,14 @@ ActiveRecord::Schema.define(version: 2019_11_12_025433) do
   add_foreign_key "jobs", "specializations"
   add_foreign_key "jobs", "theaters"
   add_foreign_key "jobs", "users"
+  add_foreign_key "labels", "french_scenes"
+  add_foreign_key "lines", "characters"
+  add_foreign_key "lines", "french_scenes"
   add_foreign_key "plays", "authors"
   add_foreign_key "productions", "theaters"
+  add_foreign_key "sound_cues", "french_scenes"
   add_foreign_key "space_agreements", "spaces"
   add_foreign_key "space_agreements", "theaters"
   add_foreign_key "stage_exits", "productions"
+  add_foreign_key "words", "lines"
 end

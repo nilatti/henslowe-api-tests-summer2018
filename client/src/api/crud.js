@@ -29,6 +29,10 @@ async function getItems(itemType) {
     return API.request(`${itemType}s`)
 }
 
+async function getItemsWithParent(parentType, parentId, itemType) {
+    return API.request(`${parentType}s/${parentId}/${itemType}s`)
+}
+
 async function updateServerItem(item, itemType) {
   const item_data = {}
   item_data[itemType] = item
@@ -42,5 +46,6 @@ export {
   deleteItem,
   getItem,
   getItems,
+  getItemsWithParent,
   updateServerItem
 }

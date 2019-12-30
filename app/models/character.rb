@@ -1,6 +1,7 @@
 class Character < ApplicationRecord
   belongs_to :play
   belongs_to :job, optional: :true
+  belongs_to :character_group, optional: :true
   has_many :on_stages
   has_many :french_scenes, through: :on_stages
   has_and_belongs_to_many :entrance_exits

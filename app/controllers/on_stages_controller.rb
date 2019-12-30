@@ -42,7 +42,7 @@ class OnStagesController < ApiController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_french_scene
-      @french_scene = FrenchScene.find(params[:french_scene])
+      @french_scene = FrenchScene.find(params[:french_scene_id])
     end
 
     def set_on_stage

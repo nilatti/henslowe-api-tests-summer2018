@@ -23,10 +23,10 @@ require 'rails_helper'
 # removed from Rails core in Rails 5, but can be added back in via the
 # `rails-controller-testing` gem.
 
-RSpec.describe EntranceExitsController, type: :controller do
+RSpec.describe CharacterGroupsController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
-  # EntranceExit. As you add validations to EntranceExit, be sure to
+  # CharacterGroup. As you add validations to CharacterGroup, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
     skip("Add a hash of attributes valid for your model")
@@ -38,12 +38,12 @@ RSpec.describe EntranceExitsController, type: :controller do
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
-  # EntranceExitsController. Be sure to keep this updated too.
+  # CharacterGroupsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   describe "GET #index" do
     it "returns a success response" do
-      entrance_exit = EntranceExit.create! valid_attributes
+      character_group = CharacterGroup.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_successful
     end
@@ -51,33 +51,33 @@ RSpec.describe EntranceExitsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      entrance_exit = EntranceExit.create! valid_attributes
-      get :show, params: {id: entrance_exit.to_param}, session: valid_session
+      character_group = CharacterGroup.create! valid_attributes
+      get :show, params: {id: character_group.to_param}, session: valid_session
       expect(response).to be_successful
     end
   end
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new EntranceExit" do
+      it "creates a new CharacterGroup" do
         expect {
-          post :create, params: {entrance_exit: valid_attributes}, session: valid_session
-        }.to change(EntranceExit, :count).by(1)
+          post :create, params: {character_group: valid_attributes}, session: valid_session
+        }.to change(CharacterGroup, :count).by(1)
       end
 
-      it "renders a JSON response with the new entrance_exit" do
+      it "renders a JSON response with the new character_group" do
 
-        post :create, params: {entrance_exit: valid_attributes}, session: valid_session
+        post :create, params: {character_group: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:created)
         expect(response.content_type).to eq('application/json')
-        expect(response.location).to eq(entrance_exit_url(EntranceExit.last))
+        expect(response.location).to eq(character_group_url(CharacterGroup.last))
       end
     end
 
     context "with invalid params" do
-      it "renders a JSON response with errors for the new entrance_exit" do
+      it "renders a JSON response with errors for the new character_group" do
 
-        post :create, params: {entrance_exit: invalid_attributes}, session: valid_session
+        post :create, params: {character_group: invalid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
       end
@@ -90,27 +90,27 @@ RSpec.describe EntranceExitsController, type: :controller do
         skip("Add a hash of attributes valid for your model")
       }
 
-      it "updates the requested entrance_exit" do
-        entrance_exit = EntranceExit.create! valid_attributes
-        put :update, params: {id: entrance_exit.to_param, entrance_exit: new_attributes}, session: valid_session
-        entrance_exit.reload
+      it "updates the requested character_group" do
+        character_group = CharacterGroup.create! valid_attributes
+        put :update, params: {id: character_group.to_param, character_group: new_attributes}, session: valid_session
+        character_group.reload
         skip("Add assertions for updated state")
       end
 
-      it "renders a JSON response with the entrance_exit" do
-        entrance_exit = EntranceExit.create! valid_attributes
+      it "renders a JSON response with the character_group" do
+        character_group = CharacterGroup.create! valid_attributes
 
-        put :update, params: {id: entrance_exit.to_param, entrance_exit: valid_attributes}, session: valid_session
+        put :update, params: {id: character_group.to_param, character_group: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to eq('application/json')
       end
     end
 
     context "with invalid params" do
-      it "renders a JSON response with errors for the entrance_exit" do
-        entrance_exit = EntranceExit.create! valid_attributes
+      it "renders a JSON response with errors for the character_group" do
+        character_group = CharacterGroup.create! valid_attributes
 
-        put :update, params: {id: entrance_exit.to_param, entrance_exit: invalid_attributes}, session: valid_session
+        put :update, params: {id: character_group.to_param, character_group: invalid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
       end
@@ -118,11 +118,11 @@ RSpec.describe EntranceExitsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    it "destroys the requested entrance_exit" do
-      entrance_exit = EntranceExit.create! valid_attributes
+    it "destroys the requested character_group" do
+      character_group = CharacterGroup.create! valid_attributes
       expect {
-        delete :destroy, params: {id: entrance_exit.to_param}, session: valid_session
-      }.to change(EntranceExit, :count).by(-1)
+        delete :destroy, params: {id: character_group.to_param}, session: valid_session
+      }.to change(CharacterGroup, :count).by(-1)
     end
   end
 

@@ -9,6 +9,7 @@ import Authors from './Authors/Authors'
 import Dashboard from './Dashboard/Dashboard'
 import Jobs from './Jobs/Jobs'
 import Plays from './Plays/Plays'
+import PlayScripts from './PlayScripts/PlayScripts'
 import Productions from './Productions/Productions'
 import Spaces from './Spaces/Spaces'
 import Specializations from './Specializations/Specializations'
@@ -23,6 +24,7 @@ class Main extends Component {
             <Route exact path='/' component={Dashboard}/>
             <Route path='/authors' render={(props) => <Authors {...props} authorFormOpen={false} />} />
             <Route path='/plays' component={Plays}/>
+            <Route path='/playscripts/:id' component={PlayScripts} />
             <Route path='/productions' component={Productions} />
             <Route path='/theaters' component={Theaters} />
             <Route path='/spaces' component={Spaces} />

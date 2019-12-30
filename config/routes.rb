@@ -65,5 +65,10 @@ Rails.application.routes.draw do
     end
     resources :on_stages
     resources :entrance_exits
+    resources :words
+    resources :labels
+    resources :sound_cues
+    resources :lines
+    resources :character_groups
   end
 end
