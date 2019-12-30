@@ -95,19 +95,28 @@ class ImportFromFolgerXmlAll
       xml_id: item.attr('xml:id')
     )
   end
-  #
-  # def build_line(character:, line:, french_scene:)
-  #   @current_line = Line.create(
-  #     ana: line.attr('ana'),
-  #     character: character,
-  #     corresp: line.attr('corresp'),
-  #     french_scene: french_scene,
-  #     number: line.attr('n'),
-  #     kind: 'line',
-  #     xml_id: line.attr('xml:id'),
-  #   )
-  # end
-  #
+
+  def build_line(character:, line:, french_scene:)
+    puts "build line called #{line}"
+    @current_line = Line.create(
+      ana: line.attr('ana'),
+      character_id: character.id,
+      corresp: line.attr('corresp'),
+      french_scene_id: french_scene.id,
+      number: line.attr('n'),
+      kind: 'line',
+      xml_id: line.attr('xml:id'),
+    )
+    corresp_arr = line.attr('corresp').to_s.split(' ')
+    corresp_arr.each do |corresp|
+      corresp.sub!('#', '')
+      xml_word = @parsed_xml.at_xpath("//*[@xml:id=\"#{corresp}\"]")
+      build_word(line: @current_line, word: xml_word)
+    end
+    puts "line built #{@current_line.id} #{@current_line.ana}"
+    return @current_line
+  end
+
   def build_play
     synopsis = @parsed_xml.xpath('//div[@type="synopsis"]') || ''
     title = @parsed_xml.xpath('//titleStmt/title').text
@@ -212,6 +221,7 @@ class ImportFromFolgerXmlAll
   end
 
   def build_word(line:, word:)
+    puts "building word #{word}"
     kind = ''
     if word.matches?('w')
       kind = 'word'

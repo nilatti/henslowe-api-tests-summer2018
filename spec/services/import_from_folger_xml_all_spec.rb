@@ -43,7 +43,7 @@ describe ImportFromFolgerXmlAll do
   it 'builds a character and adds it to a character group' do
     character_group = @import.parsed_xml.xpath('//personGrp')[2]
     test_character_group = @import.build_character_group(character_group: character_group, play: @play)
-    character = @import.parsed_xml.xpath('//person[@xml:id="LORDS.FREDERICK.0.2_AYL"]').first
+    character = @import.parsed_xml.at_xpath('//person[@xml:id="LORDS.FREDERICK.0.2_AYL"]')
     test_character = @import.build_character(character: character, play: @play)
     expect(test_character.play).to be(@play)
     expect(test_character.gender).to eq('male')
@@ -65,9 +65,9 @@ describe ImportFromFolgerXmlAll do
 
   it 'builds a word' do
     line = create(:line)
-    word = @import.parsed_xml.xpath('//w[@xml:id="w0153740"]').first
-    space = @import.parsed_xml.xpath('//c[@xml:id="c0153750"]').first
-    punctuation = @import.parsed_xml.xpath('//pc[@xml:id="p0153790"]').first
+    word = @import.parsed_xml.at_xpath('//w[@xml:id="w0153740"]')
+    space = @import.parsed_xml.at_xpath('//c[@xml:id="c0153750"]')
+    punctuation = @import.parsed_xml.at_xpath('//pc[@xml:id="p0153790"]')
     test_word = @import.build_word(line: line, word: word)
     test_space = @import.build_word(line: line, word: space)
     test_punctuation = @import.build_word(line: line, word: punctuation)
@@ -84,6 +84,20 @@ describe ImportFromFolgerXmlAll do
     expect(test_punctuation.line.id).to eq(line.id)
     expect(test_punctuation.line_number).to eq('2.5.56')
   end
+
+  it 'builds a line' do
+    character = create(:character)
+    french_scene = create(:french_scene)
+    line = @import.parsed_xml.at_xpath('//milestone[@xml:id="ftln-0172"]')
+    # //@[xml:id=\"w0030810\"]
+    test_line = @import.build_line(character: character, french_scene: french_scene, line: line)
+    expect(test_line.character).to eq(character)
+    expect(test_line.french_scene).to eq(french_scene)
+    test_line.words.each {|w| w.content}
+    expect(test_line.words.size).to eq(18)
+  end
+
+  # can I make it check for children on each node or if the node is w/c/pc to determine whether to be done?
 
   # it 'builds all acts' do
   #   @import.build_acts(parsed_xml: @import.parsed_xml, play: @play)
