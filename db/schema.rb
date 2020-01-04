@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_30_034236) do
+ActiveRecord::Schema.define(version: 2020_01_04_034806) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -77,6 +77,12 @@ ActiveRecord::Schema.define(version: 2019_12_30_034236) do
     t.index ["play_id"], name: "index_character_groups_on_play_id"
   end
 
+  create_table "character_groups_stage_directions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "character_group_id", null: false
+    t.bigint "stage_direction_id", null: false
+    t.index ["character_group_id", "stage_direction_id"], name: "index_character_groups_stage_directions"
+  end
+
   create_table "characters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "age"
@@ -95,6 +101,12 @@ ActiveRecord::Schema.define(version: 2019_12_30_034236) do
   create_table "characters_entrance_exits", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.bigint "character_id", null: false
     t.bigint "entrance_exit_id", null: false
+  end
+
+  create_table "characters_stage_directions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "character_id", null: false
+    t.bigint "stage_direction_id", null: false
+    t.index ["character_id", "stage_direction_id"], name: "index_characters_stage_directions"
   end
 
   create_table "entrance_exits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -226,6 +238,7 @@ ActiveRecord::Schema.define(version: 2019_12_30_034236) do
     t.text "notes"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "content"
     t.index ["french_scene_id"], name: "index_sound_cues_on_french_scene_id"
   end
 
@@ -257,6 +270,17 @@ ActiveRecord::Schema.define(version: 2019_12_30_034236) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "stage_directions", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "french_scene_id", null: false
+    t.string "number"
+    t.string "kind"
+    t.string "xml_id"
+    t.string "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["french_scene_id"], name: "index_stage_directions_on_french_scene_id"
   end
 
   create_table "stage_exits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -341,6 +365,7 @@ ActiveRecord::Schema.define(version: 2019_12_30_034236) do
   add_foreign_key "sound_cues", "french_scenes"
   add_foreign_key "space_agreements", "spaces"
   add_foreign_key "space_agreements", "theaters"
+  add_foreign_key "stage_directions", "french_scenes"
   add_foreign_key "stage_exits", "productions"
   add_foreign_key "words", "lines"
 end

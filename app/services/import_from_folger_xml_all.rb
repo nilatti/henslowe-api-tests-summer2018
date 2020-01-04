@@ -1,5 +1,6 @@
 class ImportFromFolgerXmlAll
   attr_accessor :current_act,
+    :current_character,
     :current_french_scene,
     :current_line,
     :current_scene,
@@ -18,18 +19,9 @@ class ImportFromFolgerXmlAll
   end
 
   def build_acts(play:, parsed_xml: @parsed_xml)
-    puts "called"
     @parsed_xml.xpath('//div1').each do |act|
-      puts "called to build act"
       if act.attr('type') === 'act'
-        puts "called to build a definite act"
-        heading = ''
-        act_header = act.at_xpath('head')
-        act_header.children.map(&:text).each do |piece|
-          piece.chomp!
-          heading += piece
-        end
-        "here's the heading even #{heading}"
+        heading = build_header(item: act.at_xpath('head'))
         @current_act = Act.create(
           heading: heading,
           number: act.attr('n'),
@@ -41,8 +33,8 @@ class ImportFromFolgerXmlAll
         build_scene(@current_act, act)
       end
     end
+    return @current_act
   end
-
 
   def build_character(character:, play:)
     if character.attr('corresp')
@@ -82,22 +74,16 @@ class ImportFromFolgerXmlAll
     )
   end
 
-  def build_label(french_scene:, item:)
-    content = ''
-    item.children.each do |child|
-      child.chomp!
-      content += child
+  def build_header(item:)
+    heading = ''
+    item.children.map(&:text).each do |piece|
+      piece.chomp!
+      heading += piece
     end
-    Label.create(
-      content: content,
-      french_scene: french_scene,
-      line_number: item.attr('n'),
-      xml_id: item.attr('xml:id')
-    )
+    return heading
   end
 
   def build_line(character:, line:, french_scene:)
-    puts "build line called #{line}"
     @current_line = Line.create(
       ana: line.attr('ana'),
       character_id: character.id,
@@ -107,13 +93,6 @@ class ImportFromFolgerXmlAll
       kind: 'line',
       xml_id: line.attr('xml:id'),
     )
-    corresp_arr = line.attr('corresp').to_s.split(' ')
-    corresp_arr.each do |corresp|
-      corresp.sub!('#', '')
-      xml_word = @parsed_xml.at_xpath("//*[@xml:id=\"#{corresp}\"]")
-      build_word(line: @current_line, word: xml_word)
-    end
-    puts "line built #{@current_line.id} #{@current_line.ana}"
     return @current_line
   end
 
@@ -130,98 +109,67 @@ class ImportFromFolgerXmlAll
   def build_scene(act:, scene:)
     if scene.attr('type') === 'scene'
       scene_number = scene.attr('n')
-      heading = ''
-      scene_header = scene.at_xpath('head')
-      scene_header.children.map(&:text).each do |piece|
-        piece.chomp!
-        heading += piece
-      end
+      heading = build_header(item: scene.at_xpath('head'))
       @current_scene = Scene.create(
         act: act,
         heading: heading,
         number: scene_number
       )
       build_french_scene(french_scene_number: 'a', scene: @current_scene)
-      scene.children.each do |item|
-        # get if first build new french scene. Maybe pass is first child/is last child
-        if item.matches?('stage')
-          if scene.children.index(item) != scene.children.size && (item.attr('type') === 'entrance' || item.attr('type') === 'exit')
-            build_french_scene(french_scene_number: @current_french_scene.number.next, scene: @current_scene)
-          end
-          build_stage_direction(line: item, french_scene: @current_french_scene)
-        elsif item.matches?('sp')
-          build_speech(french_scene: @current_french_scene, item: item)
-        elsif item.matches?('sound')
-          build_sound_cue(french_scene: @current_french_scene, item: item)
-        elsif item.matches?('label')
-          build_label(french_scene: @current_french_scene, item: item)
+      stage_directions = [] #need to grab all stage directions so that we don't make extra french scenes. The scene autocreates the first french scene and we don't want one made from the final exit.
+      scene.traverse do |node|
+        if node.matches?('stage')
+          stage_directions << node
         end
       end
+      scene.children.select(&:element?).each do |item|
+        if item.matches?('stage')
+          if (item != stage_directions.first && item != stage_directions.last) && (item.attr('type') === 'entrance' || item.attr('type') === 'exit') #if it's not the first or last entrance or exit, let's make a french scene!
+            build_french_scene(french_scene_number: @current_french_scene.number.next, scene: @current_scene)
+          end
+        end
+        process_item(item)
+      end
+      return @current_scene
     end
   end
-  #
-  # def build_sound_cue(french_scene:, item:)
-  #   SoundCue.create(
-  #     french_scene: french_scene,
-  #     line_number: item.attr('n'),
-  #     notes: item.attr('ana'),
-  #     kind: item.attr('type'),
-  #     xml_id: item.attr('xml:id')
-  #   )
-  # end
-  # def build_speech(french_scene:, item:)
-  #   item = @parsed_xml.xpath('//sp').first
-  #   character = ''
-  #   if item.attr('who')
-  #     xml_string = item.attr('who').sub('#','')
-  #     character = Character.find_by(xml_id: xml_string)
-  #     puts "character is"
-  #   end
-  #   item.xpath('//stage').each {|stage_direction| build_stage_direction(line: stage_direction, french_scene: @current_french_scene)}
-  #
-  #   speech_text = item.xpath('ab')
-  #   speech_text.each do |text|
-  #     if text.matches?('seg') do |segment|
-  #       segment.children.each do |text|
-  #         if text.matches('milestone') && text.attr('unit') === 'ftln'
-  #           handle_milestone(character: character, milestone: text)
-  #         elsif text.matches?('seg') do |segment|
-  #           if text.matches('milestone') && text.attr('unit') === 'ftln'
-  #             handle_milestone(character: character, milestone: text)
-  #           else
-  #             puts "couldn't match this one #{text.attr('xml:id')}"
-  #           end
-  #         end
-  #       end
-  #     end
-  #     if text.matches?('milestone') && text.attr('unit') === 'ftln'
-  #       handle_milestone(character: character, milestone: text)
-  #     elsif text.matches?('w') || text.matches?('pc') || text.matches?('c')
-  #       build_word(line: @current_line, word: text)
-  #     elsif text.matches?('q') || text.matches?('foreign')
-  #       text.children.each do |quoted|
-  #         if quoted.matches?('w') || quoted.matches?('pc') || quoted.matches?('c')
-  #           build_word(line: @current_line, word: text)
-  #         end
-  #       end
-  #     end
-  #   end
-  # end
-  #
-  def build_stage_direction(line:, french_scene:)
-    character = Character.find_by(xml_id: line.attr('who'))
-    @current_line = Line.create(
-      character: character,
+
+  def build_sound_cue(french_scene:, item:)
+    content = extract_content(item: item)
+    SoundCue.create(
+      content: content,
       french_scene: french_scene,
-      number: line.attr('n'),
-      kind: line.attr('type'),
-      xml_id: line.attr('xml:id')
+      line_number: item.attr('n'),
+      notes: item.attr('ana'),
+      kind: item.attr('type'),
+      xml_id: item.attr('xml:id')
     )
-    line.children.each {|word| build_word(line: @current_line, word: word)}
   end
 
-  def build_word(line:, word:)
-    puts "building word #{word}"
+  def build_speech(french_scene:, item:)
+    if item.attr('who')
+      xml_string = item.attr('who').sub('#','')
+      @current_character = Character.find_by(xml_id: xml_string)
+    end
+  end
+
+  def build_stage_direction(item:, french_scene:)
+    character_parser = extract_characters_from_xml_id_string(xml_ids: item.attr('who')) #should return an array, first item is characters, second is character groups
+    characters = character_parser[0]
+    character_groups = character_parser[1]
+    content = extract_content(item: item)
+    StageDirection.create(
+      characters: characters,
+      character_groups: character_groups,
+      content: content,
+      french_scene: french_scene,
+      number: item.attr('n'),
+      kind: item.attr('type'),
+      xml_id: item.attr('xml:id')
+    )
+  end
+
+  def build_word(word:)
     kind = ''
     if word.matches?('w')
       kind = 'word'
@@ -233,18 +181,85 @@ class ImportFromFolgerXmlAll
 
     Word.create(
       content: word.text,
-      line_id: line.id,
       line_number: word.attr('n'),
       kind: kind,
       xml_id: word.attr('xml:id')
     )
   end
-  #
-  # def handle_milestone(character:, milestone:)
-  #   if milestone.attr('rend') === 'turnunder'
-  #     @current_line.corresp += milestone.attr('corresp')
-  #   else
-  #     build_line(character, milestone, @current_french_scene)
-  #   end
-  # end
+
+  def determine_type_of_item(french_scene:, item:)
+    if item.matches?('sp')
+      build_speech(french_scene: @current_french_scene, item: item)
+    elsif item.matches?('stage')
+      build_stage_direction(french_scene: @current_french_scene, item: item)
+    elsif item.matches?('sound')
+      build_sound_cue(french_scene: @current_french_scene, item: item)
+    elsif item.matches?('head')
+      build_header(item: item)
+  elsif item.matches?('milestone') && (item.attr('unit') === 'ftln' || item.attr('unit') === 'line')
+      build_line(character: @current_character, french_scene: @current_french_scene, line: item)
+    elsif item.matches?('w') || item.matches?('c') || item.matches?('pc') || item.matches?('speaker')
+      build_word(word: item)
+    elsif item.matches?('lb') || item.matches?('q') || item.matches?('foreign') || item.matches?('ab') || item.matches?('seg')||item.matches?('label') #all junk we don't need to track, just get the children.
+    else
+      puts "couldn't match item #{item}"
+    end
+  end
+
+  def extract_characters_from_xml_id_string(xml_ids:)
+    characters = []
+    character_groups = []
+    xml_id_arr = xml_ids.to_s.split(' ')
+    xml_id_arr.each do |xml_id|
+      xml_id.sub!('#', '')
+      character = Character.find_by(xml_id: xml_id)
+      if character
+        characters << character
+      else
+        character_group = CharacterGroup.find_by(xml_id: xml_id)
+        if character_group
+          character_groups << character_group
+        else
+          puts "Couldn't find character #{xml_id}"
+        end
+      end
+    end
+    character_parser = [characters, character_groups]
+    return character_parser
+  end
+
+  def extract_content(item:)
+    content = ''
+    item.children.each do |child|
+      if child.matches?('w') || child.matches?('pc') || child.matches?('c')
+        content += child.text
+      end
+    end
+    content
+  end
+
+  def extract_items_from_corresp(corresp)
+    corresp_arr = corresp.to_s.split(' ')
+    corresp_arr.each do |corresp|
+      corresp.sub!('#', '')
+      xml_word = @parsed_xml.at_xpath("//*[@xml:id=\"#{corresp}\"]")
+    end
+  end
+
+  def process_item(item)
+    determine_type_of_item(french_scene: @current_french_scene, item: item)
+    if verify_no_more_children(item)
+      return
+    else
+      item.children.select(&:element?).each {|child| process_item(child)}
+    end
+  end
+
+  def verify_no_more_children(item)
+    if item.children.select(&:element?).size == 0
+      return true
+    else
+      return false
+    end
+  end
 end

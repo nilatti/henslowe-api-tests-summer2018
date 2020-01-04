@@ -323,6 +323,8 @@
 <pc xml:id="p0031170" n="1.2.3">?</pc>
 <lb xml:id="lb-01730"/>
 <lb xml:id="lb-04600"/>
+</ab>
+</sp>
 <sp xml:id="sp-0265" who="#Celia_AYL">
 <speaker xml:id="spk-0265">
 <w xml:id="w0045910">CELIA</w>
@@ -528,13 +530,18 @@
 <w xml:id="w0153760" n="2.5.56">that</w>
 <c xml:id="c0153770" n="2.5.56"> </c>
 <q xml:id="q-0016">
-<w xml:id="w0153780" n="2.5.56">ducdame</w>
+  <w xml:id="w0153780" n="2.5.56">ducdame</w>
 </q>
 <pc xml:id="p0153790" n="2.5.56">?</pc>
 </ab>
 </sp>
+<stage xml:id="stg-2862.1" n="SD EPI.22.1" type="exit" who="#Rosalind_AYL">
+<w xml:id="w0469000" n="SD EPI.22.1">She</w>
+<c xml:id="c0469010" n="SD EPI.22.1"> </c>
+<w xml:id="w0469020" n="SD EPI.22.1">exits</w>
+<pc xml:id="p0469030" n="SD EPI.22.1">.</pc>
+</stage>
 </div2>
-
 </div1>
 <lb xml:id="lb-06051"/>
 <milestone unit="page" xml:id="ms-045" n="45" />
@@ -645,9 +652,9 @@
 <w xml:id="w0101880" n="2.1.3">woods</w>
 <lb xml:id="lb-06080"/>
 <c xml:id="c0464280" n="SD 5.4.208.1"> </c>
-</div2>
-</div1>
-<stage xml:id="stg-2840.1b" n="SD 5.4.208.1" type="exit" who="#DukeSenior_AYL #Celia_AYL #Orlando_AYL #Oliver_AYL #SecondBrother_AYL #Touchstone_AYL #Audrey_AYL #Silvius_AYL #Phoebe_AYL #LORDS.SENIOR.Amiens_AYL #Hymen_AYL">
+</ab>
+</sp>
+<stage xml:id="stg-2840.1b" n="SD 5.4.208.1" type="exit" who="#DukeSenior_AYL #Celia_AYL #Orlando_AYL #Oliver_AYL #LORDS.SENIOR.Amiens_AYL">
 <w xml:id="w0464290" n="SD 5.4.208.1">All</w>
 <c xml:id="c0464300" n="SD 5.4.208.1"> </c>
 <w xml:id="w0464310" n="SD 5.4.208.1">but</w>
@@ -656,13 +663,14 @@
 <c xml:id="c0464340" n="SD 5.4.208.1"> </c>
 <w xml:id="w0464350" n="SD 5.4.208.1">exit</w>
 <pc xml:id="p0464360" n="SD 5.4.208.1">.</pc>
+</stage>
 <stage xml:id="stg-2840.1" n="SD 5.4.208.1" type="mixed">
 <stage xml:id="stg-2840.1a" n="SD 5.4.208.1" type="business">
 <w xml:id="w0464260" n="SD 5.4.208.1">Dance</w>
 <pc xml:id="p0464270" n="SD 5.4.208.1">.</pc>
 </stage>
 <c xml:id="c0464280" n="SD 5.4.208.1"> </c>
-<stage xml:id="stg-2840.1b" n="SD 5.4.208.1" type="exit" who="#DukeSenior_AYL #Celia_AYL #Orlando_AYL #Oliver_AYL #SecondBrother_AYL #Touchstone_AYL #Audrey_AYL #Silvius_AYL #Phoebe_AYL #LORDS.SENIOR.Amiens_AYL #Hymen_AYL">
+<stage xml:id="stg-2840.1b" n="SD 5.4.208.1" type="exit" who="#DukeSenior_AYL #Celia_AYL #Orlando_AYL #Oliver_AYL #LORDS.SENIOR.Amiens_AYL">
 <w xml:id="w0464290" n="SD 5.4.208.1">All</w>
 <c xml:id="c0464300" n="SD 5.4.208.1"> </c>
 <w xml:id="w0464310" n="SD 5.4.208.1">but</w>
@@ -739,9 +747,9 @@
 <c xml:id="c0469010" n="SD EPI.22.1"> </c>
 <w xml:id="w0469020" n="SD EPI.22.1">exits</w>
 <pc xml:id="p0469030" n="SD EPI.22.1">.</pc>
-</stage></div2></div1>
-<lb xml:id="lb-28621"/>
-<milestone unit="page" xml:id="ms-205" n="205" />
+</stage>
+</div2>
+</div1>
 </body>
 </text>
 </root>
