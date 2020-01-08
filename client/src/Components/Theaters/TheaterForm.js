@@ -14,15 +14,15 @@ class TheaterForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      city: this.props.city || '',
-      mission_statement: this.props.mission_statement || '',
-      name: this.props.name || '',
-      phone_number: this.props.phone_number || '',
-      state: this.props.state || '',
-      street_address: this.props.street_address || '',
+      city: this.props.theater.city || '',
+      mission_statement: this.props.theater.mission_statement || '',
+      name: this.props.theater.name || '',
+      phone_number: this.props.theater.phone_number || '',
+      state: this.props.theater.state || '',
+      street_address: this.props.theater.street_address || '',
       validated: false,
-      website: this.props.website || '',
-      zip: this.props.zip || '',
+      website: this.props.theater.website || '',
+      zip: this.props.theater.zip || '',
     }
   }
 
@@ -48,7 +48,7 @@ class TheaterForm extends Component {
   processSubmit = () => {
     this.props.onFormSubmit({
       city: this.state.city,
-      id: this.props.id,
+      id: this.props.theater.id,
       mission_statement: this.state.mission_statement,
       name: this.state.name,
       phone_number: this.state.phone_number,

@@ -13,6 +13,11 @@
 <profileDesc>
 <particDesc>
 <listPerson>
+<person xml:id="Adam_AYL">
+<persName><name>Adam</name></persName>
+<state><p>Old guy</p></state>
+<sex value="1">male</sex>
+</person>
 <person xml:id="Orlando_AYL">
 <persName><name>Orlando</name></persName>
 <state><p>youngest son of Sir Rowland de Boys</p></state>
@@ -32,11 +37,33 @@
 </person>
 </listPerson>
 <listPerson>
+<person xml:id="Celia_AYL">
+<persName><name>Celia</name></persName>
+<state><p>daughter to Duke Frederick</p></state>
+<sex value="2">female</sex>
+</person>
+</listPerson>
+<listPerson>
 <person xml:id="DukeFrederick_AYL">
 <persName><name>Duke Frederick</name></persName>
 <state><p>the usurping duke</p></state>
 <sex value="1">male</sex>
 </person>
+</listPerson>
+<listPerson>
+<person xml:id="Charles_AYL">
+<persName><name>Charles</name></persName>
+<state><p>the wrestler</p></state>
+<sex value="1">male</sex>
+</person>
+</listPerson>
+<listPerson>
+<person xml:id="DukeSenior_AYL">
+<persName><name>Duke Senior</name></persName>
+<state><p>the duke</p></state>
+<sex value="1">male</sex>
+</person>
+</listPerson>
 <listPerson>
 <head>attending Duke Frederick</head>
 <person xml:id="LORDS.FREDERICK.0.1_AYL" corresp="#LORDS.FREDERICK_AYL">
@@ -48,6 +75,11 @@
 <sex value="1">male</sex>
 </person>
 </listPerson>
+<listPerson>
+<person xml:id="LORDS.SENIOR.Amiens_AYL" corresp="#LORDS.SENIOR_AYL">
+<persName><name>Amiens</name></persName>
+<sex value="1">male</sex>
+</person>
 </listPerson>
 <listPerson>
 <head>Lords, Attendants, Musicians</head>

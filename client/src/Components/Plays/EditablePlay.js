@@ -494,7 +494,7 @@ interpolateNewAct = (newAct, workingPlay) => {
 
 interpolateNewEntranceExit = (newEntranceExit, workingFrenchScene) => {
   let workingEntranceExits = workingFrenchScene.entrance_exits.map((entranceExit) => {
-    if (entranceExit.id == newEntranceExit.id) {
+    if (entranceExit.id === newEntranceExit.id) {
       return newEntranceExit
     } else {
       return entranceExit
@@ -508,7 +508,7 @@ interpolateNewEntranceExit = (newEntranceExit, workingFrenchScene) => {
 
 interpolateNewFrenchScene = (newFrenchScene, workingScene) => {
   let workingFrenchScenes = workingScene.french_scenes.map((frenchScene) => {
-    if (frenchScene.id == newFrenchScene.id) {
+    if (frenchScene.id === newFrenchScene.id) {
       return newFrenchScene
     } else {
       return frenchScene
@@ -522,7 +522,7 @@ interpolateNewFrenchScene = (newFrenchScene, workingScene) => {
 
 interpolateNewOnStage = (newOnStage, workingFrenchScene) => {
   let workingOnStages = workingFrenchScene.on_stages.map((onStage) => {
-    if (onStage.id == newOnStage.id) {
+    if (onStage.id === newOnStage.id) {
       return newOnStage
     } else {
       return onStage

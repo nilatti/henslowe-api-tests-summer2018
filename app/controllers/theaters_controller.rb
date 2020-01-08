@@ -29,7 +29,7 @@ class TheatersController < ApiController
   # PATCH/PUT /theaters/1
   def update
     @theater.update(theater_params)
-    json_response(@theater.as_json(include: [:spaces]))
+    json_response(@theater.as_json(include: [:spaces, productions: {include: [:play]}]))
   end
 
   # DELETE /theaters/1

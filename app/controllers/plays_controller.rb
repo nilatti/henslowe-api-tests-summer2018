@@ -15,19 +15,22 @@ class PlaysController < ApiController
     @play = Play.includes(
       :author,
       :characters,
+      :character_groups,
         [
           acts: [
             scenes: [
               french_scenes:
                 [
                   :characters,
+                  :character_groups,
                   entrance_exits:
                   [
                     :stage_exit,
-                    :characters
+                    :characters,
+                    :character_groups
                   ],
                   on_stages: [
-                    :character
+                    :character, :character_group
                   ]
                 ]
               ]
@@ -38,6 +41,7 @@ class PlaysController < ApiController
       [
         :author,
         :characters,
+        :character_groups,
         acts: {
           include: {
             scenes: {
@@ -45,14 +49,16 @@ class PlaysController < ApiController
                 french_scenes: {
                   include: [
                     :characters,
+                    :character_groups,
                     entrance_exits: {
                       include: [
                           :stage_exit,
                           :characters,
+                          :character_groups,
                         ]
                     },
                     on_stages: {
-                      include: :character
+                      include: [:character, :character_group]
                     }
                   ]
                 }
@@ -78,13 +84,71 @@ class PlaysController < ApiController
   # PATCH/PUT /plays/1
   def update
     @play.update(play_params)
-    json_response(@play.as_json(include: %i[author acts characters]))
+    render json: @play.as_json(include:
+      [
+        :author,
+        :characters,
+        :character_groups,
+        acts: {
+          include: {
+            scenes: {
+              include: {
+                french_scenes: {
+                  include: [
+                    :characters,
+                    :character_groups,
+                    entrance_exits: {
+                      include: [
+                          :stage_exit,
+                          :characters,
+                          :character_groups,
+                        ]
+                    },
+                    on_stages: {
+                      include: [:character, :character_group]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+        ]
+      )
   end
 
   # DELETE /plays/1
   def destroy
     @play.destroy
     head :no_content
+  end
+
+  def play_script
+    @play = Play.find(params[:play])
+
+    render json: @play.as_json(include:
+      [
+        :author,
+        :characters,
+        :character_groups,
+        acts: {
+          include: {
+            scenes: {
+              include: {
+                french_scenes: {
+                  include: [
+                    :characters,
+                    :character_groups,
+                    :lines,
+                    :sound_cues
+                  ]
+                }
+              }
+            }
+          }
+        }
+        ]
+      )
   end
 
   def play_titles

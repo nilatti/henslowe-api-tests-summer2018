@@ -42,6 +42,14 @@ async function getPlay(playId) {
   return API.request(`plays/${playId}`)
 }
 
+async function getPlayScript(playId) {
+  return API.request(`plays/play_script`, {
+    params: {
+      play: playId
+    }
+  })
+}
+
 async function getPlayTitles() {
   return API.request(`plays/play_titles`)
 }
@@ -65,6 +73,7 @@ export {
   getActs,
   getCharacters,
   getPlay,
+  getPlayScript,
   getPlayTitles,
   getPlays,
   updateServerPlay

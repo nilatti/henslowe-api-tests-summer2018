@@ -2,8 +2,9 @@ class Character < ApplicationRecord
   belongs_to :play
   belongs_to :job, optional: :true
   belongs_to :character_group, optional: :true
-  has_many :on_stages
+  has_many :on_stages, dependent: :destroy
   has_many :french_scenes, through: :on_stages
+  has_many :lines, dependent: :destroy
   has_and_belongs_to_many :entrance_exits
   has_and_belongs_to_many :stage_directions
   default_scope { order('name ASC') }
