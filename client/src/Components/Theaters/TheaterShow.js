@@ -39,8 +39,8 @@ class TheaterShow extends Component {
     if (this.props.theater.spaces[0]) {
       spaceTabs = this.props.theater.spaces.map((space) =>
         <Tab eventKey={`space-${space.id}`} title={space.name} key={`space-${space.id}`}>
-        <SpaceInfoTab space={space} />
-      </Tab>
+          <SpaceInfoTab space={space} />
+        </Tab>
       )
     } else {
       spaceTabs = <div>No spaces found</div>
@@ -48,7 +48,7 @@ class TheaterShow extends Component {
 
     let productionTabs
     if (this.props.theater.productions[0]) {
-      spaceTabs = this.props.theater.productions.map((production) =>
+      productionTabs = this.props.theater.productions.map((production) =>
         <Tab eventKey={`production-${production.id}`} title={production.play ? production.play.title : 'A Play'} key={`production-${production.id}`}>
         <ProductionInfoTab production={production} />
       </Tab>
@@ -58,30 +58,30 @@ class TheaterShow extends Component {
     }
     return (
       <Col md={12}>
-      <Row>
-        <Col md={12} className="theater-profile">
-          <h2>{this.props.theater.name}</h2>
-          <p><em>{this.props.theater.mission_statement}</em></p>
-          <p>
-          {this.props.theater.street_address}<br />
-          {this.props.theater.city}, {this.props.theater.state}  {this.props.theater.zip}<br />
-          {this.props.theater.phone_number}<br />
-          <a href={'http://' + this.props.theater.website} target="_blank">{this.props.theater.website}</a>
-          </p>
-          <span
-            className='right floated edit icon'
-            onClick={this.props.onEditClick}
-          >
-            <i className="fas fa-pencil-alt"></i>
-          </span>
-          <span
-            className='right floated trash icon'
-            onClick={this.handleDeleteClick}
-          >
-            <i className="fas fa-trash-alt"></i>
-          </span>
-        </Col>
-      </Row>
+        <Row>
+          <Col md={12} className="theater-profile">
+            <h2>{this.props.theater.name}</h2>
+            <p><em>{this.props.theater.mission_statement}</em></p>
+            <p>
+            {this.props.theater.street_address}<br />
+            {this.props.theater.city}, {this.props.theater.state}  {this.props.theater.zip}<br />
+            {this.props.theater.phone_number}<br />
+            <a href={'http://' + this.props.theater.website} target="_blank">{this.props.theater.website}</a>
+            </p>
+            <span
+              className='right floated edit icon'
+              onClick={this.props.onEditClick}
+            >
+              <i className="fas fa-pencil-alt"></i>
+            </span>
+            <span
+              className='right floated trash icon'
+              onClick={this.handleDeleteClick}
+            >
+              <i className="fas fa-trash-alt"></i>
+            </span>
+          </Col>
+        </Row>
       <hr />
       <Row>
         <h2>Spaces</h2>
@@ -89,8 +89,7 @@ class TheaterShow extends Component {
       <Row>
         <SpaceAgreementFormForTheatersToggle theater={this.props.theater} isOpen={false} onFormSubmit={this.props.onFormSubmit} />
       </Row>
-
-          <Tabs
+        <Tabs
           activeKey={this.state.key}
           onSelect={this.handleSelect}
           id="space-info-tabs"

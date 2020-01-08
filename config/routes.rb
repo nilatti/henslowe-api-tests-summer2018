@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     resources :plays do
       collection do
         get :play_titles
+        get :play_script
       end
       resources :acts do
         resources :scenes

@@ -96,7 +96,6 @@ class FrenchSceneShow extends Component {
           : <span></span>
 
         }
-
       </div>
     )
   }

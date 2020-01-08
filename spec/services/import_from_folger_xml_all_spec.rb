@@ -26,18 +26,18 @@ describe ImportFromFolgerXmlAll do
 
   it 'builds acts' do
     act = @import.build_acts(play: @play, parsed_xml: @xml)
-    expect(act.number).to eq(2)
-    expect(act.heading).to eq('ACT 2')
+    expect(act.number).to eq(6)
+    expect(act.heading).to eq('EPILOGUE')
   end
 
   it 'builds a character' do
     character = @xml.xpath('//person').first
     test_character = @import.build_character(character: character, play: @play)
-    expect(test_character.play).to be(@play)
-    expect(test_character.description).to include('youngest son of Sir Rowland de Boys')
+    expect(test_character.play).to eq(@play)
+    expect(test_character.description).to include('Old guy')
     expect(test_character.gender).to eq('male')
-    expect(test_character.name).to eq('Orlando')
-    expect(test_character.xml_id).to eq('Orlando_AYL')
+    expect(test_character.name).to eq('Adam')
+    expect(test_character.xml_id).to eq('Adam_AYL')
   end
   it 'builds a character group' do
     character_group = @xml.xpath('//personGrp')[2]
@@ -53,7 +53,7 @@ describe ImportFromFolgerXmlAll do
     test_character_group = @import.build_character_group(character_group: character_group, play: @play)
     character = @xml.at_xpath('//person[@xml:id="LORDS.FREDERICK.0.2_AYL"]')
     test_character = @import.build_character(character: character, play: @play)
-    expect(test_character.play).to be(@play)
+    expect(test_character.play).to eq(@play)
     expect(test_character.gender).to eq('male')
     expect(test_character.name).to eq('Second Lord')
     expect(test_character.xml_id).to eq('LORDS.FREDERICK.0.2_AYL')
@@ -62,17 +62,13 @@ describe ImportFromFolgerXmlAll do
   end
 
   it 'builds all the characters for the play' do
-    old_character_groups = CharacterGroup.all.size
-    old_characters = Character.all.size
     @import.build_characters(play: @play)
-    new_character_groups = CharacterGroup.all.size
-    new_characters = Character.all.size
-    expect(old_character_groups + 3).to eq(new_character_groups)
-    expect(old_characters + 6).to eq(new_characters)
+    expect(Character.all.map(&:xml_id)).to include('Rosalind_AYL')
+    expect(CharacterGroup.all.map(&:xml_id)).to include('ATTENDANTS_AYL')
   end
 
   it 'builds a french scene' do
-    scene = create(:scene)
+    scene = build(:scene)
     test_french_scene = @import.build_french_scene(french_scene_number: 'b', scene: scene)
     expect(test_french_scene.number).to eq('b')
     expect(test_french_scene.scene).to eq(scene)
@@ -91,6 +87,17 @@ describe ImportFromFolgerXmlAll do
     expect(test_line.french_scene).to eq(french_scene)
   end
 
+  it 'builds onstages' do
+    french_scene = create(:french_scene)
+    characters = [Character.all.to_a, CharacterGroup.all.to_a]
+    character_count = Character.all.size + CharacterGroup.all.size
+    old_on_stages = OnStage.all.size
+    puts "target number = #{character_count + old_on_stages}"
+    new_on_stages = @import.build_on_stages(french_scene: french_scene, characters: characters)
+
+    expect(character_count + old_on_stages).to eq(new_on_stages.size)
+  end
+
   it 'builds a play' do
     old_number_of_plays = Play.all.size
     @import.build_play
@@ -103,7 +110,7 @@ describe ImportFromFolgerXmlAll do
   end
 
   it 'builds a scene' do
-    act = create(:act)
+    act = build(:act)
     scene = @xml.xpath('//div2')[1]
     test_scene = @import.build_scene(act: act, scene: scene)
     expect(test_scene.act_id).to eq(act.id)
@@ -142,7 +149,7 @@ describe ImportFromFolgerXmlAll do
   end
 
   it 'builds a word' do
-    line = create(:line)
+    line = build(:line)
     word = @xml.at_xpath('//w[@xml:id="w0153740"]')
     space = @xml.at_xpath('//c[@xml:id="c0153750"]')
     punctuation = @xml.at_xpath('//pc[@xml:id="p0153790"]')
@@ -158,6 +165,41 @@ describe ImportFromFolgerXmlAll do
     expect(test_punctuation.kind).to eq('punctuation')
     expect(test_punctuation.content).to eq("?")
     expect(test_punctuation.line_number).to eq('2.5.56')
+  end
+
+  it 'connects lines to words' do
+    act = create(:act, play: @play)
+    scene = create(:scene, act: act)
+    french_scene = create(:french_scene, scene: scene)
+    french_scene.lines << create(:line, corresp: "#w0000700 #c0000710 #w0000720 #c0000730 #w0000740 #c0000750 #w0000760 #c0000770 #w0000780 #c0000790 #w0000800 #p0000810 #c0000820 #w0000830 #c0000840 #w0000850 #c0000860 #w0000870 #c0000880 #w0000890")
+    word01 = create(:word, xml_id: "w0000700")
+    @play.words << word01
+    @play.words << create(:word, xml_id: "c0000710")
+    @play.words << create(:word, xml_id: "w0000720")
+    @play.words << create(:word, xml_id: "c0000730")
+    @play.words << create(:word, xml_id: "w0000740")
+    @play.words << create(:word, xml_id: "c0000750")
+    @play.words << create(:word, xml_id: "w0000760")
+    @play.words << create(:word, xml_id: "c0000770")
+    @play.words << create(:word, xml_id: "w0000780")
+    @play.words << create(:word, xml_id: "c0000790")
+    @play.words << create(:word, xml_id: "w0000800")
+    @play.words << create(:word, xml_id: "p0000810")
+    @play.words << create(:word, xml_id: "c0000820")
+    @play.words << create(:word, xml_id: "w0000830")
+    @play.words << create(:word, xml_id: "c0000840")
+    @play.words << create(:word, xml_id: "w0000850")
+    @play.words << create(:word, xml_id: "c0000860")
+    @play.words << create(:word, xml_id: "w0000870")
+    @play.words << create(:word, xml_id: "c0000880")
+    word20 = create(:word, xml_id: "w0000890")
+    @play.words << word20
+    @import.connect_lines_to_words(play: @play)
+    expect(@play.lines.first.words.size).to eq(20)
+    expect(@play.lines.first.words.first).to eq(word01)
+    expect(@play.lines.first.words.last).to eq(word20)
+    expect(Word.find(word01.id).line_id).to eq(@play.lines.first.id)
+    expect(Word.find(word20.id).line_id).to eq(@play.lines.first.id)
   end
 
   it 'determines the type of item' do
@@ -193,10 +235,22 @@ describe ImportFromFolgerXmlAll do
     expect(@import.verify_no_more_children(has_children)).to be false
   end
 
+  it 'tracks who is onstage' do
+    french_scene = create(:french_scene)
+    stage_direction = @xml.at_xpath('//stage[@xml:id="stg-0025.1"]')
+    @import.current_characters_onstage = []
+    @import.track_onstage_characters(french_scene: french_scene, stage_direction: stage_direction)
+    expect(@import.current_characters_onstage.size).to eq(1)
+    expect(@import.current_characters_onstage.first.xml_id).to eq('Oliver_AYL')
+    stage_direction = @xml.at_xpath('//stage[@xml:id="stg-0170.1"]')
+    @import.track_onstage_characters(french_scene: french_scene, stage_direction: stage_direction)
+    expect(@import.current_characters_onstage.size).to eq(0)
+  end
+
   it "builds speeches and lines for a scene" do
     speeches = @xml.xpath('//sp')
     scene = @xml.xpath('//div1[@n="1"]/div2')[1]
-    act = create(:act)
+    act = build(:act)
     test_scene = @import.build_scene(act: act, scene: scene)
     expect(test_scene.french_scenes.size).to eq(3)
   end

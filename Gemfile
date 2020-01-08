@@ -26,6 +26,8 @@ gem 'devise-jwt'
 gem 'sidekiq'
 gem 'activeadmin'
 
+gem 'activerecord-import'
+
 # Use Capistrano for deployment
 gem 'capistrano-rails', group: :development
 

@@ -48,6 +48,6 @@ class WordsController < ApiController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def word_params
-      params.require(:word).permit(:type, :content, :xml_id, :line_id, :line_number)
+      params.require(:word).permit(:type, :content, :xml_id, :line_id, :line_number, :play_id)
     end
 end

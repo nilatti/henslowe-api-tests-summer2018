@@ -45,11 +45,24 @@ class OnStageShow extends Component {
 
   render() {
     let character = _.find(this.props.play.characters, {'id': this.props.onStage.character_id})
+    let character_group = _.find(this.props.play.character_groups, {'id': this.props.onStage.character_group_id})
+    if (character) {
+    } else if(character_group){
+    } else {
+      console.log(this.props.play)
+      console.log('can not find character or group', this.props.onStage.character_id, this.props.onStage)
+    }
     let onStage = this.props.onStage.nonspeaking
     return (
 
       <div>
-      {character.name} &nbsp;
+      {
+        character
+        ?
+        <span>{character.name}</span>
+        :
+        <span>{character_group.name}</span>
+      }
       {
         this.state.descriptionEditOpen
         ?
@@ -66,7 +79,7 @@ class OnStageShow extends Component {
             value={this.state.description || ''}
           />
         </Form.Group>
-        : <span onClick={() => this.toggleDescriptionEdit()}>{this.props.onStage.description|| 'Click to edit description'}</span>
+        : <span onClick={() => this.toggleDescriptionEdit()}>{this.props.onStage.description|| '  Click to edit description  '}</span>
       }
 
       &nbsp; Nonspeaking role? {this.props.onStage.nonspeaking ? <span onClick={() => this.handleNonspeakingClick(false)}>yes</span> : <span onClick={() => this.handleNonspeakingClick(true)}>no</span>}

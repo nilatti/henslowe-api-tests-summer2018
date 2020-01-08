@@ -17,6 +17,7 @@ class CopyPlayForProduction
     @new_play.original_play_id = @original_play.id
     @new_play.save!
     create_copies_of_each_character(original_play_characters: @original_play.characters, new_play: @new_play)
+    create_copies_of_each_character_group(original_play_character_groups: @original_play.character_groups, new_play: @new_play)
     create_copies_of_each_act(original_play: @original_play, new_play: @new_play)
   end
 
@@ -35,6 +36,14 @@ class CopyPlayForProduction
       new_character = original_character.dup
       new_character.play = new_play
       new_character.save!
+    end
+  end
+
+  def create_copies_of_each_character_group(original_play_character_groups:, new_play:)
+    original_play_character_groups.each do |original_character_group|
+      new_character_group = original_character_group.dup
+      new_character_group.play = new_play
+      new_character_group.save!
     end
   end
 
@@ -62,7 +71,11 @@ class CopyPlayForProduction
     original_on_stages.each do |original_on_stage|
       new_on_stage = original_on_stage.dup
       new_on_stage.french_scene = new_french_scene
-      new_on_stage.character = Character.find_by(name: original_on_stage.character.name, play_id: @new_play.id)
+      if original_on_stage.character
+        new_on_stage.character = Character.find_by(name: original_on_stage.character.name, play_id: @new_play.id)
+      elsif original_on_stage.character_group
+        new_on_stage.character_group = CharacterGroup.find_by(name: original_on_stage.character_group.name, play_id: @new_play.id)
+      end
       new_on_stage.save!
     end
   end

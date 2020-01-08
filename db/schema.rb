@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_04_034806) do
+ActiveRecord::Schema.define(version: 2020_01_06_002024) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -169,7 +169,7 @@ ActiveRecord::Schema.define(version: 2020_01_04_034806) do
   create_table "lines", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "ana"
     t.bigint "character_id", null: false
-    t.string "corresp"
+    t.text "corresp"
     t.bigint "french_scene_id", null: false
     t.string "next"
     t.string "number"
@@ -178,6 +178,8 @@ ActiveRecord::Schema.define(version: 2020_01_04_034806) do
     t.string "xml_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "character_group_id"
+    t.index ["character_group_id"], name: "index_lines_on_character_group_id"
     t.index ["character_id"], name: "index_lines_on_character_id"
     t.index ["french_scene_id"], name: "index_lines_on_french_scene_id"
   end
@@ -191,6 +193,8 @@ ActiveRecord::Schema.define(version: 2020_01_04_034806) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "nonspeaking", default: false
+    t.bigint "character_group_id"
+    t.index ["character_group_id"], name: "index_on_stages_on_character_group_id"
   end
 
   create_table "plays", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -339,11 +343,13 @@ ActiveRecord::Schema.define(version: 2020_01_04_034806) do
     t.string "kind"
     t.string "content"
     t.string "xml_id"
-    t.bigint "line_id", null: false
+    t.bigint "line_id"
     t.string "line_number"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "play_id", null: false
     t.index ["line_id"], name: "index_words_on_line_id"
+    t.index ["play_id"], name: "index_words_on_play_id"
   end
 
   add_foreign_key "acts", "plays"
@@ -358,8 +364,10 @@ ActiveRecord::Schema.define(version: 2020_01_04_034806) do
   add_foreign_key "jobs", "theaters"
   add_foreign_key "jobs", "users"
   add_foreign_key "labels", "french_scenes"
+  add_foreign_key "lines", "character_groups"
   add_foreign_key "lines", "characters"
   add_foreign_key "lines", "french_scenes"
+  add_foreign_key "on_stages", "character_groups"
   add_foreign_key "plays", "authors"
   add_foreign_key "productions", "theaters"
   add_foreign_key "sound_cues", "french_scenes"
@@ -368,4 +376,5 @@ ActiveRecord::Schema.define(version: 2020_01_04_034806) do
   add_foreign_key "stage_directions", "french_scenes"
   add_foreign_key "stage_exits", "productions"
   add_foreign_key "words", "lines"
+  add_foreign_key "words", "plays"
 end
