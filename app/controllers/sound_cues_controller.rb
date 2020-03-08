@@ -28,7 +28,7 @@ class SoundCuesController < ApiController
   # PATCH/PUT /sound_cues/1.json
   def update
     if @sound_cue.update(sound_cue_params)
-      render :show, status: :ok, location: @sound_cue
+      json_response(@sound_cue.as_json)
     else
       render json: @sound_cue.errors, status: :unprocessable_entity
     end

@@ -13,6 +13,7 @@ class EditProductionForm extends Component {
     super(props)
     this.state = {
       end_date: this.props.production.end_date || '',
+      lines_per_minute: this.props.production.lines_per_minute || '',
       play: this.props.production.play,
       start_date: this.props.production.start_date || '',
       theater: this.props.production.theater,
@@ -42,6 +43,7 @@ class EditProductionForm extends Component {
   processSubmit = () => {
     this.props.onFormSubmit({
       id: this.props.production.id,
+      lines_per_minute: this.state.lines_per_minute,
       end_date: this.state.end_date,
       start_date: this.state.start_date,
     }, "production")
@@ -59,6 +61,19 @@ class EditProductionForm extends Component {
         onSubmit={e => this.handleSubmit(e)}
         validated={validated}
       >
+        <Form.Group controlId="lines_per_minute">
+          <Form.Label>
+            Lines per minute
+          </Form.Label>
+          <Form.Control
+            name="lines_per_minute"
+            onChange={this.handleChange}
+            placeholder=""
+            type="number"
+            value={this.state.lines_per_minute}
+          >
+          </Form.Control>
+        </Form.Group>
           <Form.Group controlId="start_date">
             <Form.Label>
               Start Date

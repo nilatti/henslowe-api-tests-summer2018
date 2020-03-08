@@ -1,4 +1,4 @@
-rvm use gemset ruby-2.6.1@henslowe5
+rvm use gemset ruby-2.6.3@henslowe5
 
 rails s -p 3001
 bundle exec sidekiq

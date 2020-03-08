@@ -8,6 +8,8 @@ class ImportFromFolgerXmlAll
     :current_characters_onstage,
     :current_french_scene,
     :current_scene,
+    :db_characters,
+    :db_character_groups,
     :lines,
     :on_stages,
     :play,
@@ -23,6 +25,8 @@ class ImportFromFolgerXmlAll
     @character_groups = []
     @current_character = []
     @current_characters_onstage = []
+    @db_characters = []
+    @db_character_groups = []
     @lines = []
     @on_stages = []
     @stage_directions = []
@@ -35,33 +39,20 @@ class ImportFromFolgerXmlAll
     build_play
     build_characters(play: @play)
     puts "finished building characters at #{Time.current()}"
-    character_imports = Character.import @characters
-    puts character_imports.failed_instances
-    puts character_imports.num_inserts
-    character_group_imports = CharacterGroup.import @character_groups
-    puts character_group_imports.failed_instances
-    puts character_group_imports.num_inserts
-    puts "now do more things"
+    Character.import @characters
+    @db_characters = @play.characters
+    CharacterGroup.import @character_groups
+    @db_character_groups = @play.character_groups
+    puts "built characters"
     build_acts(play: @play, parsed_xml: @parsed_xml)
-    puts "line size is #{@play.lines.size}"
-    puts "total lines before import #{Line.all.size}"
-    line_imports = Line.import @lines
-    puts line.failed_instances
-    puts line.num_inserts
-    puts "total lines after import #{Line.all.size}"
-    stage_direction_imports = StageDirection.import @stage_directions
-    puts stage_direction_imports.failed_instances
-    puts stage_direction_imports.num_inserts
-    on_stage_imports = OnStage.import @on_stages
-    puts on_stage_imports.failed_instances
-    puts on_stage_imports.num_inserts
-    word_imports = Word.import @words
-    puts word_imports.failed_instances
-    puts word_imports.num_inserts
-    puts "lines in play are #{@play.lines.size}"
-    puts @play.id
+    puts "built acts"
+    Line.import @lines
+    StageDirection.import @stage_directions
+    OnStage.import @on_stages
+    Word.import @words
     puts Time.current
-    # connect_lines_to_words(lines: @play.lines, words: @play.words)
+    connect_lines_to_words(play: @play)
+    build_lines_content(@play.lines)
   end
 
   def build_acts(play:, parsed_xml:)
@@ -118,6 +109,7 @@ class ImportFromFolgerXmlAll
   end
 
   def build_character_group(character_group:, play:)
+    puts "character group is #{character_group.attr('xml:id')}"
     character_group = CharacterGroup.new(
       corresp: character_group.attr('corresp'),
       play_id: play.id,
@@ -153,26 +145,53 @@ class ImportFromFolgerXmlAll
   def build_line(character:, line:, french_scene:) #expects array of characters
     new_line = ''
     if line.attr('ana')
-      character.each do |char|
+      if character
+        character.each do |char|
+          ana = line.attr('ana') || ''
+          corresp = line.attr('corresp') || ''
+          number = line.attr('n') || ''
+          xml_id = line.attr('xml:id') || ''
+          new_line = Line.new(
+            ana: ana,
+            character_id: char.id,
+            corresp: corresp,
+            french_scene_id: french_scene.id,
+            number: number,
+            kind: 'line',
+            xml_id: xml_id,
+          )
+          @lines << new_line
+        end
+      else
         ana = line.attr('ana') || ''
         corresp = line.attr('corresp') || ''
         number = line.attr('n') || ''
         xml_id = line.attr('xml:id') || ''
         new_line = Line.new(
           ana: ana,
-          character_id: char.id,
           corresp: corresp,
           french_scene_id: french_scene.id,
           number: number,
           kind: 'line',
           xml_id: xml_id,
         )
-        @lines << new_line
       end
     else
       puts "this didn't have an attr #{line}"
     end
     return new_line
+  end
+
+  def build_lines_content(lines)
+    lines.each do |line|
+      content = ''
+      line.words.each do |word|
+        content += word.content
+        puts content
+      end
+      line.original_content = content
+      line.save
+    end
   end
 
   def build_play
@@ -186,6 +205,7 @@ class ImportFromFolgerXmlAll
   end
 
   def build_scene(act:, scene:)
+    @current_characters_onstage = []
     scene_number = scene.attr('n') || 0
     heading = build_header(item: scene.at_xpath('head'))
     @current_scene = Scene.create(
@@ -212,13 +232,19 @@ class ImportFromFolgerXmlAll
   end
 
   def build_on_stages(french_scene:, characters:) #expect characters from parser, so [0] = characters, [1] = character groups
+    puts "build onstages called"
     characters.flatten!(3)
     characters.uniq!
+    puts "characters size is #{characters.size}"
     characters.each do |char|
       if char.is_a? Character
+        puts "character is a character"
         @on_stages << OnStage.new(french_scene: french_scene, character: char, category: 'Character')
       elsif char.is_a? CharacterGroup
+        puts "character is a charcter group"
         @on_stages << OnStage.new(french_scene: french_scene, character_group: char, category: 'Character')
+      else
+        puts "didn't match on class"
       end
     end
     return @on_stages
@@ -227,7 +253,7 @@ class ImportFromFolgerXmlAll
   def build_sound_cue(french_scene:, item:)
     content = extract_content(item: item)
     SoundCue.create(
-      content: content,
+      original_content: content,
       french_scene_id: french_scene.id,
       line_number: item.attr('n'),
       notes: item.attr('ana'),
@@ -244,17 +270,20 @@ class ImportFromFolgerXmlAll
   end
 
   def build_stage_direction(item:, french_scene:)
-    character_parser = extract_characters_from_xml_id_string(xml_ids: item.attr('who')) #should return an array, first item is characters, second is character groups
-    characters = character_parser[0]
-    character_groups = character_parser[1]
+    character_parser = extract_characters_from_xml_id_string(xml_ids: item.attr('who')).flatten!
     content = extract_content(item: item)
     if item.attr('type') == 'entrance' || item.attr('type') == 'exit'
-      track_onstage_characters(french_scene: @current_french_scene, stage_direction: item, characters: characters, character_groups: character_groups)
+      track_onstage_characters(french_scene: @current_french_scene, stage_direction: item, characters: character_parser)
+    end
+    characters = []
+    character_groups = []
+    if character_parser && character_parser.size > 0
+      character_parser.each {|char| char.is_a?(Character) ? characters << char : character_groups << char }
     end
     stage_direction = StageDirection.new(
       characters: characters,
       character_groups: character_groups,
-      content: content,
+      original_content: content,
       french_scene_id: french_scene.id,
       number: item.attr('n'),
       kind: item.attr('type'),
@@ -335,25 +364,26 @@ class ImportFromFolgerXmlAll
   end
 
   def extract_characters_from_xml_id_string(xml_ids:)
-    characters = []
-    character_groups = []
+    character_parser = []
     xml_id_arr = xml_ids.to_s.split(' ')
+    puts "size extracted from xml id is #{xml_id_arr.size}"
     xml_id_arr.each do |xml_id|
       xml_id.sub!('#', '')
-      character = Character.find_by(xml_id: xml_id, play_id: @play.id)
+      character = @db_characters.select { |character| character.xml_id == xml_id }
       if character
-        characters << character
+        puts "found character #{xml_id}"
+        character_parser << character
       else
-        character_group = CharacterGroup.find_by(xml_id: xml_id, play_id: @play.id)
+        character_group = @db_character_groups.select { |character_group| character_group.xml_id == xml_id }
         if character_group
-          character_groups << character_group
+          puts "found character group #{xml_id}"
+          character_parser << character_group
         else
           puts "Could not find character #{xml_id}"
-          characters << Character.find_by(xml_id: 'CouldNotFindCharacter')
+          character_parser << @db_characters.select { |character| character.xml_id == 'CouldNotFindCharacter' }
         end
       end
     end
-    character_parser = [characters, character_groups]
     return character_parser
   end
 
@@ -384,21 +414,29 @@ class ImportFromFolgerXmlAll
     end
   end
 
-  def track_onstage_characters(french_scene:, stage_direction:, characters:, character_groups:)
+  def track_onstage_characters(french_scene:, stage_direction:, characters:)
     puts "current french scene is #{@current_act.number}.#{@current_scene.number}.#{@current_french_scene.number}"
     puts "stage direction is #{stage_direction}"
 
-    @current_characters_onstage.size
+    puts @current_characters_onstage.size
     if stage_direction.attr('type') == 'entrance'
+      puts "we have an entrance"
+      puts @current_characters_onstage.size
       @current_characters_onstage << characters
-      @current_characters_onstage << character_groups
+      puts @current_characters_onstage.size
     elsif stage_direction.attr('type') == 'exit'
+      puts "we have an exit"
+      puts @current_characters_onstage.size
       all_characters = characters.concat(character_groups)
       all_characters.flatten!(2)
       all_characters.uniq!
       all_characters.each {|char| @current_characters_onstage.delete(char)}
+      puts @current_characters_onstage.size
+    else
+      puts "can't determine type of stage direction"
     end
     @current_characters_onstage.uniq!
+    puts "Current characters onstage size #{@current_characters_onstage.size}"
     build_on_stages(french_scene: french_scene, characters: @current_characters_onstage)
   end
 

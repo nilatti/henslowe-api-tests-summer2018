@@ -29,6 +29,9 @@ class PlaysController < ApiController
                     :characters,
                     :character_groups
                   ],
+                  lines: [
+                    :words
+                  ],
                   on_stages: [
                     :character, :character_group
                   ]
@@ -56,6 +59,9 @@ class PlaysController < ApiController
                           :characters,
                           :character_groups,
                         ]
+                    },
+                    lines: {
+                      include: :words
                     },
                     on_stages: {
                       include: [:character, :character_group]
@@ -124,11 +130,10 @@ class PlaysController < ApiController
   end
 
   def play_script
-    @play = Play.find(params[:play])
+    @play = Play.includes(:characters, :character_groups, acts: [scenes: [french_scenes: [:stage_directions, :sound_cues, lines: [:character, :words]]]]).find(params[:play])
 
     render json: @play.as_json(include:
       [
-        :author,
         :characters,
         :character_groups,
         acts: {
@@ -137,10 +142,11 @@ class PlaysController < ApiController
               include: {
                 french_scenes: {
                   include: [
-                    :characters,
-                    :character_groups,
-                    :lines,
-                    :sound_cues
+                    :stage_directions,
+                    :sound_cues,
+                    lines: {
+                      include: [:character, :words]
+                    }
                   ]
                 }
               }
@@ -149,6 +155,18 @@ class PlaysController < ApiController
         }
         ]
       )
+  end
+
+  def play_skeleton
+    @play = Play.includes(acts: [scenes: [:french_scenes]]).find(params[:play])
+
+    render json: @play.as_json(include: {
+      production: {only: [:lines_per_minute]},
+      characters: {only: [:name, :id]},
+      acts: {include: {scenes: {include: {french_scenes: {only: [:id, :number]}}, only: [:id, :number]}}, only: [:id, :number]}
+      },
+      only: [:canonical, :id, :title]
+    )
   end
 
   def play_titles

@@ -67,7 +67,6 @@ class EditablePlay extends Component {
         errorStatus: 'Error creating entrance/exit'
       })
     } else {
-      console.log('api rresponse', response.data)
       let workingPlay = this.state.play
       let workingAct = _.find(workingPlay.acts, {'id': actId})
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
@@ -574,7 +573,6 @@ onCharacterEditFormSubmit = (character) => {
 }
 
 onEntranceExitCreateFormSubmit = (actId, sceneId, frenchSceneId, entranceExit) => {
-  console.log('ee is', entranceExit)
   this.createEntranceExit(actId, sceneId, frenchSceneId, entranceExit)
 }
 

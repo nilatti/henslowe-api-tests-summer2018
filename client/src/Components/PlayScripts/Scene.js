@@ -20,7 +20,12 @@ class Scene extends Component {
     let french_scenes
     if (this.props.scene.french_scenes) {
       french_scenes = this.props.scene.french_scenes.map(french_scene =>
-        <FrenchScene french_scene={french_scene} key={french_scene.number}/>
+        <FrenchScene
+          act_number={this.props.act_number}
+          french_scene={french_scene}
+          scene_number={this.props.scene.number}
+          key={french_scene.number}
+        />
       )
     } else {
       french_scenes = <div>Loading frech scenes</div>

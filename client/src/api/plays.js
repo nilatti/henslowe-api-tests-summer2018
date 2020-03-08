@@ -33,10 +33,25 @@ async function getActs(playId) {
   return API.request(`plays/${playId}/acts`)
 }
 
+async function getActScript(actId) {
+  return API.request(`acts/act_script`, {
+    params: {
+      act: actId
+    }
+  })
+}
+
 async function getCharacters(playId) {
   return API.request(`plays/${playId}/characters`)
 }
 
+async function getFrenchSceneScript(frenchSceneId) {
+  return API.request(`french_scenes/french_scene_script`, {
+    params: {
+      french_scene: frenchSceneId
+    }
+  })
+}
 
 async function getPlay(playId) {
   return API.request(`plays/${playId}`)
@@ -44,6 +59,14 @@ async function getPlay(playId) {
 
 async function getPlayScript(playId) {
   return API.request(`plays/play_script`, {
+    params: {
+      play: playId
+    }
+  })
+}
+
+async function getPlaySkeleton(playId) {
+  return API.request(`plays/play_skeleton`, {
     params: {
       play: playId
     }
@@ -59,6 +82,14 @@ async function getPlays() {
   return API.request(`plays`)
 }
 
+async function getSceneScript(sceneId) {
+  return API.request(`scenes/scene_script`, {
+    params: {
+      scene: sceneId
+    }
+  })
+}
+
 async function updateServerPlay(play) {
   return API.put(`plays/${play.id}`, {
     play: play
@@ -71,10 +102,14 @@ export {
   createPlay,
   deletePlay,
   getActs,
+  getActScript,
   getCharacters,
+  getFrenchSceneScript,
   getPlay,
   getPlayScript,
+  getPlaySkeleton,
   getPlayTitles,
   getPlays,
+  getSceneScript,
   updateServerPlay
 }

@@ -28,7 +28,7 @@ class LinesController < ApiController
   # PATCH/PUT /lines/1.json
   def update
     if @line.update(line_params)
-      render :show, status: :ok, location: @line
+      json_response(@line.as_json)
     else
       render json: @line.errors, status: :unprocessable_entity
     end
@@ -48,6 +48,6 @@ class LinesController < ApiController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def line_params
-      params.require(:line).permit(:ana, :character_id, :corresp, :french_scene_id, :next, :number, :prev, :type, :xml_id)
+      params.require(:line).permit(:ana, :character_id, :character_group_id, :corresp, :french_scene_id, :next, :new_content, :number, :original_content, :prev, :type, :xml_id, words_attributes: [:content, :kind, :order_number, :xml_id])
     end
 end

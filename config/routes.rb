@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :stage_directions
+
   # devise_for :admin_users, ActiveAdmin::Devise.config
   devise_for :users, :controllers => {
 
@@ -48,6 +48,7 @@ Rails.application.routes.draw do
       collection do
         get :play_titles
         get :play_script
+        get :play_skeleton
       end
       resources :acts do
         resources :scenes
@@ -55,22 +56,32 @@ Rails.application.routes.draw do
       resources :characters
     end
     resources :acts do
+      collection do
+        get :act_script
+      end
       resources :scenes
     end
     resources :characters
     resources :scenes do
+      collection do
+        get :scene_script
+      end
       resources :french_scenes
     end
     resources :french_scenes do
+      collection do
+        get :french_scene_script
+      end
       resources :entrance_exits
       resources :on_stages
     end
-    resources :on_stages
-    resources :entrance_exits
-    resources :words
-    resources :labels
-    resources :sound_cues
-    resources :lines
     resources :character_groups
+    resources :entrance_exits
+    resources :labels
+    resources :lines
+    resources :on_stages
+    resources :sound_cues
+    resources :stage_directions
+    resources :words
   end
 end

@@ -15,6 +15,8 @@ import {
   Typeahead
 } from 'react-bootstrap-typeahead';
 
+import CharactersSelect from '../../../../Characters/CharactersSelect'
+
 class NewEntranceExitForm extends Component {
   constructor(props) {
     super(props)

@@ -3,6 +3,7 @@ import React, {
   Component
 } from 'react'
 import {
+  Button,
   Col,
   Row,
   Tab,
@@ -97,7 +98,13 @@ class PlayShow extends Component {
         <Row>
           <Col>
             <h2>{this.props.play.title}</h2>
-            a {this.props.play.genre.join('/')}<br />
+            {
+              this.props.play.genre
+              ?
+              <span>a {this.props.play.genre.join('/')}<br /></span>
+              :
+              <span></span>
+            }
             {this.props.play.canonical ? <p><em> Canonical Version</em></p> : <p></p>}
             by <Link to={`/authors/${this.props.play.author.id}`}> {this.props.play.author.first_name} {this.props.play.author.last_name}</Link><br />
             {this.props.play.date}<br />
@@ -134,7 +141,9 @@ class PlayShow extends Component {
       </Tabs>
       <Row>
         <Link to={`/playscripts/${this.props.play.id}`}>
-          Edit Script
+          <Button variant="info">
+            Edit Script
+          </Button>
         </Link>
       </Row>
       <Row>

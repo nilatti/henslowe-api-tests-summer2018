@@ -82,9 +82,17 @@ describe ImportFromFolgerXmlAll do
     character = create(:character)
     french_scene = create(:french_scene)
     line = @xml.at_xpath('//milestone[@xml:id="ftln-0172"]')
-    test_line = @import.build_line(character: character, french_scene: french_scene, line: line)
+    test_line = @import.build_line(character: [character], french_scene: french_scene, line: line)
     expect(test_line.character).to eq(character)
     expect(test_line.french_scene).to eq(french_scene)
+  end
+
+  it 'builds a line of content' do #too deep in the weeds to legitimately unit test, I think...
+    character = create(:character)
+    french_scene = create(:french_scene)
+    line = @xml.at_xpath('//milestone[@xml:id="ftln-0172"]')
+    test_line = @import.build_line(character: [character], french_scene: french_scene, line: line)
+    @import.build_lines_content([test_line]).each {|l| puts line.content}
   end
 
   it 'builds onstages' do

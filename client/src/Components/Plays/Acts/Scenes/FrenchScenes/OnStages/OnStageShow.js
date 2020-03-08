@@ -49,7 +49,6 @@ class OnStageShow extends Component {
     if (character) {
     } else if(character_group){
     } else {
-      console.log(this.props.play)
       console.log('can not find character or group', this.props.onStage.character_id, this.props.onStage)
     }
     let onStage = this.props.onStage.nonspeaking

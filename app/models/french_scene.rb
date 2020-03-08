@@ -14,4 +14,8 @@ class FrenchScene < ApplicationRecord
   validates :number, presence: true
 
   default_scope {order(:number)}
+
+  def pretty_name
+    "this is the pretty name"
+  end
 end

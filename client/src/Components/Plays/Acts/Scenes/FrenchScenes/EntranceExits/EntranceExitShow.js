@@ -120,7 +120,6 @@ class EntranceExitShow extends Component {
   processSubmit = (entranceExit) => {
     delete entranceExit["characters"]
     delete entranceExit["stage_exit"]
-    console.log('rails-ready', entranceExit)
     this.props.onEdit(
       this.props.actId,
       this.props.sceneId,
