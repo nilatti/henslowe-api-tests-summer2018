@@ -13,6 +13,11 @@ import {
   Link
 } from 'react-router-dom'
 
+import {
+  calculateLineCount,
+  calculateRunTime,
+} from '../../utils/playScriptUtils'
+
 import ActorsList from './Actors/ActorsList'
 import CastList from '../Jobs/CastList'
 import JobsListExcludingActorsAndAuditioners from '../Jobs/JobsListExcludingActorsAndAuditioners'
@@ -78,6 +83,15 @@ class ProductionShow extends Component {
       </Row>
       <hr />
       <Row>
+        <Col md={12}>
+          <p>Lines per minute: {this.props.production.lines_per_minute}</p>
+          <p>Total lines: </p>
+          <p>Run time:</p>
+        </Col>
+      </Row>
+      <hr />
+      <Row>
+        <h2>Production Jobs</h2>
         <JobsListExcludingActorsAndAuditioners production={this.props.production} />
       </Row>
       <hr />

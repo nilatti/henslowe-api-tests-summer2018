@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_06_002024) do
+ActiveRecord::Schema.define(version: 2020_03_07_131843) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -179,6 +179,8 @@ ActiveRecord::Schema.define(version: 2020_01_06_002024) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "character_group_id"
+    t.text "original_content"
+    t.text "new_content"
     t.index ["character_group_id"], name: "index_lines_on_character_group_id"
     t.index ["character_id"], name: "index_lines_on_character_id"
     t.index ["french_scene_id"], name: "index_lines_on_french_scene_id"
@@ -219,6 +221,7 @@ ActiveRecord::Schema.define(version: 2020_01_06_002024) do
     t.bigint "theater_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "lines_per_minute"
     t.index ["theater_id"], name: "index_productions_on_theater_id"
   end
 
@@ -242,7 +245,8 @@ ActiveRecord::Schema.define(version: 2020_01_06_002024) do
     t.text "notes"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "content"
+    t.string "original_content"
+    t.text "new_content"
     t.index ["french_scene_id"], name: "index_sound_cues_on_french_scene_id"
   end
 
@@ -281,9 +285,10 @@ ActiveRecord::Schema.define(version: 2020_01_06_002024) do
     t.string "number"
     t.string "kind"
     t.string "xml_id"
-    t.string "content"
+    t.string "original_content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "new_content"
     t.index ["french_scene_id"], name: "index_stage_directions_on_french_scene_id"
   end
 

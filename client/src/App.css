@@ -3,6 +3,11 @@ ul {
   text-align: left;
 }
 
+.added {
+  background-color: #91e68e;
+  color: #254f24;
+}
+
 .App {
   text-align: center;
 }
@@ -31,12 +36,45 @@ ul {
   border-right: 1px dotted gray;
 }
 
+.character-name {
+  font-weight: bold;
+  text-align: left;
+}
+
+.cut {
+  background-color: #eb847c;
+  color: #a61105;
+}
+
 .fas {
   padding: 4px;
 }
+
+.instructions {
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+.line {
+  text-align: left;
+}
+
 .rie-select {
   display: inline-block;
   width: 30px;
+}
+
+.script-cut-interface-row:nth-child(odd) {
+  background-color: #DCDCDC;
+}
+
+.script-cut-interface-row:nth-child(even) {
+  background-color: #FFFF;
+}
+
+.stage-direction {
+  font-style: italic;
+  text-align: left;
 }
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

@@ -14,6 +14,8 @@ import {
   Typeahead
 } from 'react-bootstrap-typeahead';
 
+import CharacterSelect from '../../../../Characters/CharacterSelect'
+
 class NewOnStageForm extends Component {
   constructor(props) {
     super(props)
@@ -79,25 +81,11 @@ class NewOnStageForm extends Component {
         onSubmit={e => this.handleSubmit(e)}
         validated={validated}
       >
-      <Form.Group>
-        <Form.Label>
-          Character/Role
-        </Form.Label>
-        <Typeahead
-          allowNew
-          id="character"
-          required
-          options={characters}
-          onChange={(selected) => {
-            this.handleChangeCharacter(selected)
-          }}
-          selected={this.state.selectedCharacter}
-          placeholder="Choose character or role"
-        />
-        <Form.Control.Feedback type="invalid">
-            Character/Role is required
-        </Form.Control.Feedback>
-      </Form.Group>
+      <CharacterSelect
+        characters={characters}
+        handleChangeCharacter={this.handleChangeCharacter}
+        selectedCharacter={this.state.selectedCharacter}
+      />
       <Form.Group>
         <Form.Label>
           Description

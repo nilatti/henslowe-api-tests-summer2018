@@ -71,7 +71,49 @@ class ProductionsController < ApiController
   # PATCH/PUT /productions/1
   def update
     if @production.update(production_params)
-      json_response(@production.as_json(include: [:play, :theater]))
+      json_response(@production.as_json(include:
+          [
+            :theater,
+            :stage_exits,
+            play: {
+              include: [
+                :characters,
+                acts: {
+                  include: [
+                    scenes: {
+                      include: [
+                        french_scenes: {
+                          include: [
+                            entrance_exits: {
+                              include: [
+                                french_scene: {
+                                  include: [
+                                    scene: {
+                                      include: :act
+                                    }
+                                  ]
+                                  }
+                                ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            jobs: {
+              include: [
+                :character,
+                :specialization,
+                :theater,
+                :user
+              ]
+            }
+          ]
+        )
+      )
     else
       render json: @production.errors, status: :unprocessable_entity
     end
@@ -103,6 +145,7 @@ class ProductionsController < ApiController
       params.require(:production).permit(
         :end_date,
         :id,
+        :lines_per_minute,
         :play_id,
         :theater_id,
         :start_date

@@ -34,9 +34,9 @@ async function getItemsWithParent(parentType, parentId, itemType) {
 }
 
 async function updateServerItem(item, itemType) {
-  const item_data = {}
-  item_data[itemType] = item
-  return API.put(`${itemType}s/${item.id}`, item_data
+  let data = {...item}
+  delete data.id
+  return API.put(`${itemType}s/${item.id}`, {[itemType]: data}
   )
 }
 

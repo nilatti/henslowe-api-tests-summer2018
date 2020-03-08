@@ -42,6 +42,28 @@ class ActsController < ApiController
     @act.destroy
   end
 
+  def act_script
+    @act = Act.includes(scenes: [french_scenes: [:stage_directions, :sound_cues, lines: [:character, :words]]]).find(params[:act])
+
+    render json: @act.as_json(include:
+      [
+        scenes: {
+            include: {
+              french_scenes: {
+                include: [
+                  :stage_directions,
+                  :sound_cues,
+                  lines: {
+                    include: [:character, :words]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      )
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_play

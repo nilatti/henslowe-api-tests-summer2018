@@ -51,6 +51,22 @@ class FrenchScenesController < ApiController
     @french_scene.destroy
   end
 
+  def french_scene_script
+    @french_scene = FrenchScene.includes(:sound_cues, lines: [:character], stage_directions: [:characters, :character_groups]).find(params[:french_scene])
+
+    render json: @french_scene.as_json(include:
+      [
+        :sound_cues,
+        stage_directions: {
+          include: [:characters, :character_groups]
+        },
+        lines: {
+          include: [:character, :words]
+        }
+        ]
+      )
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_scene

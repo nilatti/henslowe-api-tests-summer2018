@@ -1,0 +1,29 @@
+add character groups for on_stages in react
+
+is it possible to return a method from model via api? eg. pretty name?
+
+mind hard coding on updates for line-related things that aren't exactly lines (eg stage directions, sound cues). Some hard-coding in LineShow.js that could break.
+
+find other times to use character select
+
+new production doesn't forward to the production page on create.
+
+speed up production copier by adding Line.import etc
+
+regularlize sound cues so line_number is whatever it is on stage directions
+
+hide SDs from view where type = mixed or where content null
+
+ find a way to hide all cut lines with correct character demarkation
+
+ write a way to export the script text to an editable form--gdocs ideally?
+
+ on importer--when two characters share a line, one of them is not getting the content assigned (see jaques/amiens 2.5.43)
+
+check importer--why does epilogue have line number = 0, act = 0?
+
+in playscript edit fix accordions
+in play script edit find a way to make the header and accordions sticky so that you can always see act tabs, nav, and title and time counts, cut show/hide etc
+
+in script edit :
+edits on stage directions don't seem to be working quite right. Writing to DB but not updating state until reload

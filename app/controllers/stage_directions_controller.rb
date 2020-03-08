@@ -1,4 +1,4 @@
-class StageDirectionsController < ApplicationController
+class StageDirectionsController < ApiController
   before_action :set_stage_direction, only: [:show, :update, :destroy]
 
   # GET /stage_directions
@@ -28,7 +28,7 @@ class StageDirectionsController < ApplicationController
   # PATCH/PUT /stage_directions/1.json
   def update
     if @stage_direction.update(stage_direction_params)
-      render :show, status: :ok, location: @stage_direction
+      json_response(@stage_direction.as_json)
     else
       render json: @stage_direction.errors, status: :unprocessable_entity
     end
@@ -48,6 +48,6 @@ class StageDirectionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def stage_direction_params
-      params.require(:stage_direction).permit(:french_scene_id, :number, :kind, :xml_id, :content)
+      params.require(:stage_direction).permit(:french_scene_id, :number, :kind, :new_content, :original_content, :xml_id)
     end
 end
