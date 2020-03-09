@@ -16,6 +16,6 @@ class FrenchScene < ApplicationRecord
   default_scope {order(:number)}
 
   def pretty_name
-    "this is the pretty name"
+    "#{self.scene.act.number}.#{self.scene.number}.#{self.number}"
   end
 end

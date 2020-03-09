@@ -6,4 +6,8 @@ class Scene < ApplicationRecord
 
   default_scope {order(:number)}
 
+  def pretty_name
+    "#{self.act.number}.#{self.number}"
+  end
+
 end

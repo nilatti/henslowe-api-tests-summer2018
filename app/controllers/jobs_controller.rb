@@ -8,10 +8,12 @@ class JobsController < ApiController
     json_response(
       @jobs.as_json(
         include: [
-          :character,
           :specialization,
           :theater,
           :user,
+          character: {
+            include: :lines
+          },
           production: {
             include: :play
           }

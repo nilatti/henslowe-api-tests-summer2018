@@ -25,7 +25,7 @@ class CharacterSelect extends Component {
           Character
         </Form.Label>
         <Typeahead
-          labelKey="name"
+          labelKey="label"
           id="character"
           required
           options={this.props.characters}

@@ -51,17 +51,21 @@ class OnStageShow extends Component {
     } else {
       console.log('can not find character or group', this.props.onStage.character_id, this.props.onStage)
     }
+
+    let characterName
+    if (character) {
+      characterName = character.name
+    } else if (character_group) {
+      characterName = character_group.name
+    } else {
+      characterName = ''
+    }
+
     let onStage = this.props.onStage.nonspeaking
     return (
 
       <div>
-      {
-        character
-        ?
-        <span>{character.name}</span>
-        :
-        <span>{character_group.name}</span>
-      }
+      {characterName}
       {
         this.state.descriptionEditOpen
         ?

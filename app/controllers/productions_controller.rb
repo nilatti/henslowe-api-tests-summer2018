@@ -11,33 +11,79 @@ class ProductionsController < ApiController
 
   # GET /productions/1
   def show
+    @production = Production.includes(
+      :theater,
+      :stage_exits,
+      [
+        play:
+        [
+          characters: [:lines],
+        character_groups: [:lines],
+        acts: [
+          scenes: [
+            french_scenes:
+              [
+                :characters,
+                :character_groups,
+                :lines,
+                entrance_exits:
+                [
+                  :stage_exit,
+                  :characters,
+                  :character_groups
+                ],
+                on_stages: [
+                  :character, :character_group
+                ]
+              ]
+            ]
+          ]
+        ],
+        jobs: [
+          :specialization,
+          :theater,
+          :user,
+          character: [
+            :lines
+          ]
+        ]
+      ]
+    ).find(params[:id])
+
     json_response(@production.as_json(include:
         [
           :theater,
           :stage_exits,
           play: {
             include: [
-              :characters,
+              characters: {
+                include: :lines
+              },
               acts: {
                 include: [
                   scenes: {
                     include: [
                       french_scenes: {
                         include: [
-                          entrance_exits: {
-                            include: [
-                              french_scene: {
-                                include: [
-                                  scene: {
-                                    include: :act
-                                  }
-                                ]
-                                }
-                              ]
-                          }
-                        ]
+                            on_stages: {
+                              include: :character
+                            },
+                            entrance_exits: {
+                          #   include: [
+                          #     french_scene: {
+                          #       include: [
+                          #         scene: {
+                          #           include: :act
+                          #         }
+                          #       ]
+                          #       }
+                          #     ]
+                        },
+                      ],
+                        methods: :pretty_name
                       }
-                    ]
+                    ],
+                    methods: :pretty_name
                   }
                 ]
               }
@@ -45,10 +91,12 @@ class ProductionsController < ApiController
           },
           jobs: {
             include: [
-              :character,
               :specialization,
               :theater,
-              :user
+              :user,
+              character: {
+                include: :lines
+              }
             ]
           }
         ]
