@@ -27,3 +27,5 @@ in play script edit find a way to make the header and accordions sticky so that 
 
 in script edit :
 edits on stage directions don't seem to be working quite right. Writing to DB but not updating state until reload
+
+look at cast list--do I need to get jobs from server or can I just filter out of production?

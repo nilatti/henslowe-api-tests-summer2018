@@ -14,9 +14,9 @@ class PlaysController < ApiController
   def show
     @play = Play.includes(
       :author,
-      :characters,
-      :character_groups,
         [
+          characters: [:lines],
+          character_groups: [:lines],
           acts: [
             scenes: [
               french_scenes:
@@ -43,8 +43,8 @@ class PlaysController < ApiController
     render json: @play.as_json(include:
       [
         :author,
-        :characters,
-        :character_groups,
+        characters: {include: :lines},
+        character_groups: {include: :lines},
         acts: {
           include: {
             scenes: {

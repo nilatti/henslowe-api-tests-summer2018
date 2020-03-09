@@ -20,7 +20,13 @@ import {
   updateServerJob,
 } from '../../api/jobs'
 
-import {buildUserName} from '../../utils/actorUtils'
+import {
+  buildUserName
+} from '../../utils/actorUtils'
+
+import {
+  calculateLineCount
+} from '../../utils/playScriptUtils'
 
 class CastingShow extends Component {
   constructor(props) {
@@ -80,6 +86,7 @@ class CastingShow extends Component {
   }
 
   render() {
+    let lineCount = calculateLineCount(this.props.casting.character.lines)
     return (
       <div>
       {
@@ -93,6 +100,7 @@ class CastingShow extends Component {
             <Typeahead
               id="user"
               options={this.props.availableActors}
+              // onBlur={this.formToggle()}
               onChange={(selected) => {
                 this.handleChangeUser(selected)
               }}
@@ -108,7 +116,7 @@ class CastingShow extends Component {
         <span><span
           onClick={() => this.handleEditClick()}
         >
-          {this.state.selectedUser.length > 0 ? this.state.selectedUser[0].label : <strong>Click to cast</strong>}: {this.props.casting.character.name}</span>
+          {this.state.selectedUser.length > 0 ? this.state.selectedUser[0].label : <strong>Click to cast</strong>}: {this.props.casting.character.name} ({lineCount})</span>
           <span className='right floated trash icon'
           onClick={() => this.props.onDeleteClick(this.props.casting.id)}
         >

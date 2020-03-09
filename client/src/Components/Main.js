@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 import Authors from './Authors/Authors'
 import Dashboard from './Dashboard/Dashboard'
+import DoublingCharts from './Productions/DoublingCharts'
 import Jobs from './Jobs/Jobs'
 import Plays from './Plays/Plays'
 import PlayScripts from './PlayScripts/PlayScripts'
@@ -26,6 +27,7 @@ class Main extends Component {
             <Route path='/plays' component={Plays}/>
             <Route path='/playscripts/:id' component={PlayScripts} />
             <Route path='/productions' component={Productions} />
+            <Route path='/doubling_charts/:id' component={DoublingCharts} />
             <Route path='/theaters' component={Theaters} />
             <Route path='/spaces' component={Spaces} />
             <Route path='/users' component={Users} />

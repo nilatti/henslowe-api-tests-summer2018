@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import {
+  Button,
   Col,
   Row,
   Tab,
@@ -16,6 +17,7 @@ import {
 import {
   calculateLineCount,
   calculateRunTime,
+  getLinesFromCharacters
 } from '../../utils/playScriptUtils'
 
 import ActorsList from './Actors/ActorsList'
@@ -45,6 +47,9 @@ class ProductionShow extends Component {
   }
 
   render() {
+    console.log(this.props.production)
+    let linesTotal = calculateLineCount(getLinesFromCharacters(this.props.production.play.characters))
+    let runTime = parseFloat(linesTotal / this.props.production.lines_per_minute).toFixed(2)
     return (
       <Col md={12}>
       <Row>
@@ -85,8 +90,13 @@ class ProductionShow extends Component {
       <Row>
         <Col md={12}>
           <p>Lines per minute: {this.props.production.lines_per_minute}</p>
-          <p>Total lines: </p>
-          <p>Run time:</p>
+          <p>Total lines: {linesTotal}</p>
+          <p>Run time: {runTime} minutes</p>
+          <Link to={`/doubling_charts/${this.props.production.id}`}>
+            <Button variant="info">
+              Show Doubling Charts
+            </Button>
+          </Link>
         </Col>
       </Row>
       <hr />

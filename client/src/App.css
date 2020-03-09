@@ -50,6 +50,10 @@ ul {
   padding: 4px;
 }
 
+.doubling-problem {
+  background-color: purple;
+}
+
 .instructions {
   font-style: italic;
   font-size: 0.8em;

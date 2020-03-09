@@ -17,7 +17,7 @@ function calculateLineCount(lines) {
     }
     line.count = calculateChange(syllablesPerLine, defaultSyllables)
   })
-  return _.sumBy(lines, 'count')
+  return _.sumBy(lines, 'count').toFixed(2)
 }
 
 function calculateRunTime(lines, linesPerMinute) { //exects lines per minute as int and lines as array
@@ -29,19 +29,55 @@ function calculateChange(a, b){
 }
 
 function getFrenchScenesFromAct(act) {
-  let french_scenes = []
+  let frenchScenes = []
   act.scenes.map((scene) => {
-    french_scenes.push(scene.french_scenes)
+    frenchScenes.push(scene.french_scenes)
   })
-  return french_scenes
+  return _.flattenDeep(frenchScenes)
 }
 
 function getFrenchScenesFromPlay(play) {
-  let french_scenes = []
+  let frenchScenes = []
   play.acts.map((act) => {
-    french_scenes.push(getFrenchScenesFromAct(act))
+    frenchScenes.push(getFrenchScenesFromAct(act))
   })
-  return french_scenes
+  return _.flattenDeep(frenchScenes)
+}
+
+function getScenesFromPlay(play) {
+  let scenes = []
+  play.acts.map((act) => scenes.push(act.scenes))
+  return _.flattenDeep(scenes)
+}
+
+function getLinesFromCharacters(characters) {
+  let lines = []
+  characters.map((character) => {
+    if (character.lines) {
+      lines.push(character.lines)
+    }
+  })
+  return _.flattenDeep(lines)
+}
+
+function getOnStagesFromAct(act) {
+  let onStages = []
+  let frenchScenes = getFrenchScenesFromAct(act)
+  frenchScenes.map((frenchScene) => {
+    onStages.push(frenchScene.on_stages)
+  })
+  let flat = _.flattenDeep(onStages)
+  return _.uniqBy(flat, 'character_id')
+}
+
+function getOnStagesFromScene(scene) {
+  let onStages = []
+  let frenchScenes = scene.french_scenes
+  frenchScenes.map((frenchScene) => {
+    onStages.push(frenchScene.on_stages)
+  })
+  let flat = _.flattenDeep(onStages)
+  return _.uniqBy(flat, 'character_id')
 }
 
 function letterValue(str){
@@ -90,14 +126,12 @@ function sortLines(arrayOfLines) {
         if (number_pieces[2].match(/[a-zA-z]/)) {
           let letter = number_pieces[2].match(/[a-z]/)
           let numString = number_pieces[2].match(/[^a-z]/) + "." + letter
-          console.log(numString)
           line_number = parseFloat(numString)
-          console.log(line_number)
         } else {
           line_number = parseFloat(number_pieces[2])
         }
         if (typeof scene_number === 'undefined') {
-          console.log(line)
+          console.log('undefined scene number', line)
         }
       }
     } else {
@@ -119,6 +153,10 @@ export {
   calculateRunTime,
   getFrenchScenesFromAct,
   getFrenchScenesFromPlay,
+  getLinesFromCharacters,
+  getOnStagesFromAct,
+  getOnStagesFromScene,
+  getScenesFromPlay,
   mergeTextFromFrenchScenes,
   sortLines
 }
