@@ -1,5 +1,5 @@
 class UsersController < ApiController
-  before_action :set_User, only: %i[show update destroy]
+  before_action :set_user, only: %i[show update destroy]
 
   # GET /Users
   def index
@@ -10,7 +10,7 @@ class UsersController < ApiController
 
   # GET /Users/1
   def show
-    json_response(@user.as_json)
+    json_response(@user.as_json(include: :conflicts))
   end
 
   def update
@@ -51,7 +51,7 @@ class UsersController < ApiController
   end
 
   # Use callbacks to share common setup or constraints between actions.
-  def set_User
+  def set_user
     @user = User.find(params[:id])
   end
 end

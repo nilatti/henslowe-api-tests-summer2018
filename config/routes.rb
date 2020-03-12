@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :conflicts
   # devise_for :admin_users, ActiveAdmin::Devise.config
   devise_for :users, :controllers => {
 
@@ -10,7 +11,9 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   scope 'api' do
 
-    resources :users, only: [:index, :show, :update, :destroy]
+    resources :users, only: [:index, :show, :update, :destroy] do
+      resources :conflicts
+    end
     resources :jobs do
       collection do
         get :get_actors_for_production
@@ -34,6 +37,7 @@ Rails.application.routes.draw do
       end
     end
     resources :spaces do
+      resources :conflicts
       collection do
         get :space_names
       end
@@ -76,6 +80,7 @@ Rails.application.routes.draw do
       resources :on_stages
     end
     resources :character_groups
+    resources :conflicts
     resources :entrance_exits
     resources :labels
     resources :lines

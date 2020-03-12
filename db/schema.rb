@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_07_131843) do
+ActiveRecord::Schema.define(version: 2020_03_12_014830) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -107,6 +107,18 @@ ActiveRecord::Schema.define(version: 2020_03_07_131843) do
     t.bigint "character_id", null: false
     t.bigint "stage_direction_id", null: false
     t.index ["character_id", "stage_direction_id"], name: "index_characters_stage_directions"
+  end
+
+  create_table "conflicts", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string "category"
+    t.bigint "space_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["space_id"], name: "index_conflicts_on_space_id"
+    t.index ["user_id"], name: "index_conflicts_on_user_id"
   end
 
   create_table "entrance_exits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -360,6 +372,8 @@ ActiveRecord::Schema.define(version: 2020_03_07_131843) do
   add_foreign_key "acts", "plays"
   add_foreign_key "character_groups", "plays"
   add_foreign_key "characters", "character_groups"
+  add_foreign_key "conflicts", "spaces"
+  add_foreign_key "conflicts", "users"
   add_foreign_key "entrance_exits", "french_scenes"
   add_foreign_key "entrance_exits", "stage_exits"
   add_foreign_key "french_scenes", "scenes"

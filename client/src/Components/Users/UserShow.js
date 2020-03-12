@@ -15,6 +15,7 @@ import {
 } from '../../api/users.js'
 
 import JobsList from '../Jobs/JobsList'
+import ConflictsList from './Conflicts/ConflictsList'
 
 class UserShow extends Component {
   constructor(props, context) {
@@ -86,6 +87,11 @@ class UserShow extends Component {
           </span>
         </Col>
       </Row>
+      <hr />
+      <Row>
+        <ConflictsList user={this.props.user} />
+      </Row>
+      <hr />
       <Row>
         <JobsList user={this.props.user} />
       </Row>
