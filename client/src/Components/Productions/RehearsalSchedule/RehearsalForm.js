@@ -23,26 +23,30 @@ const validate = ({ startTime, endTime }) => {
   };
 };
 
-class ConflictForm extends Component {
+class RehearsalForm extends Component {
   constructor(props) {
     super(props)
-    let category = ''
     let endTime = ''
+    let notes = ''
     let startTime = ''
-    if (this.props.conflict) {
-      category =  this.props.conflict.category
-      endTime =  this.props.conflict.end_time
-      startTime = this.props.conflict.start_time
+    let title = ''
+    if (this.props.rehearsal) {
+      endTime =  this.props.rehearsal.end_time
+      notes = this.props.rehearsal.notes
+      startTime = this.props.rehearsal.start_time
+      title = this.props.rehearsal.title
     }
     this.state = {
-      category: category,
       endTime: endTime,
+      notes: notes,
       startTime: startTime,
-
+      textUnit: '',
+      title: title
     }
   }
 
   handleChange = (event) => {
+    console.log(event.target)
     this.setState({
       [event.target.name]: event.target.value
     })
@@ -60,6 +64,12 @@ class ConflictForm extends Component {
     })
   }
 
+  handleTextUnitChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+  }
+
   handleSubmit = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -74,19 +84,22 @@ class ConflictForm extends Component {
     })
   }
 
+  // loadTextUnits TKTKTK
+
   processSubmit = () => {
     let id
-    if (this.props.conflict) {
-      id = this.props.conflict.id
+    if (this.props.rehearsal) {
+      id = this.props.rehearsal.id
     }
     this.props.onFormSubmit({
       id: id,
-      category: this.state.category,
       end_time: this.state.endTime,
+      notes: this.state.notes,
       space_id: '',
       start_time: this.state.startTime,
-      user_id: this.props.user.id,
-    }, "conflict")
+      title: this.state.title,
+      production_id: this.props.productionId,
+    }, "rehearsal")
   }
 
   render() {
@@ -110,6 +123,56 @@ class ConflictForm extends Component {
           span: 8,
           offset: 2
         } }>
+      <h2>How do you want to schedule this rehearsal?</h2>
+      <Form
+        onSubmit={e => this.loadTextUnits(e)}
+      >
+      <Form.Group as={Form.Row}>
+        <Form.Label as="legend">
+          Unit of text
+        </Form.Label>
+        <Col sm={10} className="form-radio">
+          <Form.Check
+            checked={this.state.textUnit === 'french_scene'}
+            id="french_scene"
+            label="French Scene"
+            name="textUnit"
+            onChange={this.handleChange}
+            type="radio"
+            value="french_scene"
+          />
+          <Form.Check
+            checked={this.state.textUnit === 'scene'}
+            id="scene"
+            label="Scene"
+            name="textUnit"
+            onChange={this.handleChange}
+            type="radio"
+            value="scene"
+          />
+          <Form.Check
+            checked={this.state.textUnit === 'act'}
+            id="act"
+            label="Act"
+            name="textUnit"
+            onChange={this.handleChange}
+            type="radio"
+            value="act"
+          />
+          <Form.Check
+            checked={this.state.textUnit === 'play'}
+            id="play"
+            label="Whole Play"
+            name="textUnit"
+            onChange={this.handleChange}
+            type="radio"
+            value="play"
+          />
+        </Col>
+      </Form.Group>
+      <Button type="submit" variant="primary" block>Load Text Options</Button>
+      <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
+      </Form>
       <Form
         noValidate
         onSubmit={e => this.handleSubmit(e)}
@@ -139,62 +202,18 @@ class ConflictForm extends Component {
         <Form.Control.Feedback type="invalid">
         </Form.Control.Feedback>
       </Form.Group>
-        <fieldset>
-    <Form.Group as={Form.Row}>
-      <Form.Label as="legend">
-        Category
-      </Form.Label>
-      <Col sm={10} className="form-radio">
-        <Form.Check
-          checked={this.state.category === 'rehearsal'}
-          id="rehearsal"
-          label="Rehearsal"
-          name="category"
+      <Form.Group controlId="notes">
+        <Form.Label>Notes:</Form.Label>
+        <Form.Control
+          as="textarea"
+          name="notes"
           onChange={this.handleChange}
-          type="radio"
-          value="rehearsal"
+          rows="3"
+          value={this.state.notes}
         />
-        <Form.Check
-          checked={this.state.category === 'work'}
-          id="work"
-          label="Work"
-          name="category"
-          onChange={this.handleChange}
-          type="radio"
-          value="work"
-        />
-        <Form.Check
-          checked={this.state.category === 'class'}
-          id="class"
-          label="Class"
-          name="category"
-          onChange={this.handleChange}
-          type="radio"
-          value="class"
-        />
-        <Form.Check
-          checked={this.state.category === 'personal'}
-          id="personal"
-          label="Personal"
-          name="category"
-          onChange={this.handleChange}
-          type="radio"
-          value="personal"
-        />
-        <Form.Check
-          checked={this.state.category === 'medical'}
-          id="medical"
-          label="Medical"
-          name="category"
-          onChange={this.handleChange}
-          type="radio"
-          value="medical"
-        />
-      </Col>
-    </Form.Group>
-  </fieldset>
-          <Button type="submit" variant="primary" block>Submit</Button>
-          <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
+      </Form.Group>
+      <Button type="submit" variant="primary" block>Submit</Button>
+      <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
       </Form>
         <hr />
       </Col>
@@ -202,10 +221,10 @@ class ConflictForm extends Component {
   }
 }
 
-ConflictForm.propTypes = {
+RehearsalForm.propTypes = {
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  production: PropTypes.string.isRequired,
 }
 
-export default ConflictForm
+export default RehearsalForm

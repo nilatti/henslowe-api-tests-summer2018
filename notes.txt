@@ -1,7 +1,5 @@
 add character groups for on_stages in react
 
-is it possible to return a method from model via api? eg. pretty name?
-
 mind hard coding on updates for line-related things that aren't exactly lines (eg stage directions, sound cues). Some hard-coding in LineShow.js that could break.
 
 find other times to use character select
@@ -29,3 +27,5 @@ in script edit :
 edits on stage directions don't seem to be working quite right. Writing to DB but not updating state until reload
 
 look at cast list--do I need to get jobs from server or can I just filter out of production?
+
+Rehearsal scheduler request: curl -X PUT -H "Content-Type: application/json" -d '{"rehearsal_block_length":"30","rehearsal_break_length":"5", "rehearsal_days_of_week": "'Monday','Tuesday'", "rehearsal_end_date":"2020-04-20", "rehearsal_end_time":"18:00:00","rehearsal_start_date": "2020-04-10", "rehearsal_start_time": "14:00:00", "rehearsal_time_between_breaks": "55"}' http://localhost:3001/api/productions/66/build_rehearsal_schedule

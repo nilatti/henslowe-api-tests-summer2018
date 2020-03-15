@@ -27,7 +27,8 @@ gem 'sidekiq'
 gem 'activeadmin'
 
 gem 'activerecord-import'
-
+# montrose provides recurrence logic
+gem "montrose"
 # Use Capistrano for deployment
 gem 'capistrano-rails', group: :development
 

@@ -8,7 +8,8 @@ import Footer from './Components/Footer'
 import Navigation from './Components/Navigation'
 import Main from './Components/Main'
 import './App.css';
-import './react-datetime.css'
+// import './react-datetime.css'
+import 'react-widgets/dist/css/react-widgets.css';
 
 const App = () => (
   <Container fluid={true}>

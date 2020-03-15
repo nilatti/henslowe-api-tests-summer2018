@@ -141,7 +141,7 @@ class PlayShow extends Component {
         {characterTabs}
       </Tabs>
       <Row>
-        <Link to={`/playscripts/${this.props.play.id}`}>
+        <Link to={`${this.props.play.id}/playscripts/`}>
           <Button variant="info">
             Edit Script
           </Button>

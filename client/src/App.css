@@ -54,6 +54,10 @@ ul {
   background-color: purple;
 }
 
+.form-radio {
+  text-align: left;
+}
+
 .instructions {
   font-style: italic;
   font-size: 0.8em;
