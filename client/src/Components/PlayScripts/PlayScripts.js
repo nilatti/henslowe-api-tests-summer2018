@@ -123,7 +123,7 @@ class PlayScripts extends Component {
 
 
   async loadSkeleton(playId) {
-    const response = await getPlaySkeleton(this.props.match.params.id)
+    const response = await getPlaySkeleton(playId)
     if (response.status >= 400) {
       this.setState({
         errorStatus: 'Error retrieving play'

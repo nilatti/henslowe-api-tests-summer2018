@@ -11,9 +11,13 @@ import React, {
 } from 'react'
 
 import {
-  Link
-} from 'react-router-dom'
-
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams,
+  useRouteMatch
+} from "react-router-dom";
 import {
   calculateLineCount,
   calculateRunTime,
@@ -25,62 +29,47 @@ import CastList from '../Jobs/CastList'
 import JobsListExcludingActorsAndAuditioners from '../Jobs/JobsListExcludingActorsAndAuditioners'
 import StageExitsList from './SetDesign/StageExitsList'
 
-class ProductionShow extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.handleSelect = this.handleSelect.bind(this);
-
-    this.state = {
-      key: ''
-    };
-  }
-
-
-  handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.production.id)
-  }
-
-  handleSelect(key) {
-    this.setState({
-      key
-    });
-  }
-
-  render() {
-    console.log(this.props.production)
-    let linesTotal = calculateLineCount(getLinesFromCharacters(this.props.production.play.characters))
-    let runTime = parseFloat(linesTotal / this.props.production.lines_per_minute).toFixed(2)
+export default function ProductionShow (props) {
+  //
+  // handleDeleteClick = () => {
+  //   this.props.onDeleteClick(this.props.production.id)
+  // }
+  //
+  // render() {
+    let { url } = useRouteMatch();
+    let linesTotal = calculateLineCount(getLinesFromCharacters(props.production.play.characters))
+    let runTime = parseFloat(linesTotal / props.production.lines_per_minute).toFixed(2)
     return (
       <Col md={12}>
       <Row>
         <Col md={12} className="production-profile">
           <h2>
             {
-              this.props.production.play ?
-              <Link to={`/plays/${this.props.production.play.id}`}>
-                {this.props.production.play.title}
+              props.production.play ?
+              <Link to={`/plays/${props.production.play.id}`}>
+                {props.production.play.title}
               </Link>
               :
               'A Play'
             } at {
-              this.props.production.theater ?
-              <Link to={`/theaters/${this.props.production.theater.id}`}>
-                {this.props.production.theater.name}
+              props.production.theater ?
+              <Link to={`/theaters/${props.production.theater.id}`}>
+                {props.production.theater.name}
               </Link>
               : 'A Theater'
             }
           </h2>
-          <p><em>{this.props.production.start_date} - {this.props.production.end_date}</em></p>
+          <p><em>{props.production.start_date} - {props.production.end_date}</em></p>
 
           <span
             className='right floated edit icon'
-            onClick={this.props.onEditClick}
+            onClick={props.onEditClick}
           >
             <i className="fas fa-pencil-alt"></i>
           </span>
           <span
             className='right floated trash icon'
-            onClick={this.handleDeleteClick}
+            onClick={() => {props.handleDeleteClick()}}
           >
             <i className="fas fa-trash-alt"></i>
           </span>
@@ -89,10 +78,10 @@ class ProductionShow extends Component {
       <hr />
       <Row>
         <Col md={12}>
-          <p>Lines per minute: {this.props.production.lines_per_minute}</p>
+          <p>Lines per minute: {props.production.lines_per_minute}</p>
           <p>Total lines: {linesTotal}</p>
           <p>Run time: {runTime} minutes</p>
-          <Link to={`/doubling_charts/${this.props.production.id}`}>
+          <Link to={`${url}/doubling_charts/`}>
             <Button variant="info">
               Show Doubling Charts
             </Button>
@@ -102,16 +91,16 @@ class ProductionShow extends Component {
       <hr />
       <Row>
         <h2>Production Jobs</h2>
-        <JobsListExcludingActorsAndAuditioners production={this.props.production} />
+        <JobsListExcludingActorsAndAuditioners production={props.production} />
       </Row>
       <hr />
       <Row>
-        <CastList production={this.props.production} />
+        <CastList production={props.production} />
       </Row>
       <hr />
       <Row>
         <Col md={12}>
-          <ActorsList production={this.props.production} />
+          <ActorsList production={props.production} />
         </Col>
       </Row>
       <hr />
@@ -121,11 +110,11 @@ class ProductionShow extends Component {
         </h2>
       </Row>
       <Row>
-        <StageExitsList productionId={this.props.production.id}/>
+        <StageExitsList productionId={props.production.id}/>
       </Row>
       </Col>
     )
-  }
+  // }
 }
 
 ProductionShow.propTypes = {
@@ -134,4 +123,4 @@ ProductionShow.propTypes = {
   onEditClick: PropTypes.func.isRequired,
 }
 
-export default ProductionShow
+// export default ProductionShow

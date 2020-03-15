@@ -35,7 +35,7 @@ class ConflictsController < ApiController
   # PATCH/PUT /conflicts/1.json
   def update
     if @conflict.update(conflict_params)
-      render :show, status: :ok, location: @conflict
+      render json: @conflict
     else
       render json: @conflict.errors, status: :unprocessable_entity
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_12_014830) do
+ActiveRecord::Schema.define(version: 2020_03_14_161047) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -237,6 +237,19 @@ ActiveRecord::Schema.define(version: 2020_03_12_014830) do
     t.index ["theater_id"], name: "index_productions_on_theater_id"
   end
 
+  create_table "rehearsals", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.bigint "space_id"
+    t.text "notes"
+    t.string "title"
+    t.bigint "production_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["production_id"], name: "index_rehearsals_on_production_id"
+    t.index ["space_id"], name: "index_rehearsals_on_space_id"
+  end
+
   create_table "scenes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "number"
     t.text "summary"
@@ -389,6 +402,8 @@ ActiveRecord::Schema.define(version: 2020_03_12_014830) do
   add_foreign_key "on_stages", "character_groups"
   add_foreign_key "plays", "authors"
   add_foreign_key "productions", "theaters"
+  add_foreign_key "rehearsals", "productions"
+  add_foreign_key "rehearsals", "spaces"
   add_foreign_key "sound_cues", "french_scenes"
   add_foreign_key "space_agreements", "spaces"
   add_foreign_key "space_agreements", "theaters"

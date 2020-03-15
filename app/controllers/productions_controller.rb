@@ -13,6 +13,7 @@ class ProductionsController < ApiController
   def show
     @production = Production.includes(
       :theater,
+      :rehearsals,
       :stage_exits,
       [
         play:
@@ -53,6 +54,7 @@ class ProductionsController < ApiController
     json_response(@production.as_json(include:
         [
           :theater,
+          :rehearsals,
           :stage_exits,
           play: {
             include: [
@@ -182,6 +184,13 @@ class ProductionsController < ApiController
     json_response(@productions.as_json(include: [:play, :theater]))
   end
 
+  def build_rehearsal_schedule
+    set_production
+    json_response(@production.as_json(include: [:theater]))
+    # BuildRehearsalScheduleWorker.perform_async(params[:rehearsal_block_length])
+    BuildRehearsalScheduleWorker.perform_async(params[:rehearsal_block_length], params[:rehearsal_break_length], params[:rehearsal_days_of_week], params[:rehearsal_end_date], params[:rehearsal_end_time], @production.id, params[:rehearsal_time_between_breaks], params[:rehearsal_start_date], params[:rehearsal_start_time])
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_production
@@ -195,8 +204,16 @@ class ProductionsController < ApiController
         :id,
         :lines_per_minute,
         :play_id,
+        :rehearsal_block_length,
+        :rehearsal_break_length,
+        :rehearsal_days_of_week,
+        :rehearsal_end_date,
+        :rehearsal_end_time,
+        :rehearsal_start_date,
+        :rehearsal_end_time,
+        :rehearsal_time_between_breaks,
         :theater_id,
-        :start_date
+        :start_date,
       )
     end
 end

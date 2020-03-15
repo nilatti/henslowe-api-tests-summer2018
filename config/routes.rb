@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :rehearsals
   resources :conflicts
   # devise_for :admin_users, ActiveAdmin::Devise.config
   devise_for :users, :controllers => {
@@ -23,6 +24,10 @@ Rails.application.routes.draw do
     end
     resources :specializations
     resources :productions do
+      resources :rehearsals
+      member do
+        put :build_rehearsal_schedule
+      end
       resources :stage_exits
       collection do
         get :production_names
@@ -85,6 +90,7 @@ Rails.application.routes.draw do
     resources :labels
     resources :lines
     resources :on_stages
+    resources :rehearsals
     resources :sound_cues
     resources :stage_directions
     resources :words

@@ -6,9 +6,9 @@ import {
   Button,
 } from 'react-bootstrap'
 
-import ConflictForm from './ConflictForm.js'
+import RehearsalForm from './RehearsalForm.js'
 
-class ConflictFormToggle extends Component { //opens form for create action
+class RehearsalFormToggle extends Component { //opens form for create action
   constructor(props) {
     super(props)
     this.state = {
@@ -26,18 +26,18 @@ class ConflictFormToggle extends Component { //opens form for create action
       isOpen: false
     })
   }
-  handleFormSubmit = (conflict) => {
+  handleFormSubmit = (rehearsal) => {
     this.handleFormClose()
-    this.props.onFormSubmit(conflict)
+    this.props.onFormSubmit(rehearsal)
   }
 
   render() {
     if (this.state.isOpen) {
       return (
-        <ConflictForm
+        <RehearsalForm
           onFormClose={this.handleFormClose}
           onFormSubmit={this.props.onFormSubmit}
-          user={this.props.user}
+          production={this.props.production}
 
         />
       );
@@ -46,17 +46,17 @@ class ConflictFormToggle extends Component { //opens form for create action
           <Button variant="info"
             onClick={this.handleFormOpen}
           >
-            Add New Conflict
+            Add New Rehearsal
           </Button>
       );
     }
   }
 }
 
-ConflictFormToggle.propTypes = {
+RehearsalFormToggle.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  production: PropTypes.object.isRequired,
 }
 
-export default ConflictFormToggle
+export default RehearsalFormToggle

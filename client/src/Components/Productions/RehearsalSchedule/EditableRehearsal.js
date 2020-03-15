@@ -3,23 +3,24 @@ import React, {
   Component
 } from 'react'
 
-import ConflictForm from './ConflictForm'
-import ConflictShow from './ConflictShow'
+import RehearsalForm from './RehearsalForm'
+import RehearsalShow from './RehearsalShow'
 
-class EditableConflict extends Component {
+class EditableRehearsal extends Component {
   constructor(props) {
     super(props)
     this.state = {
       editFormOpen: false,
-      conflict: null,
+      rehearsal: null,
     }
   }
 
   handleEditClick = () => {
     this.toggleForm()
   }
-  handleSubmit = (conflict) => {
-    this.props.handleSubmit(conflict)
+
+  handleSubmit = (rehearsal) => {
+    this.props.handleSubmit(rehearsal)
     this.toggleForm()
   }
 
@@ -30,25 +31,25 @@ class EditableConflict extends Component {
   }
 
   render() {
-    if (this.props.conflict === null) {
+    if (this.props.rehearsal === null) {
       return (
         <div>Loading!</div>
       )
     }
     if (this.state.editFormOpen) {
       return (
-        <ConflictForm
-          conflict={this.props.conflict}
+        <RehearsalForm
+          rehearsal={this.props.rehearsal}
           isOpen={true}
           onFormSubmit={this.handleSubmit}
           onFormClose={this.toggleForm}
-          user={this.props.user}
+          production={this.props.production}
         />
       )
     } else {
       return (
-        <ConflictShow
-        conflict={this.props.conflict}
+        <RehearsalShow
+        rehearsal={this.props.rehearsal}
         handleEditClick={this.handleEditClick}
         handleDeleteClick={this.props.handleDeleteClick}
         onFormSubmit={this.handleSubmit}
@@ -58,11 +59,11 @@ class EditableConflict extends Component {
   }
 }
 
-EditableConflict.propTypes = {
-  conflict: PropTypes.object.isRequired,
+EditableRehearsal.propTypes = {
+  rehearsal: PropTypes.object.isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  production: PropTypes.object.isRequired,
 }
 
-export default EditableConflict
+export default EditableRehearsal

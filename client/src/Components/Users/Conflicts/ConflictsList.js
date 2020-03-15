@@ -18,11 +18,12 @@ import {
 import ConflictFormToggle from './ConflictFormToggle'
 import EditableConflict from './EditableConflict'
 
-
 class ConflictsList extends Component {
   constructor(props) {
     super(props)
-    let conflicts = _.sortBy(this.props.user.conflicts, 'start_date')
+    let conflicts = _.sortBy(this.props.user.conflicts, function(conflict) {
+      return new Date(conflict.start_time);
+    });
     this.state = {
       conflicts: conflicts,
     }
@@ -36,6 +37,10 @@ class ConflictsList extends Component {
     this.deleteConflict(conflictId)
   }
 
+  handleConflictEdit = (conflict) => {
+    this.updateConflict(conflict)
+  }
+
   async createConflict(userId, conflict) {
     const response = await createItemWithParent('user', userId, 'conflict', conflict)
     if (response.status >= 400) {
@@ -43,8 +48,11 @@ class ConflictsList extends Component {
         errorStatus: 'Error creating character'
       })
     } else {
+      let newConflicts = _.sortBy([...this.state.conflicts, response.data], function(conflict) {
+        return new Date(conflict.start_time);
+      });
       this.setState({
-        conflicts: _.sortBy([...this.state.conflicts, response.data], 'start_date')
+        conflicts: newConflicts
       })
     }
   }
@@ -62,6 +70,26 @@ class ConflictsList extends Component {
     }
   }
 
+  async updateConflict(updatedConflict) {
+    const response = await updateServerItem(updatedConflict, 'conflict')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error updating conflict'
+      })
+    } else {
+      let newConflicts = this.state.conflicts.map((conflict) => {
+        if (conflict.id === updatedConflict.id) {
+          return {...conflict, ...updatedConflict}
+        } else {
+          return conflict
+        }
+      })
+      this.setState({
+        conflicts: newConflicts
+      })
+    }
+  }
+
   render(){
     if (this.state.conflicts === null) {
       return (
@@ -73,6 +101,9 @@ class ConflictsList extends Component {
       <EditableConflict
       conflict={conflict}
       handleDeleteClick={this.handleConflictDelete}
+      handleSubmit={this.handleConflictEdit}
+      key={conflict.id}
+      user={this.props.user}
       />
     )
     return(
@@ -84,13 +115,11 @@ class ConflictsList extends Component {
       {conflicts}
       </Row>
       <Row>
-      <div>
-      <ConflictFormToggle
-      isOpen={false}
-      onFormSubmit={this.handleConflictCreate}
-      user={this.props.user}
-      />
-      </div>
+        <ConflictFormToggle
+          isOpen={false}
+          onFormSubmit={this.handleConflictCreate}
+          user={this.props.user}
+        />
       </Row>
       </Col>
     )
