@@ -10,10 +10,15 @@ class FrenchScene < ApplicationRecord
   has_many :character_groups, through: :on_stages
   has_many :users, through: :on_stages
   has_many :stage_directions, dependent: :destroy
+  has_and_belongs_to_many :rehearsals
 
   validates :number, presence: true
 
   default_scope {order(:number)}
+
+  def self.play_order(french_scenes)
+    french_scenes.sort_by(&:pretty_name)
+  end
 
   def pretty_name
     "#{self.scene.act.number}.#{self.scene.number}.#{self.number}"

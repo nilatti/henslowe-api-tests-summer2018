@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_14_161047) do
+ActiveRecord::Schema.define(version: 2020_03_25_195301) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -36,6 +36,11 @@ ActiveRecord::Schema.define(version: 2020_03_14_161047) do
     t.datetime "updated_at", null: false
     t.string "heading"
     t.index ["play_id"], name: "index_acts_on_play_id"
+  end
+
+  create_table "acts_rehearsals", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "act_id", null: false
+    t.bigint "rehearsal_id", null: false
   end
 
   create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -146,6 +151,11 @@ ActiveRecord::Schema.define(version: 2020_03_14_161047) do
     t.index ["scene_id"], name: "index_french_scenes_on_scene_id"
   end
 
+  create_table "french_scenes_rehearsals", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "french_scene_id", null: false
+    t.bigint "rehearsal_id", null: false
+  end
+
   create_table "jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "production_id"
     t.bigint "specialization_id"
@@ -248,6 +258,11 @@ ActiveRecord::Schema.define(version: 2020_03_14_161047) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["production_id"], name: "index_rehearsals_on_production_id"
     t.index ["space_id"], name: "index_rehearsals_on_space_id"
+  end
+
+  create_table "rehearsals_scenes", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "scene_id", null: false
+    t.bigint "rehearsal_id", null: false
   end
 
   create_table "scenes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

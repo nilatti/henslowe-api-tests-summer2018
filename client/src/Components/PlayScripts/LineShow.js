@@ -95,7 +95,6 @@ class LineShow extends Component {
   }
 
   submitLineEdit = (line) => {
-    console.log('line is', line)
     this.toggleEditForm()
     this.props.handleLineSubmit(line)
   }

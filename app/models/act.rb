@@ -1,6 +1,7 @@
 class Act < ApplicationRecord
   belongs_to :play
   has_many :scenes, dependent: :destroy
+  has_and_belongs_to_many :rehearsals
   default_scope {order(:number)}
 
   validates :number, presence: true
@@ -19,6 +20,10 @@ class Act < ApplicationRecord
     on_stages.flatten!
     on_stages.uniq! {|o| o.character_id}
     return on_stages
+  end
+
+  def self.play_order(acts)
+    acts.sort_by(&:pretty_name)
   end
 
 end

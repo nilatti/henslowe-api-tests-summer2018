@@ -93,7 +93,6 @@ class PlayShow extends Component {
     } else {
       characterTabs = <div>No acts found</div>
     }
-    console.log(this.props.play)
     return (
       <div>
         <Row>

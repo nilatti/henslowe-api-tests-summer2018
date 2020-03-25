@@ -1,6 +1,7 @@
 class Scene < ApplicationRecord
   belongs_to :act
   has_many :french_scenes, dependent: :destroy
+  has_and_belongs_to_many :rehearsals
 
   validates :number, presence: true
 
@@ -18,6 +19,10 @@ class Scene < ApplicationRecord
     on_stages.flatten!
     on_stages.uniq! {|o| o.character_id}
     return on_stages
+  end
+
+  def self.play_order(scenes)
+    scenes.sort_by(&:pretty_name)
   end
 
 end
