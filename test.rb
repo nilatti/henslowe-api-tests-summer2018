@@ -56,12 +56,27 @@ def build_rehearsal_days(days_of_week:, end_date:, start_date:)
   schedule = Montrose.every(:week, starts: start_on, until: end_on).on(days)
 end
 
-build_recurring_rehearsals(
-  end_date: "2020-05-27",
-  start_date: "2020-03-27",
-  days_of_week: ["monday","wednesday","friday"],
-  start_time: "18:00",
-  end_time: "20:00",
-  block_length: 25,
-  break_length: 5
-)
+# build_recurring_rehearsals(
+#   end_date: "2020-05-27",
+#   start_date: "2020-03-27",
+#   days_of_week: ["monday","wednesday","friday"],
+#   start_time: "18:00",
+#   end_time: "20:00",
+#   block_length: 25,
+#   break_length: 5
+# )
+
+def add_users_to_on_stages(jobs, on_stages)
+  jobs.each do |job|
+    relevant_on_stages = on_stages.select {|o| o.character_id == job.character_id}
+    relevant_on_stages.each do |on_stage|
+      on_stage.user_id = job.user_id
+      on_stage.save
+    end
+  end
+end
+
+jobs = Job.where(production_id: 66)
+castings = jobs.select {|j| j.specialization_id == 2}
+on_stages = Play.find(263).on_stages
+add_users_to_on_stages(castings, on_stages)

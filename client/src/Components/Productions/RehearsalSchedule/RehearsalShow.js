@@ -24,6 +24,8 @@ import {
   updateServerItem
 } from '../../../api/crud'
 
+import EditableRehearsalContent from './EditableRehearsalContent'
+
 class RehearsalShow extends Component {
   constructor(props) {
     super(props)
@@ -31,6 +33,14 @@ class RehearsalShow extends Component {
 
   handleDeleteClick = () => {
     this.props.handleDeleteClick(this.props.rehearsal.id)
+  }
+
+  handleContentButtonClick = () => {
+    console.log('content')
+  }
+
+  handlePeopleButtonClick = () => {
+    console.log('people')
   }
 
   render() {
@@ -53,9 +63,9 @@ class RehearsalShow extends Component {
           <span></span>
         }
         <span
-                      className='right floated edit icon'
-                      onClick={this.props.handleEditClick}
-                    >
+              className='right floated edit icon'
+              onClick={this.props.handleEditClick}
+            >
             <i className="fas fa-pencil-alt"></i>
           </span>
           <span
@@ -74,6 +84,22 @@ class RehearsalShow extends Component {
           :
           <span></span>
         }
+        <Row>
+          <EditableRehearsalContent
+            production={this.props.production}
+            rehearsal={rehearsal}
+          />
+        </Row>
+        <Row>
+          {
+            rehearsal.called ? <span>{rehearsal.called}</span> : <span></span>
+          }
+          <Button
+            onClick={this.handlePeopleButtonClick}
+          >
+            Add or edit who is called
+          </Button>
+        </Row>
         <hr />
       </Col>
 
@@ -83,6 +109,7 @@ class RehearsalShow extends Component {
 
 RehearsalShow.propTypes = {
   rehearsal: PropTypes.object.isRequired,
+  production: PropTypes.object.isRequired,
 }
 
 export default RehearsalShow

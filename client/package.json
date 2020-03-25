@@ -14,6 +14,7 @@
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.0",
+    "react-beautiful-dnd": "^13.0.0",
     "react-bootstrap": "^1.0.0-beta.17",
     "react-bootstrap-sidebar": "0.0.1",
     "react-bootstrap-typeahead": "^3.4.3",

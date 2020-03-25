@@ -46,7 +46,6 @@ class RehearsalForm extends Component {
   }
 
   handleChange = (event) => {
-    console.log(event.target)
     this.setState({
       [event.target.name]: event.target.value
     })
@@ -83,8 +82,6 @@ class RehearsalForm extends Component {
       validated: true
     })
   }
-
-  // loadTextUnits TKTKTK
 
   processSubmit = () => {
     let id
@@ -123,56 +120,6 @@ class RehearsalForm extends Component {
           span: 8,
           offset: 2
         } }>
-      <h2>How do you want to schedule this rehearsal?</h2>
-      <Form
-        onSubmit={e => this.loadTextUnits(e)}
-      >
-      <Form.Group as={Form.Row}>
-        <Form.Label as="legend">
-          Unit of text
-        </Form.Label>
-        <Col sm={10} className="form-radio">
-          <Form.Check
-            checked={this.state.textUnit === 'french_scene'}
-            id="french_scene"
-            label="French Scene"
-            name="textUnit"
-            onChange={this.handleChange}
-            type="radio"
-            value="french_scene"
-          />
-          <Form.Check
-            checked={this.state.textUnit === 'scene'}
-            id="scene"
-            label="Scene"
-            name="textUnit"
-            onChange={this.handleChange}
-            type="radio"
-            value="scene"
-          />
-          <Form.Check
-            checked={this.state.textUnit === 'act'}
-            id="act"
-            label="Act"
-            name="textUnit"
-            onChange={this.handleChange}
-            type="radio"
-            value="act"
-          />
-          <Form.Check
-            checked={this.state.textUnit === 'play'}
-            id="play"
-            label="Whole Play"
-            name="textUnit"
-            onChange={this.handleChange}
-            type="radio"
-            value="play"
-          />
-        </Col>
-      </Form.Group>
-      <Button type="submit" variant="primary" block>Load Text Options</Button>
-      <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
-      </Form>
       <Form
         noValidate
         onSubmit={e => this.handleSubmit(e)}

@@ -129,6 +129,26 @@ class PlaysController < ApiController
     head :no_content
   end
 
+  def play_act_on_stages
+    @play = Play.includes(acts: [scenes: [french_scenes: [:on_stages]]]).find(params[:play])
+    render json: @play.acts.as_json(methods: :on_stages)
+  end
+
+  def play_french_scene_on_stages
+    @play = Play.includes(french_scenes: [:on_stages]).find(params[:play])
+    render json: @play.french_scenes.as_json(include: :on_stages, methods: :pretty_name)
+  end
+
+  def play_on_stages
+    @play = Play.includes(acts: [scenes: [french_scenes: [:on_stages]]]).find(params[:play])
+    render json: @play.as_json(methods: :find_on_stages)
+  end
+
+  def play_scene_on_stages
+    @play = Play.includes(scenes: [french_scenes: [:on_stages]]).find(params[:play])
+    render json: @play.scenes.as_json(methods: [:pretty_name, :on_stages])
+  end
+
   def play_script
     @play = Play.includes(:characters, :character_groups, acts: [scenes: [french_scenes: [:stage_directions, :sound_cues, lines: [:character, :words]]]]).find(params[:play])
 

@@ -43,7 +43,7 @@ class ProductionsController < ApiController
         jobs: [
           :specialization,
           :theater,
-          :user,
+          user: [:conflicts],
           character: [
             :lines
           ]
@@ -95,7 +95,9 @@ class ProductionsController < ApiController
             include: [
               :specialization,
               :theater,
-              :user,
+              user: {
+                include: :conflicts
+              },
               character: {
                 include: :lines
               }
