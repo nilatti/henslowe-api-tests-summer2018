@@ -26,11 +26,11 @@ class RehearsalsController < ApiController
 
   # PATCH/PUT /acts/1
   def update
-    if @rehearsal.update(rehearsal_params)
-      render json: @rehearsal
-    else
-      render json: @rehearsal.errors, status: :unprocessable_entity
-    end
+    @rehearsal.update(rehearsal_params)
+    render json: @rehearsal.as_json(include: [:acts, :french_scenes, :scenes])
+    # else
+    #   render json: @rehearsal.errors, status: :unprocessable_entity
+    # end
   end
 
   # DELETE /acts/1
@@ -47,7 +47,7 @@ class RehearsalsController < ApiController
     end
 
     def set_rehearsal
-      @rehearsal = Rehearsal.find(params[:id])
+      @rehearsal = Rehearsal.includes(:acts, :french_scenes, :scenes).find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
@@ -58,7 +58,10 @@ class RehearsalsController < ApiController
         :production_id,
         :space_id,
         :start_time,
-        :title
+        :title,
+        act_ids: [],
+        french_scene_ids: [],
+        scene_ids: []
       )
     end
 end

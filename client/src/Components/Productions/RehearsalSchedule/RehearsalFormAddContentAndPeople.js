@@ -76,8 +76,6 @@ class RehearsalFormAddContentAndPeople extends Component {
   }
 
   render() {
-    console.log('props', this.props)
-    console.log('users', this.state.users)
     const {
       validated
     } = this.state

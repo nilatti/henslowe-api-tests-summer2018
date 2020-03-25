@@ -4,7 +4,7 @@ class ScenesController < ApiController
 
   # GET /scenes
   def index
-    @scenes = @act.scenes
+    @scenes = Scene.play_order(@act.scenes)
 
     render json: @scenes
   end

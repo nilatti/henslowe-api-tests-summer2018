@@ -13,9 +13,9 @@ class ProductionsController < ApiController
   def show
     @production = Production.includes(
       :theater,
-      :rehearsals,
       :stage_exits,
       [
+        rehearsals: [:acts, :french_scenes, :scenes],
         play:
         [
           characters: [:lines],
@@ -54,8 +54,10 @@ class ProductionsController < ApiController
     json_response(@production.as_json(include:
         [
           :theater,
-          :rehearsals,
           :stage_exits,
+          rehearsals: {
+            include: [:acts, french_scenes: {methods: :pretty_name}, scenes: {methods: :pretty_name}]
+          },
           play: {
             include: [
               characters: {

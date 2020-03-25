@@ -15,6 +15,7 @@ import {
 import {buildUserName} from '../../../utils/actorUtils'
 import DraggableLists from '../../../utils/DraggableLists'
 
+import { updateServerItem } from '../../../api/crud.js'
 import {
   getPlayActOnStages,
   getPlayFrenchSceneOnStages,
@@ -33,7 +34,9 @@ class RehearsalContentForm extends Component {
       content: this.props.rehearsal.content || [],
       allUsers: hiredUsers,
       availableUsers: availableUsers,
+      buttonsEnabled: false,
       playContent: [],
+      radiosEnabled: true,
     }
   }
 
@@ -110,7 +113,8 @@ class RehearsalContentForm extends Component {
 
   handleChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
+      buttonsEnabled: true,
     })
   }
 
@@ -154,6 +158,14 @@ class RehearsalContentForm extends Component {
     }, "rehearsal")
   }
 
+  setContent = (e) => {
+    let newRehearsal = {
+      ...this.props.rehearsal,
+      [`${this.state.textUnit}_ids`]: this.state.content.map((item) => item.id)
+    }
+    this.updateRehearsal(newRehearsal)
+  }
+
   async loadActOnStages(playId) {
     const response = await getPlayActOnStages(playId)
     if (response.status >= 400) {
@@ -174,7 +186,13 @@ class RehearsalContentForm extends Component {
         errorStatus: 'Error retrieving content'
       })
     } else {
-      this.setState({playContent: response.data}, function() {
+      let playContent = response.data.map((french_scene) => {
+        let prettyName = french_scene.pretty_name
+        return {
+          ...french_scene, heading: french_scene.pretty_name
+        }
+      })
+      this.setState({playContent: playContent}, function() {
         this.markContentUserUnavailable()
       })
     }
@@ -211,6 +229,17 @@ class RehearsalContentForm extends Component {
       this.setState({playContent: playContent}, function() {
         this.markContentUserUnavailable()
       })
+    }
+  }
+
+  async updateRehearsal(rehearsal) {
+    const response = await updateServerItem(rehearsal, 'rehearsal')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error updating rehearsal'
+      })
+    } else {
+      console.log('rehearsal updated', response.data)
     }
   }
 
@@ -262,6 +291,7 @@ class RehearsalContentForm extends Component {
         <Col sm={10} className="form-radio">
           <Form.Check
             checked={this.state.textUnit === 'french_scene'}
+            disabled={!this.state.radiosEnabled}
             id="french_scene"
             label="French Scene"
             name="textUnit"
@@ -271,6 +301,7 @@ class RehearsalContentForm extends Component {
           />
           <Form.Check
             checked={this.state.textUnit === 'scene'}
+            disabled={!this.state.radiosEnabled}
             id="scene"
             label="Scene"
             name="textUnit"
@@ -280,6 +311,7 @@ class RehearsalContentForm extends Component {
           />
           <Form.Check
             checked={this.state.textUnit === 'act'}
+            disabled={!this.state.radiosEnabled}
             id="act"
             label="Act"
             name="textUnit"
@@ -289,6 +321,7 @@ class RehearsalContentForm extends Component {
           />
           <Form.Check
             checked={this.state.textUnit === 'play'}
+            disabled={!this.state.radiosEnabled}
             id="play"
             label="Whole Play"
             name="textUnit"
@@ -298,7 +331,7 @@ class RehearsalContentForm extends Component {
           />
         </Col>
       </Form.Group>
-      <Button type="submit" variant="primary" block>Load Text Options</Button>
+      <Button disabled={!this.state.buttonsEnabled} type="submit" variant="primary" block>Load Text Options</Button>
       <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
     </Form>
   </Col>

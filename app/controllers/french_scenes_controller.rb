@@ -4,7 +4,7 @@ class FrenchScenesController < ApiController
 
   # GET /scenes
   def index
-    @french_scenes = @scene.french_scenes
+    @french_scenes = FrenchScene.play_order(@scene.french_scenes)
 
     render json: @french_scenes
   end

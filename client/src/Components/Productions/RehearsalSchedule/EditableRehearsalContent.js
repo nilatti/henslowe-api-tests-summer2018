@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -55,9 +56,19 @@ class EditableRehearsalContent extends Component {
           <div>Loading!</div>
         )
       }
+      let content = _.concat(this.props.rehearsal.acts, this.props.rehearsal.scenes, this.props.rehearsal.french_scenes)
+      content = content.map((item) => {
+        if (item.heading) {
+          return item
+        } else {
+          item.heading = item.pretty_name
+          return item
+        }
+      })
       if (this.state.editFormOpen) {
         return (
           <RehearsalContentForm
+            content={content}
             rehearsal={this.props.rehearsal}
             isOpen={this.state.editFormOpen}
             onFormSubmit={this.handleSubmit}
@@ -68,7 +79,7 @@ class EditableRehearsalContent extends Component {
       } else {
         return (
           <RehearsalContentShow
-            content={this.props.rehearsal.content}
+            content={content}
             handleEditClick={this.handleEditClick}
             handleDeleteClick={this.props.handleDeleteClick}
             onFormSubmit={this.handleSubmit}
