@@ -59,6 +59,12 @@ Rails.application.routes.draw do
         get :play_script
         get :play_skeleton
       end
+      member do
+        get :play_act_on_stages
+        get :play_french_scene_on_stages
+        get :play_on_stages
+        get :play_scene_on_stages
+      end
       resources :acts do
         resources :scenes
       end

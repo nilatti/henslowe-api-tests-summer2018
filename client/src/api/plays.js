@@ -45,6 +45,7 @@ async function getCharacters(playId) {
   return API.request(`plays/${playId}/characters`)
 }
 
+
 async function getFrenchSceneScript(frenchSceneId) {
   return API.request(`french_scenes/french_scene_script`, {
     params: {
@@ -53,8 +54,40 @@ async function getFrenchSceneScript(frenchSceneId) {
   })
 }
 
+
 async function getPlay(playId) {
   return API.request(`plays/${playId}`)
+}
+
+async function getPlayActOnStages(playId) {
+  return API.request(`plays/${playId}/play_act_on_stages`, {
+    params: {
+      play: playId
+    }
+  })
+}
+
+async function getPlayFrenchSceneOnStages(playId) {
+  return API.request(`plays/${playId}/play_french_scene_on_stages`, {
+    params: {
+      play: playId
+    }
+  })
+}
+
+async function getPlayOnStages(playId) {
+  return API.request(`plays/${playId}/play_on_stages`, {
+    params: {
+      play: playId
+    }
+  })
+}
+async function getPlaySceneOnStages(playId) {
+  return API.request(`plays/${playId}/play_scene_on_stages`, {
+    params: {
+      play: playId
+    }
+  })
 }
 
 async function getPlayScript(playId) {
@@ -106,6 +139,10 @@ export {
   getCharacters,
   getFrenchSceneScript,
   getPlay,
+  getPlayActOnStages,
+  getPlayFrenchSceneOnStages,
+  getPlayOnStages,
+  getPlaySceneOnStages,
   getPlayScript,
   getPlaySkeleton,
   getPlayTitles,

@@ -11,6 +11,13 @@ class Play < ApplicationRecord
   has_many :character_groups, dependent: :destroy
   has_many :scenes, through: :acts
   has_many :french_scenes, through: :scenes
+  has_many :on_stages, through: :french_scenes
   has_many :lines, through: :french_scenes
   validates :title, presence: true
+
+  def find_on_stages
+    on_stages = self.on_stages.uniq {|o| o.character_id}
+    return on_stages
+  end
+
 end

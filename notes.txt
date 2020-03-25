@@ -29,3 +29,7 @@ edits on stage directions don't seem to be working quite right. Writing to DB bu
 look at cast list--do I need to get jobs from server or can I just filter out of production?
 
 Rehearsal scheduler request: curl -X PUT -H "Content-Type: application/json" -d '{"rehearsal_block_length":"30","rehearsal_break_length":"5", "rehearsal_days_of_week": "'Monday','Tuesday'", "rehearsal_end_date":"2020-04-20", "rehearsal_end_time":"18:00:00","rehearsal_start_date": "2020-04-10", "rehearsal_start_time": "14:00:00", "rehearsal_time_between_breaks": "55"}' http://localhost:3001/api/productions/66/build_rehearsal_schedule
+
+make a script to add users to on_stages when casting is set (see test.rb for an example that works)
+
+rehearsal scheduler: write save content methods, also order scenes fs, etc before sending because wtf

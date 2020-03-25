@@ -53,6 +53,7 @@ class EditableRehearsal extends Component {
         handleEditClick={this.handleEditClick}
         handleDeleteClick={this.props.handleDeleteClick}
         onFormSubmit={this.handleSubmit}
+        production={this.props.production}
         />
       )
     }
