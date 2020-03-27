@@ -1,17 +1,22 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types';
 import React, {
   Component
 } from 'react'
 
+import { updateServerItem } from '../../../api/crud.js'
 import RehearsalForm from './RehearsalForm'
 import RehearsalShow from './RehearsalShow'
 
 class EditableRehearsal extends Component {
   constructor(props) {
     super(props)
+    let hiredJobs = _.filter(this.props.production.jobs, function(o){ return o.specialization_id != 4})
+    let hiredUsers = hiredJobs.map((job) => job.user)
+    this.myRef = React.createRef();
     this.state = {
+      hiredUsers: hiredUsers,
       editFormOpen: false,
-      rehearsal: null,
     }
   }
 
@@ -21,7 +26,6 @@ class EditableRehearsal extends Component {
 
   handleSubmit = (rehearsal) => {
     this.props.handleSubmit(rehearsal)
-    this.toggleForm()
   }
 
   toggleForm = () => {
@@ -49,10 +53,12 @@ class EditableRehearsal extends Component {
     } else {
       return (
         <RehearsalShow
+        hiredUsers={this.state.hiredUsers}
         rehearsal={this.props.rehearsal}
+        ref={this.myRef}
         handleEditClick={this.handleEditClick}
         handleDeleteClick={this.props.handleDeleteClick}
-        onFormSubmit={this.handleSubmit}
+        onFormSubmit={this.props.handleSubmit}
         production={this.props.production}
         />
       )

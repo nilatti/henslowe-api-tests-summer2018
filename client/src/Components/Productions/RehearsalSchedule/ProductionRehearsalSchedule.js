@@ -106,9 +106,10 @@ class ProductionRehearsalSchedule extends Component {
         errorStatus: 'Error updating rehearsal'
       })
     } else {
+      console.log('response is', response.data)
       let newRehearsals = this.state.production.rehearsals.map((rehearsal) => {
         if (rehearsal.id === updatedRehearsal.id) {
-          return {...rehearsal, ...updatedRehearsal}
+          return {...rehearsal, ...response.data}
         } else {
           return rehearsal
         }

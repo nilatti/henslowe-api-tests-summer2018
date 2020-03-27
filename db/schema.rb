@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_25_195301) do
+ActiveRecord::Schema.define(version: 2020_03_25_220224) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -263,6 +263,11 @@ ActiveRecord::Schema.define(version: 2020_03_25_195301) do
   create_table "rehearsals_scenes", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.bigint "scene_id", null: false
     t.bigint "rehearsal_id", null: false
+  end
+
+  create_table "rehearsals_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "rehearsal_id", null: false
+    t.bigint "user_id", null: false
   end
 
   create_table "scenes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

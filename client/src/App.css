@@ -46,13 +46,26 @@ ul {
   color: #a61105;
 }
 
-.fas {
-  padding: 4px;
+.draggable-item-heading {
+  font-weight: 600;
+}
+
+.draggable-reason-for-recommendation {
+  font-size: 0.75em
+}
+
+.draggable-further-info {
+  font-size: 0.75em
 }
 
 .doubling-problem {
   background-color: #f08e16;
 }
+
+.fas {
+  padding: 4px;
+}
+
 .form-radio {
   text-align: left;
 }

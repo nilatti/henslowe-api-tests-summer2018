@@ -32,4 +32,6 @@ Rehearsal scheduler request: curl -X PUT -H "Content-Type: application/json" -d 
 
 make a script to add users to on_stages when casting is set (see test.rb for an example that works)
 
-rehearsal scheduler: write save content methods, also order scenes fs, etc before sending because wtf
+check that users save removes ones whose things have been unscheduled
+
+On some future pass, make rehearsal time and notes editable by double clicking

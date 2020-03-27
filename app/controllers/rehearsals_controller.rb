@@ -27,7 +27,7 @@ class RehearsalsController < ApiController
   # PATCH/PUT /acts/1
   def update
     @rehearsal.update(rehearsal_params)
-    render json: @rehearsal.as_json(include: [:acts, :french_scenes, :scenes])
+    render json: @rehearsal.as_json(include: [:acts, :users, french_scenes: {methods: :pretty_name}, scenes: {methods: :pretty_name}])
     # else
     #   render json: @rehearsal.errors, status: :unprocessable_entity
     # end
@@ -61,7 +61,8 @@ class RehearsalsController < ApiController
         :title,
         act_ids: [],
         french_scene_ids: [],
-        scene_ids: []
+        scene_ids: [],
+        user_ids: [],
       )
     end
 end

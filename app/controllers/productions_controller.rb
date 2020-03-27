@@ -15,7 +15,13 @@ class ProductionsController < ApiController
       :theater,
       :stage_exits,
       [
-        rehearsals: [:acts, :french_scenes, :scenes],
+        rehearsals:
+        [
+          :acts,
+          :french_scenes,
+          :scenes,
+          :users
+        ],
         play:
         [
           characters: [:lines],
@@ -56,7 +62,14 @@ class ProductionsController < ApiController
           :theater,
           :stage_exits,
           rehearsals: {
-            include: [:acts, french_scenes: {methods: :pretty_name}, scenes: {methods: :pretty_name}]
+            include: [
+              :users,
+              acts: {methods: :on_stages},
+              french_scenes: {
+                include: [:on_stages],
+                methods: :pretty_name
+              },
+              scenes: {methods: [:on_stages, :pretty_name]}]
           },
           play: {
             include: [

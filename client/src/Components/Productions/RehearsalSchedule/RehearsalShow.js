@@ -25,6 +25,7 @@ import {
 } from '../../../api/crud'
 
 import EditableRehearsalContent from './EditableRehearsalContent'
+import EditableRehearsalPeople from './EditableRehearsalPeople'
 
 class RehearsalShow extends Component {
   constructor(props) {
@@ -35,19 +36,11 @@ class RehearsalShow extends Component {
     this.props.handleDeleteClick(this.props.rehearsal.id)
   }
 
-  handleContentButtonClick = () => {
-    console.log('content')
-  }
-
-  handlePeopleButtonClick = () => {
-    console.log('people')
-  }
-
   render() {
     let rehearsal = this.props.rehearsal
     return(
-      <Col md={8}>
-        <Row>
+      <Col md={12}>
+      <Row>
         <Moment format="h:mm MMM D, YYYY">
           {rehearsal.start_time}
         </Moment>
@@ -74,7 +67,8 @@ class RehearsalShow extends Component {
           >
             <i className="fas fa-trash-alt"></i>
           </span>
-        </Row>
+      </Row>
+      <Row>
         {
           rehearsal.notes
           ?
@@ -84,23 +78,25 @@ class RehearsalShow extends Component {
           :
           <span></span>
         }
-        <Row>
+      </Row>
+      <Row>
+        <Col md={8}>
           <EditableRehearsalContent
+            hiredUsers={this.props.hiredUsers}
             production={this.props.production}
+            onFormSubmit={this.props.onFormSubmit}
             rehearsal={rehearsal}
           />
-        </Row>
-        <Row>
-          {
-            rehearsal.called ? <span>{rehearsal.called}</span> : <span></span>
-          }
-          <Button
-            onClick={this.handlePeopleButtonClick}
-          >
-            Add or edit who is called
-          </Button>
-        </Row>
-        <hr />
+        </Col>
+        <Col md={4}>
+          <EditableRehearsalPeople
+            hiredUsers={this.props.hiredUsers}
+            onFormSubmit={this.props.onFormSubmit}
+            rehearsal={rehearsal}
+          />
+        </Col>
+      </Row>
+      <hr />
       </Col>
 
     )
@@ -109,6 +105,7 @@ class RehearsalShow extends Component {
 
 RehearsalShow.propTypes = {
   rehearsal: PropTypes.object.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
   production: PropTypes.object.isRequired,
 }
 
