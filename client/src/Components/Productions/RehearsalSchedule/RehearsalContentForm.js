@@ -13,30 +13,31 @@ import {
 } from 'react-bootstrap'
 
 import {buildUserName} from '../../../utils/actorUtils'
+import {unavailableUsers} from '../../../utils/rehearsalUtils'
 import DraggableLists from '../../../utils/DraggableLists'
 
-import { updateServerItem } from '../../../api/crud.js'
 import {
   getPlayActOnStages,
   getPlayFrenchSceneOnStages,
-  getPlayOnStages,
   getPlaySceneOnStages,
 } from '../../../api/plays.js'
 
 class RehearsalContentForm extends Component {
   constructor(props) {
     super(props)
-    let hiredJobs = _.filter(this.props.production.jobs, function(o){ return o.specialization_id != 4})
-    let hiredUsers = hiredJobs.map((job) => job.user)
-    let availableUsers = this.availableUsers(hiredUsers, this.props.rehearsal)
+    let availableUsers = this.availableUsers(this.props.hiredUsers, this.props.rehearsal)
 
     this.state={
-      content: this.props.rehearsal.content || [],
-      allUsers: hiredUsers,
+      acts: this.props.rehearsal.acts,
+      frenchScenes: this.props.rehearsal.french_scenes,
       availableUsers: availableUsers,
       buttonsEnabled: false,
+      calledUsers: this.props.rehearsal.users,
+      content: [],
+      contentNotToEdit:[],
       playContent: [],
       radiosEnabled: true,
+      scenes: this.props.rehearsal.scenes,
     }
   }
 
@@ -58,57 +59,17 @@ class RehearsalContentForm extends Component {
     })
     return availableUsers.filter(Boolean)
   }
-  markContentRecommended() {
-    let newPlayContent = this.state.playContent.map((content) => {
-      if (content.hasOwnProperty('isRecommended')) {
-        return content
-      } else {
-        return {...content, isRecommended: true}
-      }
-    })
-    this.setState({
-      playContent: newPlayContent
-    })
-  }
 
-  markContentUserUnavailable(){
-    let unavailableUsers = this.unavailableUsers(this.state.allUsers, this.props.rehearsal)
-    let newPlayContent = this.state.playContent
-    unavailableUsers.map((unavailableUser) => {
-      newPlayContent = newPlayContent.map((item) => {
-        let contentUsers = item.on_stages.map((on_stage) => on_stage.user_id)
-        if (contentUsers.includes(unavailableUser.id)) {
-          let reasonForRecommendation = ''
-          if (item.reasonForRecommendation) { // tk add a thing t splice in and add more names if we have multiple "is not available"
-            reasonForRecommendation += item.reasonForRecommendation
-          }
-          reasonForRecommendation += buildUserName(unavailableUser) + " is not available."
-          return {...item, isRecommended: false, reasonForRecommendation: reasonForRecommendation}
-        } else {
-          return {...item, isRecommended: true}
-        }
-      })
-    })
-    this.setState({playContent: newPlayContent}, function() {this.markContentRecommended()})
-  }
-
-  unavailableUsers(users, rehearsal) {
-    let unavailableUsers = users.map((user) => {
-      if (user.conflicts.length === 0) {
+  filterAlreadyScheduledContent = (playContent) => {
+    let contentIds = this.state.content.map((item) => item.id)
+    let filtered = playContent.map((item) => {
+      if (_.includes(contentIds, item.id)) {
         return
       } else {
-        let conflicts_with_this_rehearsal = 0
-        user.conflicts.map((conflict) => {
-          if (conflict.start_time <= rehearsal.end_time && rehearsal.start_time <= conflict.end_time) {
-            conflicts_with_this_rehearsal += 1
-          }
-        })
-        if (conflicts_with_this_rehearsal > 0) {
-          return user
-        }
+        return item
       }
     })
-    return unavailableUsers.filter(Boolean)
+    return _.compact(filtered)
   }
 
   handleChange = (event) => {
@@ -124,46 +85,153 @@ class RehearsalContentForm extends Component {
     })
   }
 
-  handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    } else {
-      this.processSubmit()
-      this.props.onFormClose()
+  listNotEditingContent = () => {
+    let notEditing = []
+    if (this.state.contentNotToEdit.french_scenes){
+      this.state.contentNotToEdit.french_scenes.map((item) =>{
+        notEditing = _.concat(notEditing, item.pretty_name)
+      })
     }
-    this.setState({
-      validated: true
-    })
+    if (this.state.contentNotToEdit.scenes) {
+      this.state.contentNotToEdit.scenes.map((item) =>{
+        notEditing = _.concat(notEditing, item.pretty_name)})
+    }
+    if (this.state.contentNotToEdit.acts){
+      this.state.contentNotToEdit.acts.map((item) =>{
+      notEditing = _.concat(notEditing, item.heading)
+      })
+    }
+
+    return _.join(notEditing, ', ')
   }
 
   loadOnStages = (e) => {
     e.preventDefault()
     if (this.state.textUnit === 'french_scene') {
       this.loadFrenchSceneOnStages(263)
+      this.setNonworkingContent(['acts', 'scenes'])
+      this.setWorkingContent('french_scenes')
     } else if (this.state.textUnit === 'scene') {
       this.loadSceneOnStages(263)
+      this.setNonworkingContent(['french_scenes', 'acts'])
+      this.setWorkingContent('scenes')
     } else if (this.state.textUnit === 'act') {
       this.loadActOnStages(263)
-    } else {
-      this.loadPlayOnStages(263)
+      this.setNonworkingContent(['french_scenes', 'scenes'])
+      this.setWorkingContent('acts')
     }
   }
 
+  mapOnStagesToUsers(users, onStages) {
+    let calledUsers = this.state.content.map((item) => {
+      return item.on_stages.map((onStage) => {
+        return _.find(this.props.hiredUsers, ['id', onStage.user_id])
+      })
+    })
+    calledUsers = _.flatten(calledUsers)
+    calledUsers = _.uniq(calledUsers)
+    return calledUsers
+  }
+
+  markContentRecommended(newPlayContent) {
+    return newPlayContent.map((content) => {
+      if (content.hasOwnProperty('isRecommended')) {
+        return content
+      } else {
+        return {...content, isRecommended: true}
+      }
+    })
+  }
+
+  markContentUserUnavailable(newPlayContent, unavailableUsers){
+    unavailableUsers.map((unavailableUser) => {
+      newPlayContent = newPlayContent.map((item) => {
+        let contentUsers = item.on_stages.map((on_stage) => on_stage.user_id)
+        if (contentUsers.includes(unavailableUser.id)) {
+          let reasonForRecommendation = ''
+          if (item.reasonForRecommendation) { // tk add a thing t splice in and add more names if we have multiple "is not available"
+            reasonForRecommendation += item.reasonForRecommendation
+          }
+          reasonForRecommendation += buildUserName(unavailableUser) + " is not available."
+          return {...item, isRecommended: false, reasonForRecommendation: reasonForRecommendation}
+        } else {
+          return {...item, isRecommended: true}
+        }
+      })
+    })
+    return newPlayContent
+  }
+
+  markItemCallList(newPlayContent) {
+    newPlayContent = newPlayContent.map((item) => {
+      let callList = []
+      let contentUsers = item.on_stages.map((on_stage) => on_stage.user_id)
+      callList = _.concat(callList, contentUsers)
+      callList = callList.map((userId) => {
+        let user = _.find(this.props.hiredUsers, ['id', userId])
+        return buildUserName(user)
+      })
+      callList = callList.sort()
+      callList = callList.join(', ')
+      return {...item, furtherInfo: callList} //this will let it easily pop into the furtherInfo slot in DraggableList
+    })
+    return newPlayContent
+  }
+
+  organizeContent(playContent) {
+    let rehearsalUnavailableUsers = unavailableUsers(this.props.hiredUsers, this.props.rehearsal)
+    let unavailableUsersMarked = this.markContentUserUnavailable(playContent, rehearsalUnavailableUsers)
+    let recommendedContentMarked = this.markContentRecommended(unavailableUsersMarked)
+    let withCallLists = this.markItemCallList(recommendedContentMarked)
+    let filteredContent = this.filterAlreadyScheduledContent(withCallLists)
+    this.setState({
+      playContent: filteredContent
+    })
+  }
+
   processSubmit = () => {
+    this.props.onFormClose()
     this.props.onFormSubmit({
       content: this.state.content,
       id: this.props.rehearsal.id,
+      users: this.props.rehearsal.users
     }, "rehearsal")
   }
 
   setContent = (e) => {
+    let newUsers = this.mapOnStagesToUsers(this.props.hiredUsers,this.state.content)
     let newRehearsal = {
-      ...this.props.rehearsal,
+      id: this.props.rehearsal.id,
+      user_ids: newUsers.map((user) => user.id),
       [`${this.state.textUnit}_ids`]: this.state.content.map((item) => item.id)
     }
-    this.updateRehearsal(newRehearsal)
+    this.props.onFormClose()
+    this.props.onFormSubmit(newRehearsal, "rehearsal")
+  }
+
+  setNonworkingContent = (nonworkingContent) => { //arr
+    let newNonworkingContent = {}
+    nonworkingContent.map((item) => {
+      newNonworkingContent[item] = this.props.rehearsal[item]
+      }
+    )
+    this.setState({
+      contentNotToEdit: newNonworkingContent
+    })
+  }
+
+  setWorkingContent = (workingContentType) => { //string name of content type eg 'acts', 'scenes' etc
+    let workingContent = this.props.rehearsal[workingContentType]
+    if (workingContentType == 'french_scenes' || workingContentType == 'scenes') {
+      workingContent.map((item) => item.heading = item.pretty_name)
+    }
+    let rehearsalUnavailableUsers = unavailableUsers(this.props.hiredUsers, this.props.rehearsal)
+    let unavailableUsersMarked = this.markContentUserUnavailable(workingContent, rehearsalUnavailableUsers)
+    let callListMarked = this.markItemCallList(unavailableUsersMarked)
+    let recommendedContentMarked = this.markContentRecommended(callListMarked)
+    this.setState({
+      content: recommendedContentMarked
+    })
   }
 
   async loadActOnStages(playId) {
@@ -174,7 +242,7 @@ class RehearsalContentForm extends Component {
       })
     } else {
       this.setState({playContent: response.data}, function() {
-        this.markContentUserUnavailable()
+        this.organizeContent(response.data)
       })
     }
   }
@@ -186,6 +254,7 @@ class RehearsalContentForm extends Component {
         errorStatus: 'Error retrieving content'
       })
     } else {
+      let rehearsalUnavailableUsers = unavailableUsers(this.props.hiredUsers, this.props.rehearsal)
       let playContent = response.data.map((french_scene) => {
         let prettyName = french_scene.pretty_name
         return {
@@ -193,23 +262,9 @@ class RehearsalContentForm extends Component {
         }
       })
       this.setState({playContent: playContent}, function() {
-        this.markContentUserUnavailable()
-      })
-    }
-  }
-
-  async loadPlayOnStages(playId) {
-    const response = await getPlayOnStages(playId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error retrieving content'
-      })
-    } else {
-      let playContent = response.data
-      playContent['on_stages'] = playContent['find_on_stages']
-      this.setState({playContent: playContent}, function() {
-        this.markContentUserUnavailable()
-      })
+          this.organizeContent(playContent)
+        }
+      )
     }
   }
 
@@ -220,6 +275,7 @@ class RehearsalContentForm extends Component {
         errorStatus: 'Error retrieving content'
       })
     } else {
+      let rehearsalUnavailableUsers = unavailableUsers(this.props.hiredUsers, this.props.rehearsal)
       let playContent = response.data.map((scene) => {
         let prettyName = scene.pretty_name
         return {
@@ -227,19 +283,8 @@ class RehearsalContentForm extends Component {
         }
       })
       this.setState({playContent: playContent}, function() {
-        this.markContentUserUnavailable()
+        this.organizeContent(playContent)
       })
-    }
-  }
-
-  async updateRehearsal(rehearsal) {
-    const response = await updateServerItem(rehearsal, 'rehearsal')
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating rehearsal'
-      })
-    } else {
-      console.log('rehearsal updated', response.data)
     }
   }
 
@@ -247,21 +292,29 @@ class RehearsalContentForm extends Component {
     const {
       validated
     } = this.state
-    if (this.state.playContent.length && this.state.playContent[0].hasOwnProperty('isRecommended')) {
+    if (this.state.playContent && this.state.playContent.length && this.state.playContent[0].hasOwnProperty('isRecommended')) {
       let listContents = [
         {
           listId: 'playContent',
           listContent: this.state.playContent,
-          header: 'Don\'t rehearse in this session'
+          header: 'Don\'t rehearse'
         },
         {
-          header: 'Rehearse in this session',
+          header: 'Rehearse',
           listId: 'content',
           listContent: this.state.content
         }
       ]
+      let notEditing = this.listNotEditingContent()
+
       return(
         <Col>
+          <Col>
+            <p>
+              Also rehearsing {notEditing}.
+            </p>
+
+          </Col>
           <Row>
             <DraggableLists
               listContents={listContents}
@@ -271,6 +324,7 @@ class RehearsalContentForm extends Component {
           <Row>
             <Button onClick={this.setContent}>Schedule this content</Button>
           </Row>
+          <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
         </Col>
 
       )
@@ -319,16 +373,6 @@ class RehearsalContentForm extends Component {
             type="radio"
             value="act"
           />
-          <Form.Check
-            checked={this.state.textUnit === 'play'}
-            disabled={!this.state.radiosEnabled}
-            id="play"
-            label="Whole Play"
-            name="textUnit"
-            onChange={this.handleChange}
-            type="radio"
-            value="play"
-          />
         </Col>
       </Form.Group>
       <Button disabled={!this.state.buttonsEnabled} type="submit" variant="primary" block>Load Text Options</Button>
@@ -340,9 +384,9 @@ class RehearsalContentForm extends Component {
 }
 
 RehearsalContentForm.propTypes = {
+  hiredUsers: PropTypes.array.isRequired,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  production: PropTypes.object.isRequired,
   rehearsal: PropTypes.object.isRequired,
 }
 

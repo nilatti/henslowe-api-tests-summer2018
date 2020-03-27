@@ -60,7 +60,6 @@ function getItemStyle (isDragging, isRecommended, draggableStyle) {
 const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? 'lightblue' : 'lightgrey',
   padding: grid,
-  width: 250
 });
 
 class DraggableLists extends Component {
@@ -127,7 +126,7 @@ class DraggableLists extends Component {
     render() {
       let draggableLists = Object.entries(this.state.listContents).map(([key, value]) =>
         (<Col key={key}>
-            <h1>{this.state.headers[key]}</h1>
+            <h3>{this.state.headers[key]}</h3>
             <DraggableList
               key={key}
               getItemStyle={getItemStyle}

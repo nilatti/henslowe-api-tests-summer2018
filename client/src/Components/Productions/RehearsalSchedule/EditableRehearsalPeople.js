@@ -25,10 +25,10 @@ import {
   updateServerItem
 } from '../../../api/crud'
 
-import RehearsalContentForm from './RehearsalContentForm'
-import RehearsalContentShow from './RehearsalContentShow'
+import RehearsalPeopleForm from './RehearsalPeopleForm'
+import RehearsalPeopleShow from './RehearsalPeopleShow'
 
-class EditableRehearsalContent extends Component {
+class EditableRehearsalPeople extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -37,10 +37,6 @@ class EditableRehearsalContent extends Component {
   }
 
   handleEditClick = () => {
-    this.toggleForm()
-  }
-  handleSubmit = (conflict) => {
-    this.props.handleSubmit(conflict)
     this.toggleForm()
   }
 
@@ -58,7 +54,7 @@ class EditableRehearsalContent extends Component {
       }
       if (this.state.editFormOpen) {
         return (
-          <RehearsalContentForm
+          <RehearsalPeopleForm
             hiredUsers={this.props.hiredUsers}
             rehearsal={this.props.rehearsal}
             isOpen={this.state.editFormOpen}
@@ -68,24 +64,19 @@ class EditableRehearsalContent extends Component {
         )
       } else {
         return (
-          <RehearsalContentShow
-            acts={this.props.rehearsal.acts}
-            french_scenes={this.props.rehearsal.french_scenes}
-            hiredUsers={this.props.hiredUsers}
+          <RehearsalPeopleShow
             handleEditClick={this.handleEditClick}
-            handleDeleteClick={this.props.handleDeleteClick}
-            onFormSubmit={this.handleSubmit}
-            scenes={this.props.rehearsal.scenes}
+            users={this.props.rehearsal.users}
           />
         )
       }
   }
 }
 
-EditableRehearsalContent.propTypes = {
+EditableRehearsalPeople.propTypes = {
   hiredUsers: PropTypes.array.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   rehearsal: PropTypes.object.isRequired,
 }
 
-export default EditableRehearsalContent
+export default EditableRehearsalPeople

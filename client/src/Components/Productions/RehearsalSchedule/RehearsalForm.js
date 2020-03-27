@@ -171,7 +171,7 @@ class RehearsalForm extends Component {
 RehearsalForm.propTypes = {
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  production: PropTypes.string.isRequired,
+  production: PropTypes.object.isRequired,
 }
 
 export default RehearsalForm
