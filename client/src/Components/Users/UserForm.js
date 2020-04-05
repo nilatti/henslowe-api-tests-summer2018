@@ -192,6 +192,33 @@ class UserForm extends Component {
                 Email is required
               </Form.Control.Feedback>
           </Form.Group>
+          <Form.Group controlId="password">
+            <Form.Label>
+              Password
+            </Form.Label>
+              <Form.Control
+                name="password"
+                onChange={this.handleChange}
+                placeholder="password"
+                type="password"
+                value={this.state.password}
+              />
+          </Form.Group>
+          <Form.Group controlId="password_confirmation">
+            <Form.Label>
+              Confirm Password
+            </Form.Label>
+              <Form.Control
+                name="password_confirmation"
+                onChange={this.handleChange}
+                placeholder="confirm password"
+                type="password"
+                value={this.state.password_confirmation}
+              />
+              <Form.Control.Feedback type="invalid">
+                Passwords must match and are required
+              </Form.Control.Feedback>
+          </Form.Group>
           <Form.Group controlId="website">
             <Form.Label>
               Website

@@ -66,7 +66,9 @@ class Users extends Component {
             <h2><Link to='/users'>Users</Link></h2>
             <hr />
               <Switch>
-              <Route path='/users/new' render={(props) => <NewUser {...props} onFormSubmit={this.handleCreateFormSubmit}/> } />
+              <Route path='/users/new' render={
+                (props) => <NewUser {...props} onFormSubmit={this.handleCreateFormSubmit}/> }
+              />
               <Route
                 path={`/users/:userId`}
                 render={(props) => (

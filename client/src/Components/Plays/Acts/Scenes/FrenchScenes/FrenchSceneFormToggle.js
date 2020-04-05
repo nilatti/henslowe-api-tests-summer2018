@@ -31,6 +31,7 @@ class FrenchSceneFormToggle extends Component { //opens form for create action
     if (this.state.isOpen) {
       return (
         <FrenchSceneForm
+          lastFrenchScene={this.props.lastFrenchScene}
           onFormSubmit={this.handleFormSubmit}
           onFormClose={this.toggleForm}
           play={this.props.play}
@@ -53,6 +54,7 @@ class FrenchSceneFormToggle extends Component { //opens form for create action
 
 FrenchSceneFormToggle.propTypes = {
   isOpen: PropTypes.bool.isRequired,
+  lastFrenchScene: PropTypes.object,
   onFormSubmit: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
   sceneId: PropTypes.number.isRequired,

@@ -1,10 +1,7 @@
-import React, {
-  Component
-} from 'react'
+import React from 'react'
 import {
   Switch,
   Route,
-  useRouteMatch
 } from 'react-router-dom'
 import Authors from './Authors/Authors'
 import Dashboard from './Dashboard/Dashboard'
@@ -20,7 +17,6 @@ import Theaters from './Theaters/Theaters'
 import Users from './Users/Users'
 
 export default function Main () {
-  let { path } = useRouteMatch();
   return (
     <main>
         <Switch>

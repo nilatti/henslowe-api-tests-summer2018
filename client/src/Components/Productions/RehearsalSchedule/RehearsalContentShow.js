@@ -1,10 +1,7 @@
-import _ from 'lodash'
-import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import {
   Button,
   Col,
-  Row,
 } from 'react-bootstrap'
 import React, {
   Component
@@ -12,25 +9,22 @@ import React, {
 import uuid from 'react-uuid'
 
 class RehearsalContentShow extends Component {
-  constructor(props, context) {
-    super(props, context)
-  }
 
   makeContentPretty = () => {
     let content = []
     if (this.props.acts){
-      this.props.acts.map((item) =>{
+      this.props.acts.map((item) =>
         content.push(item.heading)
-      })
+      )
     }
     if (this.props.scenes) {
-      this.props.scenes.map((item) =>{
-        content.push(item.pretty_name)})
+      this.props.scenes.map((item) =>
+        content.push(item.pretty_name))
     }
     if (this.props.french_scenes){
-      this.props.french_scenes.map((item) =>{
+      this.props.french_scenes.map((item) =>
         content.push(item.pretty_name)
-      })
+      )
     }
 
     return content.map((item) => <li key={uuid()}>{item}</li>)

@@ -6,8 +6,6 @@ import React, {
 } from 'react'
 
 import {
-  Col,
-  Row,
   Table,
 } from 'react-bootstrap'
 
@@ -28,7 +26,7 @@ class DoublingChart extends Component {
   state={}
 
   getAllActors() {
-    let castings = _.filter(this.props.production.jobs, function(job) {return job.character && !job.character.name.match(/Could Not Find Character/)})
+    let castings = _.filter(this.props.production.jobs, function(job) {return job.character && !job.character.name.match(/Could Not Find Character/) && job.user_id})
     let actorsWithRepeats = _.chain(castings).map('user').value()
     return _.uniqBy(actorsWithRepeats, 'id')
   }
@@ -97,11 +95,30 @@ class DoublingChart extends Component {
     return row
   }
 
+  generateUncastRow() {
+    let blocks = this.getOnStages()
+    let jobsThatAreNotCast = _.filter(this.props.production.jobs, function(job) {return job.character && !job.character.name.match(/Could Not Find Character/) && !job.user_id})
+    let uncastCharacterIds = jobsThatAreNotCast.map((job) => job.character_id)
+    let rowData = blocks.map((block) => {
+      let blockCharacters = []
+      block.map((onStage) => {
+        if (_.includes(uncastCharacterIds, onStage.character_id)) {
+          blockCharacters.push(onStage.character)
+        }
+      })
+      let uniqBlockCharacters = _.uniqBy(blockCharacters, 'id')
+      let blockCharactersNames = _.map(uniqBlockCharacters, 'name')
+      return <td key={uuid()}>{_.join(blockCharactersNames, ',')}</td>
+    })
+    let row = <tr key={uuid()}><td>Still to cast</td>{rowData}</tr>
+    return row
+  }
+
   render() {
       let headRow = this.generateColumns()
       let actors = this.getAllActors()
       let rows = actors.map((actor) => this.generateRow(actor))
-      // let rows = this.generateRow()
+      let uncast = this.generateUncastRow()
       return (
         <Table striped bordered hover size="sm">
           <thead>
@@ -111,6 +128,7 @@ class DoublingChart extends Component {
           </thead>
           <tbody>
             {rows}
+            {uncast}
           </tbody>
         </Table>
       )

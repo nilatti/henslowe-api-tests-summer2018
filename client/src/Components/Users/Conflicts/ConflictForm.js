@@ -7,21 +7,19 @@ import {
   Button,
   Col,
   Form,
-  Row,
 } from 'react-bootstrap'
-import Moment from 'react-moment';
 import momentLocalizer from 'react-widgets-moment';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 moment.locale('en')
 momentLocalizer()
-const validate = ({ startTime, endTime }) => {
-  return {
-    endTime:
-      endTime < startTime
-        ? "Start time must be after end time."
-        : false
-  };
-};
+// const validate = ({ startTime, endTime }) => {
+//   return {
+//     endTime:
+//       endTime < startTime
+//         ? "Start time must be after end time."
+//         : false
+//   };
+// };
 
 class ConflictForm extends Component {
   constructor(props) {

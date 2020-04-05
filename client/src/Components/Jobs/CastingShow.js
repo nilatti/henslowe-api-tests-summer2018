@@ -116,7 +116,7 @@ class CastingShow extends Component {
         <span><span
           onClick={() => this.handleEditClick()}
         >
-          {this.state.selectedUser.length > 0 ? this.state.selectedUser[0].label : <strong>Click to cast</strong>}: {this.props.casting.character.name} ({lineCount})</span>
+          {this.props.casting.character.name} {lineCount > 0 ? (lineCount) : <span></span>}: {this.state.selectedUser.length > 0 ? this.state.selectedUser[0].label : <strong>Click to cast</strong>}</span>
           <span className='right floated trash icon'
           onClick={() => this.props.onDeleteClick(this.props.casting.id)}
         >

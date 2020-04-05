@@ -104,6 +104,7 @@ class SceneShow extends Component {
             onFormSubmit={this.handleFrenchSceneCreateClick}
             play={this.props.play}
             sceneId={scene.id}
+            lastFrenchScene={_.last(scene.french_scenes)}
           />
         </Row>
         <Tabs

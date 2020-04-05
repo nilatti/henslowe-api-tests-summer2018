@@ -6,9 +6,7 @@ import React, {
 
 import {
   Button,
-  Col,
   Form,
-  Row
 } from 'react-bootstrap'
 
 class NewStageExitForm extends Component {

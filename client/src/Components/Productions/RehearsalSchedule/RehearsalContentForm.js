@@ -1,10 +1,8 @@
 import _ from 'lodash'
-import moment from 'moment'
 import PropTypes from 'prop-types';
 import React, {
   Component
 } from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
   Button,
   Col,

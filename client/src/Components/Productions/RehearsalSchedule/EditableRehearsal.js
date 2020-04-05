@@ -4,15 +4,15 @@ import React, {
   Component
 } from 'react'
 
-import { updateServerItem } from '../../../api/crud.js'
 import RehearsalForm from './RehearsalForm'
 import RehearsalShow from './RehearsalShow'
 
 class EditableRehearsal extends Component {
   constructor(props) {
     super(props)
-    let hiredJobs = _.filter(this.props.production.jobs, function(o){ return o.specialization_id != 4})
+    let hiredJobs = _.filter(this.props.production.jobs, function(o){ return o.specialization_id !== 4})
     let hiredUsers = hiredJobs.map((job) => job.user)
+    hiredUsers = _.uniq(hiredUsers)
     this.myRef = React.createRef();
     this.state = {
       hiredUsers: hiredUsers,

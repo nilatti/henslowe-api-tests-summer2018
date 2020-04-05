@@ -4,7 +4,6 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 class DraggableList extends Component {
   render() {
-    console.log('in drag', this.props.listContent)
     return (
       <Droppable droppableId={this.props.listId} key={this.props.listId}>
           {(provided, snapshot) => (

@@ -4,16 +4,12 @@ import React, {
 } from 'react'
 import {
   Col,
-  Row,
 } from 'react-bootstrap'
-import {
-  Link
-} from 'react-router-dom'
 
 import _ from 'lodash'
 
 import ActorTrack from './ActorTrack'
-
+import {buildUserName} from '../../../utils/actorUtils'
 class ActorShow extends Component {
   state ={
     showActorTrack: false,
@@ -25,10 +21,25 @@ class ActorShow extends Component {
     })
   }
 
+  actingJobs(jobs) {
+    let acting = jobs.filter((job) => job.specialization.title === 'Actor')
+    acting = acting.map((job) => {
+      if (job.character) {
+        return job.character.name
+      } else {
+        return
+      }
+    })
+    acting = _.compact(acting)
+    let joined = _.join(acting, ", ")
+    return joined
+  }
+
   render() {
+    let actingJobs = this.actingJobs(this.props.actorObj.jobs)
     return (
       <Col md={12}>
-      <strong>{this.props.actorObj.actor.preferred_name || this.props.actorObj.actor.first_name} {this.props.actorObj.actor.last_name}:</strong> {_.join(this.props.actorObj.jobs.map(job => job.character.name), ', ')}
+      <strong>{buildUserName(this.props.actorObj.actor)}: {actingJobs}</strong>
       <br />
 
       {

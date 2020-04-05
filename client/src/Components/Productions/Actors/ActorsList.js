@@ -4,11 +4,7 @@ import React, {
 } from 'react'
 import {
   Col,
-  Row,
 } from 'react-bootstrap'
-import {
-  Link
-} from 'react-router-dom'
 
 import _ from 'lodash'
 
@@ -38,7 +34,7 @@ class ActorsList extends Component {
         }
       })
 
-      uniqActors = _.sortBy(uniqActors,'actor.last_name', 'actor.first_name', 'actor.email')
+      uniqActors = sortUsers(uniqActors)
 
       return uniqActors
     } else {

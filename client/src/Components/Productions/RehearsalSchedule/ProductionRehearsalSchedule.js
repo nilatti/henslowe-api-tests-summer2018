@@ -1,22 +1,12 @@
 import _ from 'lodash'
 import PropTypes from 'prop-types';
 import {
-  Button,
   Col,
   Row,
-  Tab,
-  Tabs,
 } from 'react-bootstrap'
 import React, {
   Component
 } from 'react'
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-} from "react-router-dom";
 
 import {
   createItemWithParent,

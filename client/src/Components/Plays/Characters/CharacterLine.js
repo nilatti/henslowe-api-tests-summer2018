@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 import {
   Col,
-  Button,
   Row
 } from 'react-bootstrap'
 
@@ -17,9 +16,9 @@ class CharacterLine extends Component {
 
   buildLineContentWithDiffs(diffArray) {
     let diffArrayWithClasses = diffArray.map((item) => {
-      if (item.removed == true) {
+      if (item.removed === true) {
         return <span className="cut" key={uuid()}>{item.value}</span>
-      } else if (item.added == true) {
+      } else if (item.added === true) {
         return <span className="added" key={uuid()}>{item.value}</span>
       } else {
         return <span key={uuid()}>{item.value}</span>

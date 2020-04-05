@@ -25,28 +25,41 @@ import {
 } from '../../api/theaters'
 
 import {
+  createUser,
   getUsers
 }  from '../../api/users'
 
+import {buildUserName} from '../../utils/actorUtils'
 
+
+import NewUserModal from '../Users/NewUserModal'
 
 class JobForm extends Component {
   constructor(props) {
     super(props)
     let end_date
     let production
+    let specializationId
+    let specializationName
+    let specializationSet = false
     let start_date
     let theater
-    let theaterSet
     let user
     let userName
-    let userSet
+
     if (this.props.job) {
       end_date = this.props.job.end_date
       production = this.props.job.production
+      specializationId = this.props.job.specialization ? this.props.job.specialization.id : this.props.specializationId
+      specializationName = this.props.job.specialization ? this.props.job.specialization.name : this.props.specializationName
       start_date = this.props.job.start_date
       theater = this.props.job.theater
       user = this.props.job.user
+    }
+
+    if (this.props.specializationId) {
+      specializationId = this.props.specializationId
+      specializationName = this.props.specializationName
     }
 
     if (this.props.production) {
@@ -58,13 +71,14 @@ class JobForm extends Component {
 
     if (this.props.theater) {
       theater = this.props.theater
-      theaterSet = true
     }
 
     if (this.props.user) {
       user = this.props.user
-      userSet = true
       userName = this.buildUserName(user)
+    }
+    if (specializationId) {
+      specializationSet = true
     }
 
     this.state = {
@@ -72,15 +86,17 @@ class JobForm extends Component {
       productions: [],
       productionSet: this.props.productionSet,
       selectedProduction: production ? [{id: production.id, label: `${production.play.title} at ${theater.name}` }] : [],
-      selectedSpecialization: this.props.job.specialization ? [{id: this.props.job.specialization.id, label: this.props.job.specialization.title }] : [],
+      selectedSpecialization: [{id: specializationId, label: specializationName }] || [],
       selectedTheater: theater ? [{id: theater.id, label: theater.name }] : [],
       selectedUser: user ? [{id: user.id, label: userName}] : [],
+      showNewUserModal: false,
       specializations: [],
+      specializationSet: specializationSet,
       start_date: start_date || '',
       theaters: [],
-      theaterSet: theaterSet,
+      theaterSet: false,
       users: [],
-      userSet: userSet || false,
+      userSet: false,
       validated: false,
     }
   }
@@ -154,10 +170,15 @@ class JobForm extends Component {
       event.stopPropagation();
     } else {
       this.processSubmit()
+      event.preventDefault()
     }
     this.setState({
       validated: true
     })
+  }
+
+  handleUserFormSubmit = (user) => {
+    this.createNewUser(user)
   }
 
   processSubmit = () => {
@@ -170,6 +191,25 @@ class JobForm extends Component {
       user_id: this.state.selectedUser[0].id,
       id: this.props.job.id,
     }, "job")
+  }
+
+  toggleNewUserModal = () => {
+    this.setState({showNewUserModal: !this.state.showNewUserModal})
+  }
+
+  async createNewUser(user) {
+    const response = await createUser(user, 'user')
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error creating user'
+      })
+    }  else {
+      let newUsers = [...this.state.users, response.data]
+      this.setState({
+        users: newUsers,
+        selectedUser: [{id: response.data.id, label: buildUserName(response.data)}]
+      })
+    }
   }
 
   async loadProductionsFromServer() {
@@ -273,7 +313,14 @@ class JobForm extends Component {
       id: user.id,
       label: this.buildUserName(user)
     }))
-    return (<Col md = {{span: 8, offset: 2}}>
+    return (
+
+      <Col md = {{span: 8, offset: 2}}>
+      <NewUserModal
+        handleClose={this.toggleNewUserModal}
+        onFormSubmit={this.handleUserFormSubmit}
+        show={this.state.showNewUserModal}
+      />
       <Form
         noValidate
         onSubmit={e => this.handleSubmit(e)}
@@ -281,7 +328,9 @@ class JobForm extends Component {
       >
       <Form.Group>
         <Form.Label>
-          User
+          User <Button variant="outline-info" size="sm" onClick={this.toggleNewUserModal}>
+                  Add New User
+                </Button>
         </Form.Label>
         <Typeahead
           disabled={(this.state.userSet === true || this.state.userSet) ? true : false}
@@ -303,6 +352,7 @@ class JobForm extends Component {
           Specialization
         </Form.Label>
         <Typeahead
+          disabled={this.state.specializationSet}
           id="specialization"
           required
           options={specializations}

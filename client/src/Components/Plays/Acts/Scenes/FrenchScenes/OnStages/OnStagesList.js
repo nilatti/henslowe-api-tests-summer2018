@@ -5,7 +5,6 @@ import React, {
 
 import {Button} from 'react-bootstrap'
 
-import { RIEInput} from '@attently/riek'
 import _ from 'lodash'
 
 import NewOnStageForm from './NewOnStageForm'

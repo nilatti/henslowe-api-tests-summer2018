@@ -15,10 +15,6 @@ import {
 class CharacterSelect extends Component {
 
   render() {
-    var characters = this.props.characters.map((character) => ({
-      id: character.id,
-      label: character.name
-    }))
     return(
       <Form.Group>
         <Form.Label>

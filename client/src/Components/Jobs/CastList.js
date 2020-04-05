@@ -26,6 +26,8 @@ import {
   updateServerJob,
 } from '../../api/jobs'
 
+import {buildUserName} from '../../utils/actorUtils'
+
 import CastingShow from './CastingShow'
 import NewCasting from './NewCasting'
 
@@ -105,6 +107,23 @@ async loadActorsAndAuditionersFromServer(){
     }
   }
 
+  castingGroupedByActor(castings) {
+    let grouped = _.groupBy(castings, 'user_id')
+    let actorIds = _.compact(Object.keys(grouped))
+    return actorIds.map((actorId) => {
+      if (actorId !== null) {
+        let actor = _.find(this.state.availableActors, ['id', _.toNumber(actorId)])
+        if (actor) {
+          let actorName = buildUserName(actor)
+          let actorGroup = grouped[actorId]
+          let characters = actorGroup.map((item) => item.character)
+          let characterNames = characters.map((character) => character.name)
+          return <li key={actorId}>{actorName}: {_.join(characterNames, ', ')}</li>
+        }
+      }
+    })
+  }
+
   handleActorClick(castingId) {
     this.setState({
       castings: this.state.castings.map(casting => {
@@ -136,12 +155,13 @@ async loadActorsAndAuditionersFromServer(){
     this.deleteCasting(castingId)
   }
 
-  render() {
+  render(){
     let availableActors = this.state.availableActors.map(actor => ({
       id: actor.id,
       label: `${actor.preferred_name || actor.first_name} ${actor.last_name}`
     }))
     availableActors.unshift({value: null, label: ''})
+    let castingByActor = this.castingGroupedByActor(this.state.castings)
     let castings = this.state.castings.map(casting =>
       <li
         key={casting.id}
@@ -155,6 +175,7 @@ async loadActorsAndAuditionersFromServer(){
     )
     return (
       <div>
+        <h2>Casting by Character</h2>
         <ul>
           {castings}
         </ul>
@@ -174,7 +195,10 @@ async loadActorsAndAuditionersFromServer(){
             Add Casting
           </Button>
         }
-
+        <h2>Casting by Actor</h2>
+        <ul>
+          {castingByActor}
+        </ul>
       </div>
     )
   }

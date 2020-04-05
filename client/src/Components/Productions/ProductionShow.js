@@ -25,17 +25,12 @@ import {
 } from '../../utils/playScriptUtils'
 
 import ActorsList from './Actors/ActorsList'
+import AuditionersList from '../Jobs/AuditionersList'
 import CastList from '../Jobs/CastList'
 import JobsListExcludingActorsAndAuditioners from '../Jobs/JobsListExcludingActorsAndAuditioners'
 import StageExitsList from './SetDesign/StageExitsList'
 
 export default function ProductionShow (props) {
-  //
-  // handleDeleteClick = () => {
-  //   this.props.onDeleteClick(this.props.production.id)
-  // }
-  //
-  // render() {
     let { url } = useRouteMatch();
     let linesTotal = calculateLineCount(getLinesFromCharacters(props.production.play.characters))
     let runTime = parseFloat(linesTotal / props.production.lines_per_minute).toFixed(2)
@@ -78,9 +73,23 @@ export default function ProductionShow (props) {
       <hr />
       <Row>
         <Col md={12}>
-          <p>Lines per minute: {props.production.lines_per_minute}</p>
-          <p>Total lines: {linesTotal}</p>
-          <p>Run time: {runTime} minutes</p>
+          {props.production.lines_per_minute ?
+            <p>Lines per minute: {props.production.lines_per_minute}</p>
+            :
+            <span></span>
+          }
+          {
+            linesTotal > 0 ?
+            <p>Total lines: {linesTotal}</p>
+            :
+            <span></span>
+          }
+          {
+            props.production.lines_per_minute && linesTotal > 0 ?
+            <p>Run time: {runTime} minutes</p>
+            :
+            <span></span>
+          }
           <Link to={`${url}/doubling_charts/`}>
             <Button variant="info">
               Show Doubling Charts
@@ -92,6 +101,11 @@ export default function ProductionShow (props) {
       <Row>
         <h2>Production Jobs</h2>
         <JobsListExcludingActorsAndAuditioners production={props.production} />
+      </Row>
+      <hr />
+      <Row>
+        <h2>Auditioners</h2>
+        <AuditionersList production={props.production} />
       </Row>
       <hr />
       <Row>

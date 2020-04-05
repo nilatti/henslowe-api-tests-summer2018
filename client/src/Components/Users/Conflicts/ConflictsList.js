@@ -11,7 +11,6 @@ import React, {
 import {
   createItemWithParent,
   deleteItem,
-  getItem,
   updateServerItem
 } from '../../../api/crud'
 
