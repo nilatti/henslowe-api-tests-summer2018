@@ -28,8 +28,19 @@ class Jobs extends Component {
         errorStatus: 'Error creating Job'
       })
     } else {
-      this.props.history.push(`/jobs/${response.data.id}`)
-      window.location.reload();
+      if (response.data.production_id) {
+        this.props.history.push(`/productions/${response.data.production_id}`)
+        window.location.reload();
+      } else if (response.data.theater_id) {
+        this.props.history.push(`/theaters/${response.data.theater_id}`)
+        window.location.reload();
+      } else if (response.data.user_id) {
+        this.props.history.push(`/users/${response.data.user_id}`)
+        window.location.reload();
+      } else {
+        this.props.history.push(`/jobs/${response.data.id}`)
+        window.location.reload();
+      }
     }
   }
 

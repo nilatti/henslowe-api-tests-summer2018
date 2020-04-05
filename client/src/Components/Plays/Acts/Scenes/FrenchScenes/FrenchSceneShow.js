@@ -6,8 +6,6 @@ import React, {
 import {
   Col,
   Row,
-  Tab,
-  Tabs,
 } from 'react-bootstrap'
 
 import OnStagesList from './OnStages/OnStagesList'
@@ -35,9 +33,9 @@ class FrenchSceneShow extends Component {
       <div>
         <Row>
           <Col>
-            <h2>{this.props.actNumber}.{this.props.sceneNumber}.{this.props.frenchScene.number}</h2>
+            <h2>{this.props.actNumber}.{this.props.sceneNumber}.{frenchScene.number}</h2>
             <p>
-              {this.props.frenchScene.summary}
+              {frenchScene.summary}
             </p>
             <span
               className='right floated edit icon'
@@ -55,9 +53,9 @@ class FrenchSceneShow extends Component {
         </Row>
         <Row>
           {
-            this.props.frenchScene.start_page ?
+            frenchScene.start_page ?
               <p>
-                Pages {this.props.frenchScene.start_page} - {this.props.frenchScene.end_page}
+                Pages {frenchScene.start_page} - {frenchScene.end_page}
               </p>
             :
             <br />
@@ -70,7 +68,7 @@ class FrenchSceneShow extends Component {
           <ul>
             <OnStagesList
               actId={this.props.actId}
-              frenchSceneId={this.props.frenchScene.id}
+              frenchSceneId={frenchScene.id}
               handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
               onDeleteClick={this.props.handleOnStageDeleteClick}
               handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
@@ -84,7 +82,7 @@ class FrenchSceneShow extends Component {
           ? <Row>
             <EntranceExitList
               actId={this.props.actId}
-              frenchSceneId={this.props.frenchScene.id}
+              frenchSceneId={frenchScene.id}
               handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
               onDeleteClick={this.props.handleEntranceExitDeleteClick}
               handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}

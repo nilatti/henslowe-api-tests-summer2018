@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types';
 import React, {
   Component
@@ -6,18 +7,20 @@ import {
   Link
 } from 'react-router-dom'
 
-class JobsListExcludingActorsAndAuditioners extends Component {
-  excludeActorsAndAuditioners() {
-    return this.props.production.jobs.filter(job => job.specialization.title !== 'Actor' && job.specialization.title !== 'Auditioner')
+import {
+  buildUserName
+} from '../../utils/actorUtils'
+
+class AuditionersList extends Component {
+  getAuditioners() {
+    let auditioners = this.props.production.jobs.filter(job => job.specialization.title === 'Auditioner')
+    return _.sortBy(auditioners, [function(o) { return o.user.first_name; }])
   }
   render() {
     let productionSet = this.props.production !== undefined ? true : false
-    let jobs = this.excludeActorsAndAuditioners().map(job =>
+    let jobs = this.getAuditioners().map(job =>
       <li key={job.id}>
-        <Link to={`/jobs/${job.id}`}>
-          {job.user ? job.user.preferred_name || job.user.first_name : ''} {job.user ? job.user.last_name : ''}
-          : {job.specialization.title} at {job.theater.name}
-        </Link>
+        {job.user ? buildUserName(job.user) : ''}
       </li>
     )
     return (
@@ -32,18 +35,20 @@ class JobsListExcludingActorsAndAuditioners extends Component {
               production: this.props.production,
               productionSet: productionSet,
               theater: this.props.theater,
+              specializationId: 4,
+              specializationName: 'Auditioner', //tk get rid of this hard coding, it is ugly
             }
           }}
         >
-          Add New
+          Add New Auditioner
         </Link>
       </div>
     )
   }
 }
 
-JobsListExcludingActorsAndAuditioners.propTypes = {
+AuditionersList.propTypes = {
   production: PropTypes.object.isRequired,
 }
 
-export default JobsListExcludingActorsAndAuditioners
+export default AuditionersList

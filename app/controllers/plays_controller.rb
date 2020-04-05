@@ -223,6 +223,8 @@ class PlaysController < ApiController
       :author_id,
       :canonical,
       :date,
+      :synopsis,
+      :text_notes,
       :title,
       genre: []
     )

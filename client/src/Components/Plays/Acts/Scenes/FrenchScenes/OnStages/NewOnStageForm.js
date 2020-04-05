@@ -8,11 +8,7 @@ import {
   Button,
   Col,
   Form,
-  Row
 } from 'react-bootstrap'
-import {
-  Typeahead
-} from 'react-bootstrap-typeahead';
 
 import CharacterSelect from '../../../../Characters/CharacterSelect'
 

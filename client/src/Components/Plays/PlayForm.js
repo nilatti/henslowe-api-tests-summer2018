@@ -31,6 +31,8 @@ class PlayForm extends Component {
       canonical: this.props.play.canonical || false,
       date: props_date,
       genre: this.props.play.genre || [],
+      synopsis: this.props.play.synopsis || '',
+      textNotes: this.props.play.text_notes || '',
       title: this.props.play.title || '',
       validated: false,
     }
@@ -101,6 +103,8 @@ class PlayForm extends Component {
       canonical: this.state.canonical,
       date: this.state.date,
       genre: this.state.genre,
+      synopsis: this.state.synopsis,
+      text_notes: this.state.textNotes,
       title: this.state.title,
       id: this.props.play.id
     })
@@ -241,6 +245,26 @@ class PlayForm extends Component {
 								onChange={this.handleDateChange}
 							/>
 						</Form.Group>
+            <Form.Group controlId="text-notes">
+              <Form.Label>Text Notes:</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="textNotes"
+                onChange={this.handleChange}
+                rows="3"
+                value={this.state.textNotes}
+              />
+            </Form.Group>
+            <Form.Group controlId="synopsis">
+              <Form.Label>Synopsis:</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="synopsis"
+                onChange={this.handleChange}
+                rows="3"
+                value={this.state.synopsis}
+              />
+            </Form.Group>
 						<Button
 							type="submit"
 							variant="primary"

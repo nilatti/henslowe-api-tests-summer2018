@@ -4,12 +4,8 @@ import React, {
 import PropTypes from 'prop-types';
 
 import {
-  Col,
   Form,
-  Row
 } from 'react-bootstrap'
-
-var Diff = require('diff')
 
 class LineEditForm extends Component {
   state = {

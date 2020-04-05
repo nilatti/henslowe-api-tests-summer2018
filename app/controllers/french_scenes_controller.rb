@@ -27,9 +27,21 @@ class FrenchScenesController < ApiController
   # POST /scenes
   def create
     @french_scene = FrenchScene.new(french_scene_params)
-
     if @french_scene.save
-      render json: @french_scene, status: :created, location: @french_scene
+      if params[:character_ids]
+        build_on_stages(character_ids: params[:character_ids], french_scene: @french_scene)
+      end
+      json_response(@french_scene.as_json(
+          include: [
+            :characters,
+            on_stages: {
+              include: :character,
+            },
+            entrance_exits: {
+              include: :characters
+            },
+          ]
+        ))
     else
       render json: @french_scene.errors, status: :unprocessable_entity
     end
@@ -37,10 +49,21 @@ class FrenchScenesController < ApiController
 
   # PATCH/PUT /french_scenes/1
   def update
+    if french_scene_params[:character_ids]
+      build_on_stages(character_ids: french_scene_params[:character_ids], french_scene: @french_scene)
+    end
     if @french_scene.update(french_scene_params)
-      json_response(@french_scene.as_json)
-
-      # json_response(@french_scene.as_json(include: [:characters, :entrace_exits, :on_stages]))
+      json_response(@french_scene.as_json(
+          include: [
+            :characters,
+            on_stages: {
+              include: :character,
+            },
+            entrance_exits: {
+              include: :characters
+            },
+          ]
+        ))
     else
       render json: @french_scene.errors, status: :unprocessable_entity
     end
@@ -68,6 +91,14 @@ class FrenchScenesController < ApiController
   end
 
   private
+
+    def build_on_stages(character_ids:, french_scene:)
+      puts "build on stages called"
+      character_ids.each do |character_id|
+        on_stage = OnStage.new(character_id: character_id, french_scene_id: french_scene.id)
+        on_stage.save
+      end
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_scene
       if params[:scene_id]

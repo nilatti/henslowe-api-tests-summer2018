@@ -27,11 +27,15 @@ class NewJob extends Component {
   render() {
     let production
     let productionSet
+    let specializationId
+    let specializationName
     let theater
     let user
     if (this.props.location.state){
       production = this.props.location.state.production
       productionSet = this.props.location.state.productionSet
+      specializationId = this.props.location.state.specializationId
+      specializationName = this.props.location.state.specializationName
       theater = this.props.location.state.theater
       user = this.props.location.state.user
     } else {
@@ -48,6 +52,8 @@ class NewJob extends Component {
             <JobForm
             production={production}
             productionSet={productionSet}
+            specializationId={specializationId}
+            specializationName={specializationName}
             theater={theater}
             onFormSubmit={this.handleFormSubmit}
             onFormClose={this.handleFormClose}

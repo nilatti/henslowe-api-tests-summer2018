@@ -37,7 +37,14 @@ class DoublingCharts extends Component {
   }
 
   getJobsForActor(actor) {
-    return _.filter(this.state.production.jobs, {'user_id': actor.id, 'specialization_id': 2}) //again, don't like the hard coding here where actor = 2
+    let uncastRemoved = this.state.production.jobs.map((job) => {
+      if (job.user_id !== null && job.specialization_id === 2) {  //again, don't like the hard coding here where actor = 2
+        return job
+      } else {
+        return
+      }
+    })
+    return _.compact(uncastRemoved)
   }
 
   async loadProductionFromServer(productionId) {

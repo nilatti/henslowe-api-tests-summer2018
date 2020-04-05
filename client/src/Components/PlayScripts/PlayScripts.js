@@ -9,14 +9,8 @@ import {
   ListGroup,
   Row
 } from 'react-bootstrap'
-import {
-  Link,
-  Route,
-  Switch,
-} from 'react-router-dom'
 
 import {
-  getItemsWithParent,
   updateServerItem
 } from '../../api/crud'
 
@@ -28,18 +22,13 @@ import {
   getPlaySkeleton
 } from '../../api/plays'
 
-import Act from './Act'
-import LineShow from './LineShow'
 import {
   calculateRunTime,
   getFrenchScenesFromAct,
   getFrenchScenesFromPlay,
-  getFrenchScenesFromScene,
   mergeTextFromFrenchScenes,
-  sortLines
 } from '../../utils/playScriptUtils'
 import ScriptContainer from './ScriptContainer'
-import Text from './Text'
 
 class PlayScripts extends Component {
   state={

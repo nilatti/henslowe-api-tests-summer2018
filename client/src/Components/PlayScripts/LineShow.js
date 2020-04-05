@@ -6,19 +6,10 @@ import PropTypes from 'prop-types';
 import {
   Col,
   Button,
-  Form,
   Row
 } from 'react-bootstrap'
-import {
-  Link,
-  Route,
-  Switch,
-} from 'react-router-dom'
-import uuid from 'react-uuid'
 
-import {
-  updateServerItem
-} from '../../api/crud'
+import uuid from 'react-uuid'
 
 import CharacterSelect from '../Plays/Characters/CharacterSelect'
 import LineEditForm from './LineEditForm'

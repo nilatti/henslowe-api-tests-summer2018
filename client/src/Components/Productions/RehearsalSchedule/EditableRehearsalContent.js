@@ -1,29 +1,7 @@
-import _ from 'lodash'
 import PropTypes from 'prop-types';
-import {
-  Button,
-  Col,
-  Row,
-  Tab,
-  Tabs,
-} from 'react-bootstrap'
 import React, {
   Component
 } from 'react'
-
-import Moment from 'react-moment';
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-} from "react-router-dom";
-
-import {
-  getItemsWithParent,
-  updateServerItem
-} from '../../../api/crud'
 
 import RehearsalContentForm from './RehearsalContentForm'
 import RehearsalContentShow from './RehearsalContentShow'

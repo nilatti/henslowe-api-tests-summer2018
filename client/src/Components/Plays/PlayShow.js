@@ -108,6 +108,8 @@ class PlayShow extends Component {
             {this.props.play.canonical ? <p><em> Canonical Version</em></p> : <p></p>}
             by <Link to={`/authors/${this.props.play.author.id}`}> {this.props.play.author.first_name} {this.props.play.author.last_name}</Link><br />
             {this.props.play.date}<br />
+            <p>{this.props.play.synopsis}</p>
+            <p>{this.props.play.text_notes}</p>
             <span
               className='right floated edit icon'
               onClick={this.props.handleEditClick}

@@ -22,10 +22,21 @@ class FrenchSceneForm extends Component {
         id: this.props.frenchScene.id,
         number: this.props.frenchScene.number,
         scene_id: this.props.sceneId,
-        selected_characters: this.props.frenchScene.characters || [],
+        selected_characters: this.props.frenchScene.characters|| [],
         start_page: this.props.frenchScene.start_page || '',
         summary: this.props.frenchScene.summary,
         validated: false,
+      }
+    } else if (this.props.lastFrenchScene) {
+        this.state = {
+          available_characters: [],
+          end_page: '',
+          number: String.fromCharCode(this.props.lastFrenchScene.number.charCodeAt() + 1) || '',
+          scene_id: this.props.sceneId,
+          selected_characters:  this.props.lastFrenchScene.characters || [],
+          start_page: this.props.lastFrenchScene.end_page || '',
+          summary: '',
+          validated: false,
       }
     } else {
       this.state = {
@@ -33,7 +44,7 @@ class FrenchSceneForm extends Component {
         end_page: '',
         number: '',
         scene_id: this.props.sceneId,
-        selected_characters: [],
+        selected_characters:  [],
         start_page: '',
         summary: '',
         validated: false,
@@ -78,14 +89,11 @@ componentDidMount = () => {
 
   processSubmit = () => {
     var character_ids = this.state.selected_characters.map((character) => character.id)
-    var characters = this.state.available_characters.filter(character => character_ids.includes(character.id))
     this.props.onFormSubmit({
       character_ids: character_ids,
-      characters: characters,
       end_page: this.state.end_page,
       id: this.state.id || '',
       number: this.state.number,
-      // on_stages: this.props.frenchScene.on_stages,
       scene_id: this.state.scene_id,
       start_page: this.state.start_page,
       summary: this.state.summary,
@@ -204,6 +212,7 @@ componentDidMount = () => {
 
 FrenchSceneForm.propTypes = {
   frenchScene: PropTypes.object,
+  lastFrenchScene: PropTypes.object,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   sceneId: PropTypes.number.isRequired,

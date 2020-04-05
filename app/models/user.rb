@@ -10,7 +10,7 @@ class User < ApplicationRecord
   # validates_presence_of :first_name, :last_name, :phone_number, :email
   has_many :conflicts
   has_many :entrance_exits
-  has_many :jobs
+  has_many :jobs, dependent: :destroy
   has_many :characters, through: :jobs
   has_many :on_stages, through: :characters
   has_many :french_scenes, through: :on_stages

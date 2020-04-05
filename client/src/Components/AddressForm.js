@@ -3,7 +3,6 @@ import React, {
   Component
 } from 'react'
 import {
-  Button,
   Col,
   Form,
 } from 'react-bootstrap'
@@ -289,7 +288,7 @@ class AddressForm extends Component {
         >
           {states}
         </Form.Control>
-      </Form.Group> 
+      </Form.Group>
       <
       Form.Group as = {
         Col

@@ -3,16 +3,10 @@ import PropTypes from 'prop-types';
 import {
   Col,
   Row,
-  Tab,
-  Tabs,
 } from 'react-bootstrap'
 import React, {
   Component
 } from 'react'
-
-import {
-  updateServerUser
-} from '../../api/users.js'
 
 import JobsList from '../Jobs/JobsList'
 import ConflictsList from './Conflicts/ConflictsList'

@@ -12,11 +12,9 @@ regularlize sound cues so line_number is whatever it is on stage directions
 
 hide SDs from view where type = mixed or where content null
 
- find a way to hide all cut lines with correct character demarkation
+write a way to export the script text to an editable form--gdocs ideally?
 
- write a way to export the script text to an editable form--gdocs ideally?
-
- on importer--when two characters share a line, one of them is not getting the content assigned (see jaques/amiens 2.5.43)
+on importer--when two characters share a line, one of them is not getting the content assigned (see jaques/amiens 2.5.43)
 
 check importer--why does epilogue have line number = 0, act = 0?
 
@@ -35,3 +33,7 @@ make a script to add users to on_stages when casting is set (see test.rb for an 
 check that users save removes ones whose things have been unscheduled
 
 On some future pass, make rehearsal time and notes editable by double clicking
+
+when a tall form closes, scroll to the top of the containing element (somehow)
+
+make "schedule this content" and "schedule these people" buttons float along the side so that you don't have to scroll around to find them.

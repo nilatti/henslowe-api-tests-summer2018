@@ -119,7 +119,8 @@ class EditablePlay extends Component {
       let workingScene = _.find(workingAct.scenes, {'id': sceneId})
       let workingFrenchScene = _.find(workingScene.french_scenes, {'id': frenchSceneId})
       let newOnStages = _.orderBy([...workingFrenchScene.on_stages, response.data], 'number')
-      let newFrenchScene = {...workingFrenchScene, on_stages: newOnStages}
+      let newCharacters = [workingFrenchScene.characters, response.data.character]
+      let newFrenchScene = {...workingFrenchScene, characters: newCharacters, on_stages: newOnStages}
 
       workingScene = this.interpolateNewFrenchScene(newFrenchScene, workingScene)
       workingAct = this.interpolateNewScene(workingScene, workingAct)
@@ -469,7 +470,7 @@ componentDidMount = () => {
 }
 
 handleFormClose = () => {
-  this.toggleeForm()
+  this.toggleForm()
 }
 
 handleSubmit = (play) => {
