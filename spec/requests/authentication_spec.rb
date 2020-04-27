@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'POST /sign_in', type: :request do
   let(:user) { create(:user) }
-  let(:url) { '/users/sign_in' }
+  let(:url) { '/sign_in' }
   let(:params) do
     {
       user: {
@@ -44,7 +44,7 @@ RSpec.describe 'POST /sign_in', type: :request do
 end
 
 RSpec.describe 'DELETE /logout', type: :request do
-  let(:url) { '/users/sign_out' }
+  let(:url) { '/sign_out' }
 
   it 'returns 204, no content' do
     delete url

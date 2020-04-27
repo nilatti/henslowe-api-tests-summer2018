@@ -10,7 +10,7 @@ class UsersController < ApiController
 
   # GET /Users/1
   def show
-    json_response(@user.as_json(include: :conflicts))
+    json_response(@user.as_json(include: [:conflicts, :jobs]))
   end
 
   def update

@@ -202,10 +202,11 @@ class ProductionsController < ApiController
   end
 
   def build_rehearsal_schedule
+    puts "CALLED BUILD"
     set_production
     json_response(@production.as_json(include: [:theater]))
-    # BuildRehearsalScheduleWorker.perform_async(params[:rehearsal_block_length])
-    BuildRehearsalScheduleWorker.perform_async(params[:rehearsal_block_length], params[:rehearsal_break_length], params[:rehearsal_days_of_week], params[:rehearsal_end_date], params[:rehearsal_end_time], @production.id, params[:rehearsal_time_between_breaks], params[:rehearsal_start_date], params[:rehearsal_start_time])
+    rehearsal_schedule_pattern = params[:production][:rehearsal_schedule_pattern]
+    BuildRehearsalScheduleWorker.perform_async(rehearsal_schedule_pattern[:block_length], rehearsal_schedule_pattern[:break_length], rehearsal_schedule_pattern[:days_of_week], rehearsal_schedule_pattern[:end_date], rehearsal_schedule_pattern[:end_time], @production.id, rehearsal_schedule_pattern[:time_between_breaks], rehearsal_schedule_pattern[:start_date], rehearsal_schedule_pattern[:start_time])
   end
 
   private

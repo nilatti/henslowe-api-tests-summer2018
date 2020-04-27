@@ -24,7 +24,6 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'devise'
 gem 'devise-jwt'
 gem 'sidekiq'
-gem 'sidekiq-status'
 gem 'activeadmin'
 
 gem 'activerecord-import'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_25_220224) do
+ActiveRecord::Schema.define(version: 2020_04_06_112915) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -80,6 +80,12 @@ ActiveRecord::Schema.define(version: 2020_03_25_220224) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["play_id"], name: "index_character_groups_on_play_id"
+  end
+
+  create_table "character_groups_entrance_exits", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.bigint "character_group_id", null: false
+    t.bigint "entrance_exit_id", null: false
+    t.index ["character_group_id", "entrance_exit_id"], name: "index_character_groups_entrance_exits"
   end
 
   create_table "character_groups_stage_directions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|

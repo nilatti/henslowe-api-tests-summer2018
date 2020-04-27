@@ -1,11 +1,11 @@
 class BuildRehearsalScheduleBlocks
-  def initialize(block_length:, break_length:, days_of_week:, end_date:, end_time:, production:, time_between_breaks:, start_date:, start_time:)
+  def initialize(block_length:, break_length:, days_of_week:, end_date:, end_time:, production_id:, time_between_breaks:, start_date:, start_time:)
     @block_length = block_length
     @break_length = break_length
     @days_of_week = days_of_week
     @end_date = end_date
     @end_time = end_time
-    @production = production
+    @production_id = production_id
     @start_date = start_date
     @start_time = start_time
     @rehearsal_blocks = []
@@ -13,25 +13,44 @@ class BuildRehearsalScheduleBlocks
   end
 
   def run
-    build_recurring_rehearsals(end_date: @end_date, start_date: @start_date, days_of_week: @days_of_week, start_time: @start_time, end_time: @end_time, block_length: @block_length, break_length: @break_length, time_between_breaks: @time_between_breaks)
+    @rehearsal_blocks = build_recurring_rehearsals(
+      block_length: @block_length,
+      break_length: @break_length,
+      days_of_week: @days_of_week,
+      end_date: @end_date,
+      end_time: @end_time,
+      start_date: @start_date,
+      start_time: @start_time,
+      time_between_breaks: @time_between_breaks
+    )
     Rehearsal.import @rehearsal_blocks
   end
-  def build_recurring_rehearsals(end_date:, start_date:, days_of_week:, start_time:, end_time:, block_length:, break_length:, time_between_breaks:) #block length should be in minutes
+  def build_recurring_rehearsals(
+    block_length:,
+    break_length:,
+    days_of_week:,
+    end_date:,
+    end_time:,
+    start_date:,
+    start_time:,
+    time_between_breaks:
+  ) #block length should be in minutes
     blocks = build_rehearsal_blocks(block_length: block_length, break_length: break_length, end_time: end_time, start_time: start_time, time_between_breaks: time_between_breaks)
     puts "rehearsal blocks built: #{blocks.size}"
     days = build_rehearsal_days(days_of_week: days_of_week, end_date: end_date, start_date: start_date)
+    rehearsal_blocks_array = []
     days.each do |day|
       puts "day is #{day}"
       blocks.each do |block|
         r = Rehearsal.new
         r.end_time = Time.zone.parse("#{day.strftime('%F')} #{block[:end_time].strftime('%T')}")
-        r.production = @production
+        r.production_id = @production_id
         r.notes = block[:notes]
         r.start_time = Time.zone.parse("#{day.strftime('%F')} #{block[:start_time].strftime('%T')}")
-        @rehearsal_blocks << r
+        rehearsal_blocks_array << r
       end
     end
-    puts "built rehearsal blocks #{@rehearsal_blocks.size}"
+    return rehearsal_blocks_array
   end
 
   def build_rehearsal_blocks(block_length:, break_length:, end_time:, start_time:, time_between_breaks:)
@@ -76,7 +95,11 @@ class BuildRehearsalScheduleBlocks
   end
 
   def build_rehearsal_days(days_of_week:, end_date:, start_date:)
-    days = days_of_week.each {|day| day.to_sym}
+    days_arr = days_of_week.flatten
+    
+    puts "days of week"
+    days_arr.each {|w| puts "\t#{w}"}
+    days = days_arr.each {|day| day.to_sym}
     start_on = Date.parse(start_date)
     end_on = Date.parse(end_date)
     schedule = Montrose.every(:week, starts: start_on, until: end_on).on(days)
