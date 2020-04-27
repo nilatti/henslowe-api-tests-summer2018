@@ -1,4 +1,5 @@
 class PlaysController < ApiController
+  before_action :authenticate_user!
   before_action :set_author, only: %i[index, create]
   before_action :set_play, only: %i[show update destroy]
   # GET /plays
@@ -181,6 +182,8 @@ class PlaysController < ApiController
   end
 
   def play_skeleton
+    puts "play_params"
+    puts params[:play]
     @play = Play.includes(acts: [scenes: [:french_scenes]]).find(params[:play])
 
     render json: @play.as_json(include: {

@@ -1,15 +1,14 @@
 Rails.application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
-  resources :rehearsals
-  resources :conflicts
+
   # devise_for :admin_users, ActiveAdmin::Devise.config
-  devise_for :users, :controllers => {
-
-   :registrations => "registrations",
-   :sessions => "sessions"
-
-   }
+  devise_for :users,
+             path: '',
+             controllers: {
+               sessions: 'sessions',
+               registrations: 'registrations'
+             }
   ActiveAdmin.routes(self)
   scope 'api' do
 
@@ -57,6 +56,8 @@ Rails.application.routes.draw do
     resources :plays do
       collection do
         get :play_titles
+      end
+      member do
         get :play_script
         get :play_skeleton
       end
@@ -72,7 +73,7 @@ Rails.application.routes.draw do
       resources :characters
     end
     resources :acts do
-      collection do
+      member do
         get :act_script
       end
       resources :scenes
@@ -101,5 +102,7 @@ Rails.application.routes.draw do
     resources :sound_cues
     resources :stage_directions
     resources :words
+    resources :rehearsals
+    resources :conflicts
   end
 end
