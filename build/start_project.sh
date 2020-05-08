@@ -4,16 +4,15 @@ set -e -x
 #!/bin/bash
 set -e -x
 # rest of the script
-source "/usr/local/rvm/bin/rvm"
+source "/usr/local/rvm/scripts/rvm" # may need this?
 echo 'Building SIF Project'
 AGENT_INSTALL_DIR="/var/lib/go-agent/pipelines"
 WORKSPACE="$AGENT_INSTALL_DIR/$GO_PIPELINE_NAME"
 bundle install
 echo 'starting rails'
-#rails server -d
 rails s -d -b 0.0.0.0
 
-echo 'rake seeds'
+# echo 'rake seeds'
 rake db:drop db:create db:schema:load
 # rake db:seed_fu
 echo 'get new db migrations'
