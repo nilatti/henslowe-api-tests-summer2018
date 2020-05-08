@@ -8,7 +8,7 @@ source "/usr/local/rvm/bin/rvm"
 echo 'Building SIF Project'
 AGENT_INSTALL_DIR="/var/lib/go-agent/pipelines"
 WORKSPACE="$AGENT_INSTALL_DIR/$GO_PIPELINE_NAME"
-
+bundle install
 echo 'starting rails'
 #rails server -d
 rails s -d -b 0.0.0.0
