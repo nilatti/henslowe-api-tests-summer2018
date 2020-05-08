@@ -5,7 +5,7 @@ set -e -x
 set -e -x
 # rest of the script
 echo 'Stopping Rails Server'
-source "/var/go/.rvm/scripts/rvm"
+source "/usr/local/rvm/bin/rvm"
 AGENT_INSTALL_DIR="/var/lib/go-agent/pipelines"
 WORKSPACE="$AGENT_INSTALL_DIR/$GO_PIPELINE_NAME"
 echo "workspace is $WORKSPACE"
