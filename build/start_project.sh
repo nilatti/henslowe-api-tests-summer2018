@@ -19,6 +19,8 @@ rake db:drop db:create db:schema:load
 # rake db:seed_fu
 echo 'get new db migrations'
 rake db:migrate
+
+bundle exec sidekiq
 # rake import_users
 # rake create_system_active
 # rake db:migrate
