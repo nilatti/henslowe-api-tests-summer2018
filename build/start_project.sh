@@ -13,7 +13,7 @@ echo 'starting rails'
 rails s -d -b 0.0.0.0
 
 # echo 'rake seeds'
-# rake db:drop db:create db:schema:load
+rake db:drop db:create db:schema:load
 # rake db:seed_fu
 echo 'get new db migrations'
 rake db:migrate
