@@ -4,7 +4,7 @@ set -e -x
 #!/bin/bash
 set -e -x
 # rest of the script
-# source "/usr/local/rvm/scripts/rvm" # may need this?
+source "/usr/local/rvm/scripts/rvm"
 echo 'Building Henslowe API'
 AGENT_INSTALL_DIR="/var/lib/go-agent/pipelines"
 WORKSPACE="$AGENT_INSTALL_DIR/$GO_PIPELINE_NAME"
