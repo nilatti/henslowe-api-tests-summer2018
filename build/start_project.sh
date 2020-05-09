@@ -8,7 +8,7 @@ source "/usr/local/rvm/scripts/rvm"
 echo 'Building Henslowe API'
 AGENT_INSTALL_DIR="/var/lib/go-agent/pipelines"
 WORKSPACE="$AGENT_INSTALL_DIR/$GO_PIPELINE_NAME"
-rvm use ruby-2.6.5@henslowe
+# rvm use ruby-2.6.5@henslowe
 bundle install
 echo 'starting rails'
 rails s -d -b 0.0.0.0
