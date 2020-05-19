@@ -12,10 +12,10 @@ WORKSPACE="$AGENT_INSTALL_DIR/$GO_PIPELINE_NAME"
 gem install bundler:2.0.2
 bundle install
 echo 'starting rails'
-rails s -d -b 0.0.0.0
+rails s -p 3001 -b -d
 
 # echo 'rake seeds'
-rake db:drop db:create db:schema:load
+# rake db:drop db:create db:schema:load
 # rake db:seed_fu
 echo 'get new db migrations'
 rake db:migrate
