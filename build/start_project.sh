@@ -12,7 +12,8 @@ WORKSPACE="$AGENT_INSTALL_DIR/$GO_PIPELINE_NAME"
 gem install bundler:2.0.2
 bundle install
 echo 'starting rails'
-rails s -p 3001 -b -d
+# rails s -p 3001 -b -d
+thin -p 3001 -a 127.0.0.1 -P tmp/pids/thin.pid -l logs/thin.log -d start
 
 # echo 'rake seeds'
 # rake db:drop db:create db:schema:load
