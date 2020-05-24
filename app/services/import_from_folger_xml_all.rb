@@ -52,6 +52,7 @@ class ImportFromFolgerXmlAll
     puts Time.current
     connect_lines_to_words(play: @play)
     build_lines_content(@play.lines)
+    check_on_stages(french_scenes: @play.french_scenes)
   end
 
   def build_acts(play:, parsed_xml:)
@@ -240,7 +241,7 @@ class ImportFromFolgerXmlAll
   end
 
   def build_on_stages(french_scene:, characters:) #expect characters from parser, so [0] = characters, [1] = character groups
-    characters.flatten!(3)
+    characters.flatten!(4)
     characters.uniq!
     characters.each do |char|
       if char.is_a? Character
@@ -315,6 +316,23 @@ class ImportFromFolgerXmlAll
     )
     @words << new_word
     return new_word
+  end
+
+  def check_on_stages(french_scenes:)
+    french_scenes.each do |french_scene|
+      speaking_characters = french_scene.lines.map { |line| line.character_id}.to_set
+      on_stage_characters = french_scene.on_stages.map {|on_stage| on_stage.character_id}.to_set
+      speaking_but_not_on_stage = speaking_characters - on_stage_characters
+      speaking_but_not_on_stage.each do |character|
+        OnStage.create(character_id: character, french_scene_id: french_scene.id, category: 'Character')
+      end
+      on_stage_but_not_speaking = on_stage_characters - speaking_characters
+      on_stage_but_not_speaking.each do |character|
+        o = OnStage.find_by(character_id: character, french_scene_id: french_scene.id)
+        o.nonspeaking = true
+        o.save
+      end
+    end
   end
 
   def connect_lines_to_words(play:)

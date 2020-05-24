@@ -30399,7 +30399,7 @@ The <att>ana</att> attribute may provide information such as the specific type o
 <c xml:id="c0235150" n="SD 3.1.297"> </c>
 <w xml:id="w0235160" n="SD 3.1.297">2</w>
 </head>
-<stage xml:id="stg-1504.1" n="SD 3.2.0" type="entrance" who="#Elbow_MM #Pompey_MM #OFFICERS_MM">
+<stage xml:id="stg-1504.1" n="SD 3.2.0" type="entrance" who="#Elbow_MM #Pompey_MM #OFFICERS_MM #DUKE_MM">
 <w xml:id="w0235170" n="SD 3.2.0">Enter</w>
 <c xml:id="c0235180" n="SD 3.2.0"> </c>
 <w xml:id="w0235190" n="SD 3.2.0">Elbow</w>
