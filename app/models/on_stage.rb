@@ -5,6 +5,7 @@ class OnStage < ApplicationRecord
   belongs_to :french_scene, optional: true
 
   before_save :set_category, if: :category_unset?
+
   private
   def category_unset?
     self.category.blank?
