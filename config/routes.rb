@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
@@ -12,6 +13,7 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   scope 'api' do
 
+    post "/graphql", to: "graphql#execute"
     resources :users, only: [:index, :show, :update, :destroy] do
       resources :conflicts
     end

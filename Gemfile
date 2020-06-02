@@ -13,6 +13,8 @@ gem 'mysql2', '>= 0.3.18', '< 0.6.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.12'
 gem 'thin'
+gem 'graphql'
+gem 'graphiql-rails'
 gem 'foreman'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'

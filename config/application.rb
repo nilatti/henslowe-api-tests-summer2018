@@ -29,7 +29,8 @@ module June20
     config.middleware.use ActionDispatch::Session::CookieStore
     config.app_generators.scaffold_controller = :scaffold_controller
     config.x.cors_allowed_origins
-    config.hosts = 'henslowescloud.com'
+    # config.hosts = 'henslowescloud.com'
+    config.hosts = 'localhost'
     config.api_only = true
     config.active_job.queue_adapter = :sidekiq
   end
