@@ -16,8 +16,8 @@ class PlaysController < ApiController
     @play = Play.includes(
       :author,
         [
-          characters: [:lines],
-          character_groups: [:lines],
+          :characters,
+          :character_groups,
           acts: [
             scenes: [
               french_scenes:
@@ -29,9 +29,6 @@ class PlaysController < ApiController
                     :stage_exit,
                     :characters,
                     :character_groups
-                  ],
-                  lines: [
-                    :words
                   ],
                   on_stages: [
                     :character, :character_group
@@ -60,9 +57,6 @@ class PlaysController < ApiController
                           :characters,
                           :character_groups,
                         ]
-                    },
-                    lines: {
-                      include: :words
                     },
                     on_stages: {
                       include: [:character, :character_group]
@@ -169,7 +163,7 @@ class PlaysController < ApiController
                     :stage_directions,
                     :sound_cues,
                     lines: {
-                      include: [:character, :words]
+                      include: :character
                     }
                   ]
                 }
