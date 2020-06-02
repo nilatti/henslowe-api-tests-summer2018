@@ -46,6 +46,7 @@ class ImportFromFolgerXmlAll
     build_acts(play: @play, parsed_xml: @parsed_xml)
     puts "built acts"
     Line.import @lines
+
     StageDirection.import @stage_directions
     OnStage.import @on_stages
     Word.import @words
@@ -145,9 +146,11 @@ class ImportFromFolgerXmlAll
 
   def build_header(item:)
     heading = ''
-    item.children.map(&:text).each do |piece|
-      piece.chomp!
-      heading << piece
+    if item
+      item.children.map(&:text).each do |piece|
+        piece.chomp!
+        heading << piece
+      end
     end
     return heading
   end
@@ -320,6 +323,10 @@ class ImportFromFolgerXmlAll
 
   def check_on_stages(french_scenes:)
     french_scenes.each do |french_scene|
+      uniq_on_stages = french_scene.on_stages.uniq { |o| o.character_id }
+      duplicates = french_scene.on_stages - uniq_on_stages
+      duplicates.each { |o| o.destroy }
+
       speaking_characters = french_scene.lines.map { |line| line.character_id}.to_set
       on_stage_characters = french_scene.on_stages.map {|on_stage| on_stage.character_id}.to_set
       speaking_but_not_on_stage = speaking_characters - on_stage_characters
@@ -332,6 +339,7 @@ class ImportFromFolgerXmlAll
         o.nonspeaking = true
         o.save
       end
+
     end
   end
 

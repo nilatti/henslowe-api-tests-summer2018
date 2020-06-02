@@ -7,5 +7,7 @@ FactoryBot.define do
     xml_id {'ftln-0887'}
     character
     french_scene
+    original_content {Faker::Quotes::Shakespeare.king_richard_iii_quote}
+    new_content {''}
   end
 end
