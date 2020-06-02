@@ -24,8 +24,183 @@ class ProductionsController < ApiController
         ],
         play:
         [
+          :characters,
+          :character_groups,
+        acts: [
+          scenes: [
+            french_scenes:
+              [
+                :characters,
+                :character_groups,
+                entrance_exits:
+                [
+                  :stage_exit,
+                  :characters,
+                  :character_groups
+                ],
+                on_stages: [
+                  :character, :character_group
+                ]
+              ]
+            ]
+          ]
+        ],
+        jobs: [
+          :specialization,
+          :theater,
+          :character,
+          user: [:conflicts],
+        ]
+      ]
+    ).find(params[:id])
+
+    json_response(@production.as_json(include:
+        [
+          :theater,
+          :stage_exits,
+          rehearsals: {
+            include: [
+              :users,
+              acts: {methods: :on_stages},
+              french_scenes: {
+                include: [:on_stages],
+                methods: :pretty_name
+              },
+              scenes: {methods: [:on_stages, :pretty_name]}]
+          },
+          play: {
+            include: [
+              :characters,
+              acts: {
+                include: [
+                  scenes: {
+                    include: [
+                      french_scenes: {
+                        include: [
+                            on_stages: {
+                              include: :character
+                            },
+                            entrance_exits: {
+                        },
+                      ],
+                        methods: :pretty_name
+                      }
+                    ],
+                    methods: :pretty_name
+                  }
+                ]
+              }
+            ]
+          },
+          jobs: {
+            include: [
+              :specialization,
+              :theater,
+              :character,
+              user: {
+                include: :conflicts
+              }
+            ]
+          }
+        ]
+      )
+    )
+  end
+
+  # POST /productions
+  def create
+    @production = Production.new(production_params)
+
+    if @production.save
+      json_response(@production.as_json(include: [:theater]), :created)
+      PlayCopyWorker.perform_async(production_params['play_id'], @production.id)
+    else
+      render json: @production.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /productions/1
+  def update
+    if @production.update(production_params)
+      json_response(@production.as_json(include:
+          [
+            :theater,
+            :stage_exits,
+            play: {
+              include: [
+                :characters,
+                acts: {
+                  include: [
+                    scenes: {
+                      include: [
+                        french_scenes: {
+                          include: [
+                            entrance_exits: {
+                              include: [
+                                french_scene: {
+                                  include: [
+                                    scene: {
+                                      include: :act
+                                    }
+                                  ]
+                                  }
+                                ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            jobs: {
+              include: [
+                :character,
+                :specialization,
+                :theater,
+                :user
+              ]
+            }
+          ]
+        )
+      )
+    else
+      render json: @production.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /productions/1
+  def destroy
+    @production.destroy
+  end
+
+  def production_names
+    @productions = Production.all
+    render json: @productions.as_json(only: %i[id name], include: [:theater, :play])
+  end
+
+  def get_productions_for_theater
+    @productions = Production.where(theater: params[:theater])
+    json_response(@productions.as_json(include: [:play, :theater]))
+  end
+
+  def get_production_with_play_text
+    @production = Production.includes(
+      :theater,
+      :stage_exits,
+      [
+        rehearsals:
+        [
+          :acts,
+          :french_scenes,
+          :scenes,
+          :users
+        ],
+        play:
+        [
           characters: [:lines],
-        character_groups: [:lines],
+          character_groups: [:lines],
         acts: [
           scenes: [
             french_scenes:
@@ -121,84 +296,6 @@ class ProductionsController < ApiController
         ]
       )
     )
-  end
-
-  # POST /productions
-  def create
-    @production = Production.new(production_params)
-
-    if @production.save
-      json_response(@production.as_json(include: [:theater]), :created)
-      PlayCopyWorker.perform_async(production_params['play_id'], @production.id)
-    else
-      render json: @production.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /productions/1
-  def update
-    if @production.update(production_params)
-      json_response(@production.as_json(include:
-          [
-            :theater,
-            :stage_exits,
-            play: {
-              include: [
-                :characters,
-                acts: {
-                  include: [
-                    scenes: {
-                      include: [
-                        french_scenes: {
-                          include: [
-                            entrance_exits: {
-                              include: [
-                                french_scene: {
-                                  include: [
-                                    scene: {
-                                      include: :act
-                                    }
-                                  ]
-                                  }
-                                ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            jobs: {
-              include: [
-                :character,
-                :specialization,
-                :theater,
-                :user
-              ]
-            }
-          ]
-        )
-      )
-    else
-      render json: @production.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /productions/1
-  def destroy
-    @production.destroy
-  end
-
-  def production_names
-    @productions = Production.all
-    render json: @productions.as_json(only: %i[id name], include: [:theater, :play])
-  end
-
-  def get_productions_for_theater
-    @productions = Production.where(theater: params[:theater])
-    json_response(@productions.as_json(include: [:play, :theater]))
   end
 
   def build_rehearsal_schedule

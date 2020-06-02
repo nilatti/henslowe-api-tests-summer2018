@@ -31,12 +31,14 @@ gem 'activerecord-import'
 gem "montrose"
 # Use Capistrano for deployment
 gem 'capistrano-rails', group: :development
-
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 gem 'rubocop-rails'
 gem 'rubocop-faker'
-
+#syllable counter
+gem 'syllabize'
+#dependency for syllabize
+gem 'numbers_and_words'
 group :development, :test do
   gem 'rspec-rails'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

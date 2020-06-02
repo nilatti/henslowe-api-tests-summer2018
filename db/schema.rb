@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_06_112915) do
+ActiveRecord::Schema.define(version: 2020_05_29_114413) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -105,6 +105,8 @@ ActiveRecord::Schema.define(version: 2020_04_06_112915) do
     t.string "xml_id"
     t.string "corresp"
     t.bigint "character_group_id"
+    t.integer "original_line_count"
+    t.integer "new_line_count"
     t.index ["character_group_id"], name: "index_characters_on_character_group_id"
     t.index ["play_id"], name: "index_characters_on_play_id"
   end
@@ -207,8 +209,10 @@ ActiveRecord::Schema.define(version: 2020_04_06_112915) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "character_group_id"
-    t.text "original_content"
-    t.text "new_content"
+    t.text "original_content", size: :medium
+    t.text "new_content", size: :medium
+    t.integer "original_line_count"
+    t.integer "new_line_count"
     t.index ["character_group_id"], name: "index_lines_on_character_group_id"
     t.index ["character_id"], name: "index_lines_on_character_id"
     t.index ["french_scene_id"], name: "index_lines_on_french_scene_id"
@@ -239,6 +243,8 @@ ActiveRecord::Schema.define(version: 2020_04_06_112915) do
     t.bigint "production_id"
     t.integer "original_play_id"
     t.text "synopsis"
+    t.integer "original_line_count"
+    t.integer "new_line_count"
     t.index ["author_id"], name: "index_plays_on_author_id"
     t.index ["production_id"], name: "index_plays_on_production_id"
   end
@@ -336,10 +342,10 @@ ActiveRecord::Schema.define(version: 2020_04_06_112915) do
     t.string "number"
     t.string "kind"
     t.string "xml_id"
-    t.string "original_content"
+    t.text "original_content", size: :medium
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "new_content"
+    t.text "new_content", size: :medium
     t.index ["french_scene_id"], name: "index_stage_directions_on_french_scene_id"
   end
 

@@ -3,15 +3,16 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   # devise_for :admin_users, ActiveAdmin::Devise.config
+
+  ActiveAdmin.routes(self)
+  scope 'api' do
+
   devise_for :users,
              path: '',
              controllers: {
                sessions: 'sessions',
                registrations: 'registrations'
              }
-  ActiveAdmin.routes(self)
-  scope 'api' do
-
     resources :users, only: [:index, :show, :update, :destroy] do
       resources :conflicts
     end
