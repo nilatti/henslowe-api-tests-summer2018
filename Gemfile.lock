@@ -390,6 +390,7 @@ DEPENDENCIES
   sidekiq
   spring
   spring-watcher-listen (> 2.0.0)
+  syllabize
   thin
 
 BUNDLED WITH

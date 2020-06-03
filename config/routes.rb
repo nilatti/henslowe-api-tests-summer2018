@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   ActiveAdmin.routes(self)
   scope 'api' do
+    post "/graphql", to: "graphql#execute"
 
   devise_for :users,
              path: '',
@@ -14,10 +15,7 @@ Rails.application.routes.draw do
                sessions: 'sessions',
                registrations: 'registrations'
              }
-  ActiveAdmin.routes(self)
-  scope 'api' do
 
-    post "/graphql", to: "graphql#execute"
     resources :users, only: [:index, :show, :update, :destroy] do
       resources :conflicts
     end
