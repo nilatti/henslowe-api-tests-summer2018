@@ -2,6 +2,7 @@ module Types
   class SceneType < Types::BaseObject
     field :act, Types::ActType, null: false
     field :endPage, Int, null: true
+    field :frenchScenes, [Types::FrenchSceneType], null: false
     field :heading, String, null: true
     field :id, ID, null: false
     field :number, Int, null: false

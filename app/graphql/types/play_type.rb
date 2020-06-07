@@ -8,10 +8,10 @@ module Types
     field :date, String, null: true
     field :genre, [String], null: true
     field :id, ID, null: false
-    field :original_line_count, Int, null: true
-    field :new_line_count, Int, null: true
+    field :originalLineCount, Int, null: true
+    field :newLineCount, Int, null: true
     field :synopsis, String, null: true
-    field :text_notes, String, null: true
+    field :textNotes, String, null: true
     field :title, String, null: false
   end
 end

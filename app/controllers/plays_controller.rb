@@ -220,6 +220,8 @@ class PlaysController < ApiController
       :author_id,
       :canonical,
       :date,
+      :new_line_count,
+      :original_line_count,
       :synopsis,
       :text_notes,
       :title,

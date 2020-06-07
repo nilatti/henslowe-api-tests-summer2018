@@ -6,6 +6,7 @@ module Types
     field :number, Int, null: false
     field :play, Types::PlayType, null: false
     field :rehearsals, [Types::RehearsalType], null: true
+    field :scenes, [Types::SceneType], null: false
     field :summary, String, null: true
     field :startPage, Int, null: true
   end
