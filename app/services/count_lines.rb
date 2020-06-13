@@ -2,6 +2,7 @@ class CountLines
   attr_reader :lines, :updated_lines
   def initialize(lines:, play: nil)
     @characters = []
+    @character_groups = []
     @lines = lines
     @updated_lines = []
     @play = play
@@ -11,7 +12,9 @@ class CountLines
     get_line_lengths(lines: @lines)
     import_line_counts(updated_lines: @updated_lines)
     @characters = get_characters(lines: @lines)
+    @character_groups = get_character_groups(lines: @lines)
     update_characters(characters: @characters)
+    update_character_groups(character_groups: @character_groups)
     if @play
       update_play(play: @play)
     end
@@ -19,8 +22,14 @@ class CountLines
 
   def get_characters(lines:)
     characters = []
-    lines.each {|line| characters << line.character}
+    lines.each {|line| characters << line.character if line.character}
     return characters.uniq
+  end
+
+  def get_character_groups(lines:)
+    character_groups = []
+    lines.each {|line| character_groups << line.character_group if line.character_group }
+    return character_groups.uniq
   end
 
   def get_line_lengths(lines:)
@@ -58,7 +67,10 @@ class CountLines
   end
 
   def import_line_counts(updated_lines:)
-    Line.upsert_all(updated_lines)
+    begin Line.upsert_all(updated_lines)
+    rescue
+      print 'problem upserting lines'
+    end
   end
 
   def update_characters(characters:)
@@ -66,6 +78,14 @@ class CountLines
       character.original_line_count = character.lines.all.reduce(0) {|sum, line| line.original_line_count ? sum + line.original_line_count : 0}
       character.new_line_count = character.lines.all.reduce(0) {|sum, line| line.new_line_count ? sum + line.new_line_count : 0 }
       character.save
+    end
+  end
+
+  def update_character_groups(character_groups:)
+    character_groups.each do |character_group|
+      character_group.original_line_count = character_group.lines.all.reduce(0) {|sum, line| line.original_line_count ? sum + line.original_line_count : 0}
+      character_group.new_line_count = character_group.lines.all.reduce(0) {|sum, line| line.new_line_count ? sum + line.new_line_count : 0 }
+      character_group.save
     end
   end
 
