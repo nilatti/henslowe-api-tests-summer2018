@@ -6,5 +6,8 @@ module Types
     field :create_theater, mutation: Mutations::CreateTheater
     field :create_user, mutation: Mutations::CreateUser
     field :update_author, mutation: Mutations::UpdateAuthor
+    field :update_space, mutation: Mutations::UpdateSpace
+    field :update_specialization, mutation: Mutations::UpdateSpecialization
+    field :update_theater, mutation: Mutations::UpdateTheater
   end
 end
