@@ -34,3 +34,24 @@ bundle exec sidekiq
 # echo 'replacing production with development'
 # sudo sed -i -e 's/production/development/g' /var/spool/cron/go
 #in here is where we should add something to edit /var/spool/cron/go to change "-e production" to "-e development"
+
+# to start all things or pull a build manually:
+# Be root (sudo su)
+# stop nginx (systemctl stop nginx)
+# be go (su - go)
+# nav to /var/lib/go-agent/pipelines/henslowe-client
+# git fetch
+# git pull origin master
+# npm run build
+# nav to /var/lib/go-agent/pipelines/henslowe-api
+# thin stop
+# git fetch
+# git pull origin master
+# may have to rename server_database.yml to database.yml
+# rake db:migrate
+# thin -p 3001 -a 127.0.0.1 -P tmp/pids/thin.pid -l logs/thin.log -d start
+# screen (that's all, just type screen)
+# bundle exec sidekiq -- at some point, need to daemonize this and not run as screen, but it's okay for now.
+# ctrl+a+d
+# be sudo
+# start nginx (systemctl start nginx)
