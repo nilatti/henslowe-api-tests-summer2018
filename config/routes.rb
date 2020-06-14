@@ -10,7 +10,9 @@ Rails.application.routes.draw do
                sessions: 'sessions',
                registrations: 'registrations'
              }
-             post '/api/users' => 'registrations'
+   devise_scope :user do
+     post '/api/users' => 'registrations'
+   end
     # post :users, to: 'registrations#create'
     # resources :users do
     resources :users, only: [:index, :show, :update, :destroy] do
