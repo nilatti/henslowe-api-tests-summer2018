@@ -10,6 +10,7 @@ Rails.application.routes.draw do
                sessions: 'sessions',
                registrations: 'registrations'
              }
+    post :users, to: 'registrations#create'
     resources :users do
     # resources :users, only: [:index, :show, :update, :destroy] do
       resources :conflicts
