@@ -11,7 +11,7 @@ Rails.application.routes.draw do
                registrations: 'registrations'
              }
    devise_scope :user do
-     match '/api/users', to: 'registrations#create', via: :post
+     match '/users', to: 'registrations#create', via: :post
    end
     # resources :users do
     resources :users, only: [:index, :show, :update, :destroy] do
