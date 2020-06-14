@@ -10,7 +10,7 @@ Rails.application.routes.draw do
                sessions: 'sessions',
                registrations: 'registrations'
              }
-  devise_scope :user do
+  devise_scope :users do
     post   '/',  to: 'registrations#create'
   end
     # post :users, to: 'registrations#create'
