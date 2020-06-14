@@ -93,7 +93,6 @@ class FrenchScenesController < ApiController
   private
 
     def build_on_stages(character_ids:, french_scene:)
-      puts "build on stages called"
       character_ids.each do |character_id|
         on_stage = OnStage.new(character_id: character_id, french_scene_id: french_scene.id)
         on_stage.save
@@ -115,7 +114,9 @@ class FrenchScenesController < ApiController
       params.require(:french_scene).permit(
         :end_page,
         :id,
+        :new_line_count,
         :number,
+        :original_line_count,
         :scene_id,
         :start_page,
         :summary,

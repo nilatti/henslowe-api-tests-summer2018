@@ -48,6 +48,23 @@ class LinesController < ApiController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def line_params
-      params.require(:line).permit(:ana, :character_id, :character_group_id, :corresp, :french_scene_id, :next, :new_content, :number, :original_content, :prev, :type, :xml_id, words_attributes: [:content, :kind, :order_number, :xml_id])
+      params.require(:line).permit(
+        :ana,
+        :character_id,
+        :character_group_id,
+        :corresp,
+        :french_scene_id,
+        :kind,
+        :next,
+        :new_content,
+        :new_line_count,
+        :number,
+        :original_content,
+        :original_line_count,
+        :prev,
+        :type,
+        :xml_id,
+        words_attributes: [:content, :kind, :order_number, :xml_id]
+      )
     end
 end

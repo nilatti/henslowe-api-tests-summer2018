@@ -1,14 +1,22 @@
 class CountLines
   attr_reader :lines, :updated_lines
-  def initialize(lines:, play: nil)
+  def initialize(line_id: nil, lines: nil, play: nil)
     @characters = []
     @character_groups = []
     @lines = lines
+    @line_id = line_id
     @updated_lines = []
-    @play = play
+    if play
+      @play = play
+    else
+      @play = @line.play
+    end
   end
 
   def run
+    if @line_id
+      @line = Line.find(@line_id)
+    end
     get_line_lengths(lines: @lines)
     import_line_counts(updated_lines: @updated_lines)
     @characters = get_characters(lines: @lines)
@@ -44,7 +52,7 @@ class CountLines
       original_line_count = original_content_syllables / line_length
       line_attrs = {
         original_line_count: original_line_count,
-        new_line_count: new_line_count ? new_line_count : nil,
+        new_line_count: new_line_count ? new_line_count : original_line_count,
         ana: line.ana,
         character_id: line.character_id,
         character_group_id: line.character_group_id,
@@ -89,9 +97,30 @@ class CountLines
     end
   end
 
+  def update_act(act:)
+    act.original_line_count = act.lines.all.reduce(0) {|sum, line| line.original_line_count ? sum + line.original_line_count : 0}
+    act.new_line_count = act.lines.all.reduce(0) {|sum, line| line.new_line_count ? sum + line.new_line_count : 0 }
+    act.save
+    act.scenes.each {|scene| update_scene(scene: scene)}
+  end
+
+  def update_french_scene(french_scene:)
+    french_scene.original_line_count = french_scene.lines.all.reduce(0) {|sum, line| line.original_line_count ? sum + line.original_line_count : 0}
+    french_scene.new_line_count = french_scene.lines.all.reduce(0) {|sum, line| line.new_line_count ? sum + line.new_line_count : 0 }
+    french_scene.save
+  end
+
   def update_play(play:)
     play.original_line_count = play.lines.all.reduce(0) {|sum, line| line.original_line_count ? sum + line.original_line_count : 0}
     play.new_line_count = play.lines.all.reduce(0) {|sum, line| line.new_line_count ? sum + line.new_line_count : 0 }
     play.save
+    play.acts.each {|act| update_act(act: act)}
+  end
+
+  def update_scene(scene:)
+    scene.original_line_count = scene.lines.all.reduce(0) {|sum, line| line.original_line_count ? sum + line.original_line_count : 0}
+    scene.new_line_count = scene.lines.all.reduce(0) {|sum, line| line.new_line_count ? sum + line.new_line_count : 0 }
+    scene.save
+    scene.french_scenes.each {|french_scene| update_french_scene(french_scene: french_scene)}
   end
 end

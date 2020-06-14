@@ -1,6 +1,8 @@
 class Act < ApplicationRecord
   belongs_to :play
   has_many :scenes, dependent: :destroy
+  has_many :french_scenes, through: :scenes
+  has_many :lines, through: :french_scenes
   has_and_belongs_to_many :rehearsals
   default_scope {order(:number)}
 
