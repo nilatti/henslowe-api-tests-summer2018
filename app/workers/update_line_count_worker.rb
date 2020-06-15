@@ -2,7 +2,7 @@ class UpdateLineCountWorker
   include Sidekiq::Worker
 
   def perform(line_id)
-    CountLines.new(line_id: line).run
+    CountLines.new(line_id: line_id).run
   end
   def cancelled?
     Sidekiq.redis {|c| c.exists("cancelled-#{jid}") }
