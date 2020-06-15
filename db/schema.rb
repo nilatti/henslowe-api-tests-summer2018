@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_29_114413) do
+ActiveRecord::Schema.define(version: 2020_06_15_010204) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "namespace"
@@ -35,6 +35,8 @@ ActiveRecord::Schema.define(version: 2020_05_29_114413) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "heading"
+    t.float "original_line_count"
+    t.float "new_line_count"
     t.index ["play_id"], name: "index_acts_on_play_id"
   end
 
@@ -156,6 +158,8 @@ ActiveRecord::Schema.define(version: 2020_05_29_114413) do
     t.datetime "updated_at", null: false
     t.integer "end_page"
     t.integer "start_page"
+    t.float "original_line_count"
+    t.float "new_line_count"
     t.index ["scene_id"], name: "index_french_scenes_on_scene_id"
   end
 
@@ -211,8 +215,8 @@ ActiveRecord::Schema.define(version: 2020_05_29_114413) do
     t.bigint "character_group_id"
     t.text "original_content", size: :medium
     t.text "new_content", size: :medium
-    t.integer "original_line_count"
-    t.integer "new_line_count"
+    t.float "original_line_count"
+    t.float "new_line_count"
     t.index ["character_group_id"], name: "index_lines_on_character_group_id"
     t.index ["character_id"], name: "index_lines_on_character_id"
     t.index ["french_scene_id"], name: "index_lines_on_french_scene_id"
@@ -243,8 +247,8 @@ ActiveRecord::Schema.define(version: 2020_05_29_114413) do
     t.bigint "production_id"
     t.integer "original_play_id"
     t.text "synopsis"
-    t.integer "original_line_count"
-    t.integer "new_line_count"
+    t.float "original_line_count"
+    t.float "new_line_count"
     t.index ["author_id"], name: "index_plays_on_author_id"
     t.index ["production_id"], name: "index_plays_on_production_id"
   end
@@ -291,6 +295,8 @@ ActiveRecord::Schema.define(version: 2020_05_29_114413) do
     t.integer "end_page"
     t.integer "start_page"
     t.string "heading"
+    t.float "original_line_count"
+    t.float "new_line_count"
     t.index ["act_id"], name: "index_scenes_on_act_id"
   end
 
