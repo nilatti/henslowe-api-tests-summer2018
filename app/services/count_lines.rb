@@ -46,8 +46,12 @@ class CountLines
     lines.each do |line|
       original_content_syllables = line.original_content.count_syllables
       if line.new_content
-        new_content_syllables = line.new_content.count_syllables
-        new_line_count = new_content_syllables / line_length
+        if line.new_content.blank?
+          new_line_count = 0
+        else
+          new_content_syllables = line.new_content.count_syllables
+          new_line_count = new_content_syllables / line_length
+        end
       end
       original_line_count = original_content_syllables / line_length
       line_attrs = {
