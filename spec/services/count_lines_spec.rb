@@ -7,6 +7,10 @@ describe CountLines do
     @first_scene = first_act.scenes.first
     @character1 = create(:character, play: @play)
     @character2 = create(:character, play: @play)
+    @character3 = create(:character, play: @play)
+    @on_stage1 = create(:on_stage, french_scene: @first_scene.french_scenes.first, character: @character1)
+    @on_stage2 = create(:on_stage, french_scene: @first_scene.french_scenes.first, character: @character2)
+    @on_stage3 = create(:on_stage, french_scene: @first_scene.french_scenes.first, character: @character3)
     line1 = create(:line, french_scene: @first_scene.french_scenes.first, character: @character1, original_content: 'If music be the food of love, play on!', new_content: 'If music be the food of love, yum yum yum yum yum!')
     line2 = create(:line, french_scene: @first_scene.french_scenes.first, character: @character2, original_content: 'I dreamed there was an emperor, Antony', new_content: 'I dreamed there was a god, Antony')
     line3 = create(:line, french_scene: @first_scene.french_scenes.first, character: @character2, original_content: 'Speak the speech, I pray you, as I pronounced it to you', new_content: nil)
@@ -23,7 +27,7 @@ describe CountLines do
     expect(updated_lines.size).to eq(3)
     expect(updated_lines[0][:original_line_count]).to eq(1.0)
     expect(updated_lines[2][:original_line_count]).to eq(1.3)
-    expect(updated_lines[2][:new_line_count]).to eq(nil)
+    expect(updated_lines[2][:new_line_count]).to eq(1.3)
     expect(updated_lines[1][:new_line_count]).to eq(0.9)
   end
 
@@ -31,7 +35,7 @@ describe CountLines do
     @counter.run
     expect(@counter.updated_lines[0][:original_line_count]).to eq(1.0)
     expect(@counter.updated_lines[2][:original_line_count]).to eq(1.3)
-    expect(@counter.updated_lines[2][:new_line_count]).to eq(nil)
+    expect(@counter.updated_lines[2][:new_line_count]).to eq(1.3)
     expect(@counter.updated_lines[1][:new_line_count]).to eq(0.9)
     expect (@character1.original_line_count == 10)
     expect (@character1.new_line_count == 1.2)
@@ -47,6 +51,12 @@ describe CountLines do
     expect (@character1.original_line_count == 10)
     expect (@character1.new_line_count == 1.2)
     expect (@character2.original_line_count == 24)
+  end
+
+  it 'updates onstages speaking or not' do
+    @counter.update_on_stage_nonspeaking(on_stages: @first_scene.french_scenes.first.on_stages)
+    expect(@on_stage3.nonspeaking).to be true
+    expect(@on_stage2.nonspeaking).to be false
   end
 
   it 'updates play line counts' do

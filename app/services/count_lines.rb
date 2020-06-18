@@ -19,13 +19,13 @@ class CountLines
     end
     get_line_lengths(lines: @lines)
     import_line_counts(updated_lines: @updated_lines)
+    if @play
+      update_play(play: @play)
+    end
     @characters = get_characters(lines: @lines)
     @character_groups = get_character_groups(lines: @lines)
     update_characters(characters: @characters)
     update_character_groups(character_groups: @character_groups)
-    if @play
-      update_play(play: @play)
-    end
   end
 
   def get_characters(lines:)
@@ -112,6 +112,18 @@ class CountLines
     french_scene.original_line_count = french_scene.lines.all.reduce(0) {|sum, line| line.original_line_count ? sum + line.original_line_count : 0}
     french_scene.new_line_count = french_scene.lines.all.reduce(0) {|sum, line| line.new_line_count ? sum + line.new_line_count : 0 }
     french_scene.save
+    update_on_stage_nonspeaking(on_stages: french_scene.on_stages)
+  end
+
+  def update_on_stage_nonspeaking(on_stages:)
+    on_stages.each do |on_stage|
+      speaking_characters = on_stage.french_scene.lines.map {|line| line.character}
+      if !speaking_characters.include?(on_stage.character)
+        on_stage.nonspeaking == true
+      else
+        on_stage.nonspeaking == false
+      end
+    end
   end
 
   def update_play(play:)
