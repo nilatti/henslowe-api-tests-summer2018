@@ -1,6 +1,6 @@
 module Types
   class ActType < Types::BaseObject
-    field :endPage, Int, null: true
+    field :end_page, Int, null: true
     field :heading, String, null: true
     field :id, ID, null: false
     field :number, Int, null: false
@@ -8,6 +8,6 @@ module Types
     field :rehearsals, [Types::RehearsalType], null: true
     field :scenes, [Types::SceneType], null: false
     field :summary, String, null: true
-    field :startPage, Int, null: true
+    field :start_page, Int, null: true
   end
 end

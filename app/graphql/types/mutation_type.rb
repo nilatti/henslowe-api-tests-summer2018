@@ -1,13 +1,15 @@
 module Types
   class MutationType < Types::BaseObject
-    field :create_author, mutation: Mutations::CreateAuthor
-    field :create_space, mutation: Mutations::CreateSpace
-    field :create_specialization, mutation: Mutations::CreateSpecialization
-    field :create_theater, mutation: Mutations::CreateTheater
-    field :create_user, mutation: Mutations::CreateUser
-    field :update_author, mutation: Mutations::UpdateAuthor
-    field :update_space, mutation: Mutations::UpdateSpace
-    field :update_specialization, mutation: Mutations::UpdateSpecialization
-    field :update_theater, mutation: Mutations::UpdateTheater
+    field :author_create, mutation: Mutations::AuthorCreate
+    field :author_destroy, mutation: Mutations::AuthorDestroy
+    field :author_update, mutation: Mutations::AuthorUpdate
+    field :space_create, mutation: Mutations::SpaceCreate
+    field :space_update, mutation: Mutations::SpaceUpdate
+    field :specialization_create, mutation: Mutations::SpecializationCreate
+    field :specialization_update, mutation: Mutations::SpecializationUpdate
+    field :theater_create, mutation: Mutations::TheaterCreate
+    field :theater_update, mutation: Mutations::TheaterUpdate
+    field :user_create, mutation: Mutations::UserCreate
+    field :user_update, mutation: Mutations::UserUpdate
   end
 end

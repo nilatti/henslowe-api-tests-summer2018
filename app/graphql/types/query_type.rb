@@ -81,7 +81,7 @@ module Types
       null: false,
       description: "returns a list of theaters"
     field :user,
-      [Types::UserType],
+      Types::UserType,
       null: false,
       description: "returns one user" do
         argument :id, ID, required: true

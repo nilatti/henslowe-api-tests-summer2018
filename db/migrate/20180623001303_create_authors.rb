@@ -1,4 +1,4 @@
-class CreateAuthors < ActiveRecord::Migration[5.1]
+class AuthorCreates < ActiveRecord::Migration[5.1]
   def change
     create_table :authors do |t|
       t.date :birthdate

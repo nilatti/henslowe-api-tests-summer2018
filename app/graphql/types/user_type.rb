@@ -5,21 +5,21 @@ module Types
     field :city, String, null: true
     field :description, String, null: true
     field :email, String, null: false
-    field :emergencyContactName, String, null: true
-    field :emergencyContactNumber, String, null: true
-    field :encryptedPassword, String, null: false
-    field :firstName, String, null: true
+    field :emergency_contact_name, String, null: true
+    field :emergency_contact_number, String, null: true
+    field :encrypted_password, String, null: false
+    field :first_name, String, null: true
     field :gender, String, null: true
     field :id, ID, null: false
-    field :lastName, String, null: true
-    field :middleName, String, null: true
-    field :phoneNumber, String, null: true
-    field :preferredName, String, null: true
-    field :programName, String, null: true
+    field :last_name, String, null: true
+    field :middle_name, String, null: true
+    field :phone_number, String, null: true
+    field :preferred_name, String, null: true
+    field :program_name, String, null: true
     field :rehearsals, [Types::RehearsalType], null: true
-    field :resetPasswordToken, String, null: true
+    field :reset_password_token, String, null: true
     field :state, String, null: true
-    field :streetAddress, String, null: true
+    field :street_address, String, null: true
     field :timezone, String, null: true
     field :website, String, null: true
     field :zip, String, null: true

@@ -1,14 +1,14 @@
 module Types
   class StageDirectionType < Types::BaseObject
     field :character, Types::CharacterType, null: true
-    field :characterGroup, Types::CharacterGroupType, null: true
-    field :frenchScene, Types::FrenchSceneType, null: false
+    field :character_group, Types::CharacterGroupType, null: true
+    field :french_scene, Types::FrenchSceneType, null: false
     field :id, ID, null: false
     field :kind, String, null: true
-    field :newContent, String, null: true
+    field :new_content, String, null: true
     field :number, String, null: true
-    field :originalContent, String, null: true
-    field :xmlId, String, null: true
+    field :original_content, String, null: true
+    field :xml_id, String, null: true
 
   end
 end

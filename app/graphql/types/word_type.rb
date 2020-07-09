@@ -4,7 +4,7 @@ module Types
     field :id, ID, null: false
     field :kind, String, null: true
     field :line, Types::LineType, null: false
-    field :lineNumber, String, null: true
-    field :xmlId, String, null: true
+    field :line_number, String, null: true
+    field :xml_id, String, null: true
   end
 end

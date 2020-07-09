@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="fdt.xsl"?>
 <root>
+
 <fileDesc>
 <titleStmt>
 <title>Measure for Measure</title>
@@ -81,7 +82,7 @@
 <p>Words, spaces, and punctuation marks are enclosed in <gi>w</gi>, <gi>c</gi>, and <gi>pc</gi> tags respectively.</p>
 <p>Lines (verse and prose) are not segmented within <gi>l</gi> or <gi>line</gi> elements. They are noted through line breaks and <gi>milestone</gi> elements.</p>
 </segmentation>
-<interpretation>
+<interpretation> 
 <p>Lineation is determined by critical judgments, complicated by accidental features of publication. While this document marks the line breaks as they appear in the Folger editions, it is understood that other projects may wish to format the text differently. Therefore, the text itself is not enclosed in any kind of line tag (<gi>l</gi> or <gi>ab</gi>). Instead, the elements of a typographic line are combined using a <gi>milestone</gi> tag. Using <gi>milestone</gi> tags allows us to maintain the Folger line numbering system and offer additional information about the verse without imposing these features on the base text. Not insignificantly, this also helps to avoid overlapping hierarchies in the XML.</p>
 <p>The <att>ana</att> attribute of the <gi>milestone</gi> tags designates the line as <val>verse</val>, <val>prose</val>, or <val>short</val>. Verse lines may use <att>prev</att> and <att>next</att> attributes to point to other typographic lines that complete the metrical line. When it is unclear how to combine an incomplete line into a full metrical line, or when it is unclear whether the line represents verse or prose, the line is designated as <val>short</val>.</p>
 <p>Identifying formal units of verse requires another interpretation. This document notes when stanzas are indicated in the edition, often by indentation. Couplets are not generally indented, and therefore, unless part of a larger formal structure, their presence is not always acknowledged.</p>
@@ -155,19 +156,6 @@ The <att>ana</att> attribute may provide information such as the specific type o
 </langUsage>
 <particDesc>
 <listPerson>
-    <person xml:id="CouldNotFindCharacter">
-      <persName>
-        <name>
-          Could Not Find Character
-        </name>
-      </persName>
-      <state>
-        <p>
-          Bogus person for lines that we can't attribute
-        </p>
-      </state>
-      <sex>neutral</sex>
-    </person>
 <person xml:id="Duke_MM">
 <persName><name>Duke</name> of Vienna</persName>
 <state><p>later called Friar Lodowick</p></state>
@@ -311,6 +299,7 @@ The <att>ana</att> attribute may provide information such as the specific type o
 <change when="2015-07-31" who="#MSP #RLN">Identified turnunders (verse lines split because they could not fit on the previous line in the print edition). Added #p0015395. Split #w0018350 into #w0018450, #c0018453, #w0018456. Updated #p0173400, #p0403040. Combined "three pence" into one word: #w0083600, #w0086030, #w0108060. Combined "o’ clock" into one word: #w0306060, #c0306070, #w0306080. Renumbered stg-0723.2 to stg-0724.</change>
 <change when="2014-04-23" who="#MSP #RLN">Version 0.9.0 released.</change>
 </revisionDesc>
+
 <text>
 <front>
 <div type="FromTheDirector">
@@ -30399,7 +30388,7 @@ The <att>ana</att> attribute may provide information such as the specific type o
 <c xml:id="c0235150" n="SD 3.1.297"> </c>
 <w xml:id="w0235160" n="SD 3.1.297">2</w>
 </head>
-<stage xml:id="stg-1504.1" n="SD 3.2.0" type="entrance" who="#Elbow_MM #Pompey_MM #OFFICERS_MM #DUKE_MM">
+<stage xml:id="stg-1504.1" n="SD 3.2.0" type="entrance" who="#Elbow_MM #Pompey_MM #OFFICERS_MM">
 <w xml:id="w0235170" n="SD 3.2.0">Enter</w>
 <c xml:id="c0235180" n="SD 3.2.0"> </c>
 <w xml:id="w0235190" n="SD 3.2.0">Elbow</w>
@@ -60854,3 +60843,6 @@ The <att>ana</att> attribute may provide information such as the specific type o
 </back>
 </text>
 </root>
+
+
+

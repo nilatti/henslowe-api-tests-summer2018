@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
+  mount GraphiQL::Rails::Engine, at: "api/graphiql", graphql_path: "graphql"
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 

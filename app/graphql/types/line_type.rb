@@ -2,9 +2,9 @@ module Types
   class LineType < Types::BaseObject
     field :ana, String, null: true
     field :character, Types::CharacterType, null: true
-    field :characterGroup, Types::CharacterGroupType, null: true
+    field :character_group, Types::CharacterGroupType, null: true
     field :corresp, String, null: true
-    field :frenchScene, Types::FrenchSceneType, null: false
+    field :french_scene, Types::FrenchSceneType, null: false
     field :id, ID, null: false
     field :kind, String, null: true
     field :new_content, String, null: true
