@@ -5,20 +5,20 @@ Rails.application.routes.draw do
 
   # devise_for :admin_users, ActiveAdmin::Devise.config
 
-  ActiveAdmin.routes(self)
+  # ActiveAdmin.routes(self)
   scope 'api' do
     post "/graphql", to: "graphql#execute"
 
-  devise_for :users,
-             path: '',
-             controllers: {
-               sessions: 'sessions',
-               registrations: 'registrations'
-             }
-
-    resources :users, only: [:index, :show, :update, :destroy] do
-      resources :conflicts
-    end
+  # devise_for :users,
+  #            path: '',
+  #            controllers: {
+  #              sessions: 'sessions',
+  #              registrations: 'registrations'
+  #            }
+  #
+  #   resources :users, only: [:index, :show, :update, :destroy] do
+  #     resources :conflicts
+  #   end
     resources :jobs do
       collection do
         get :get_actors_for_production

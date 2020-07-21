@@ -14,7 +14,7 @@ class Mutations::SpecializationUpdate < Mutations::BaseMutation
       specialization = Specialization.find(id)
       specialization.update(
         description: description ? description : specialization.description,
-        title: title? title : specialization.title
+        title: title ? title : specialization.title
       )
         if specialization.save
       {
