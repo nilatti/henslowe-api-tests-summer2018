@@ -1,6 +1,7 @@
 class Mutations::TheaterCreate < Mutations::BaseMutation
   argument :calendarUrl, String, required: false
   argument :city, String, required: false
+  argument :logo, String, required: false
   argument :missionStatement, String, required: false
   argument :name, String, required: true
   argument :phoneNumber, String, required: false
@@ -15,6 +16,7 @@ class Mutations::TheaterCreate < Mutations::BaseMutation
   def resolve(
     calendarUrl: nil,
     city: nil,
+    logo: nil,
     missionStatement: nil,
     name:,
     phoneNumber: nil,
@@ -26,6 +28,7 @@ class Mutations::TheaterCreate < Mutations::BaseMutation
       theater = Theater.new(
         calendar_url: calendarUrl,
         city: city,
+        logo: logo,
         mission_statement: missionStatement,
         name: name,
         phone_number: phoneNumber,

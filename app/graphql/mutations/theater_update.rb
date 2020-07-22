@@ -2,6 +2,7 @@ class Mutations::TheaterUpdate < Mutations::BaseMutation
   argument :calendarUrl, String, required: false
   argument :city, String, required: false
   argument :id, ID, required: true
+  argument :logo, String, required: false
   argument :missionStatement, String, required: false
   argument :name, String, required: true
   argument :phoneNumber, String, required: false
@@ -17,6 +18,7 @@ class Mutations::TheaterUpdate < Mutations::BaseMutation
     calendarUrl: nil,
     city: nil,
     id:,
+    logo: nil,
     missionStatement: nil,
     name: nil,
     phoneNumber: nil,
@@ -29,6 +31,7 @@ class Mutations::TheaterUpdate < Mutations::BaseMutation
       theater.update(
         calendar_url: calendarUrl ? calendarUrl : theater.calendar_url,
         city: city ? city : theater.city,
+        logo: logo ? logo : theater.logo,
         mission_statement: missionStatement ? missionStatement : theater.missionStatement,
         name: name ? name : theater.name,
         phone_number: phoneNumber ? phoneNumber : theater.phone_number,
