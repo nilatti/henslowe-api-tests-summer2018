@@ -51,6 +51,17 @@ class SpacesController < ApiController
 
     # Only allow a trusted parameter "white list" through.
     def space_params
-      params.require(:space).permit(:name, :street_address, :city, :state, :zip, :phone_number, :mission_statement, :website, :seating_capacity, theater_ids: [])
+      params.require(:space).permit(
+        :name,
+        :city,
+        :logo,
+        :mission_statement,
+        :phone_number,
+        :seating_capacity,
+        :state,
+        :street_address, 
+        :website,
+        :zip,
+        theater_ids: [])
     end
 end

@@ -72,7 +72,7 @@ module Types
       description: "returns a list of specializations"
     field :theater,
       Types::TheaterType,
-      null: false,
+      null: true,
       description: "returns one theater" do
         argument :id, ID, required: true
       end
@@ -128,13 +128,13 @@ module Types
       Space.all
     end
     def specialization(id:)
-      specialization(id)
+      Specialization.find(id)
     end
     def specializations
       Specialization.all
     end
     def theater(id:)
-      theater(id)
+      Theater.find(id)
     end
     def theaters
       Theater.all

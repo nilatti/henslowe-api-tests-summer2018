@@ -32,7 +32,7 @@ class Mutations::TheaterUpdate < Mutations::BaseMutation
         calendar_url: calendarUrl ? calendarUrl : theater.calendar_url,
         city: city ? city : theater.city,
         logo: logo ? logo : theater.logo,
-        mission_statement: missionStatement ? missionStatement : theater.missionStatement,
+        mission_statement: missionStatement ? missionStatement : theater.mission_statement,
         name: name ? name : theater.name,
         phone_number: phoneNumber ? phoneNumber : theater.phone_number,
         state: state ? state : theater.state,

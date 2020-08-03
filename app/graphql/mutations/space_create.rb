@@ -1,5 +1,6 @@
 class Mutations::SpaceCreate < Mutations::BaseMutation
   argument :city, String, required: false
+  argument :logo, String, required: false
   argument :missionStatement, String, required: false
   argument :name, String, required: true
   argument :phoneNumber, String, required: false
@@ -14,6 +15,7 @@ class Mutations::SpaceCreate < Mutations::BaseMutation
 
   def resolve(
     city: nil,
+    logo: nil,
     missionStatement: nil,
     name:,
     phoneNumber: nil,
@@ -25,6 +27,7 @@ class Mutations::SpaceCreate < Mutations::BaseMutation
   )
       space = Space.new(
         city: city,
+        logo: logo,
         mission_statement: missionStatement,
         name: name,
         phone_number: phoneNumber,

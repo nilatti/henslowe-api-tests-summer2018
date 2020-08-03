@@ -1,5 +1,5 @@
 class Mutations::SpaceDestroy < Mutations::BaseMutation
-  argument :id, Integer, required: true
+  argument :id, ID, required: true
   field :space, Types::SpaceType, null: false
   def resolve(id:)
     space = Space.find(id)

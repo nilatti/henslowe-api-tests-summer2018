@@ -1,5 +1,5 @@
 class Mutations::SpecializationDestroy < Mutations::BaseMutation
-  argument :id, Integer, required: true
+  argument :id, ID, required: true
   field :specialization, Types::SpecializationType, null: false
   def resolve(id:)
     specialization = Specialization.find(id)

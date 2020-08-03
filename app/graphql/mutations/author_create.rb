@@ -13,7 +13,7 @@ class Mutations::AuthorCreate < Mutations::BaseMutation
   def resolve(
     birthdate: nil,
     deathdate: nil,
-    firstName:,
+    firstName: nil,
     gender: nil,
     lastName:,
     middleName: nil,
@@ -31,7 +31,7 @@ class Mutations::AuthorCreate < Mutations::BaseMutation
         if author.save
       {
         author: author,
-        errors: []
+        errors: [],
       }
     else
       {

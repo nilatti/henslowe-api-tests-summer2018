@@ -1,5 +1,5 @@
 class Mutations::AuthorDestroy < Mutations::BaseMutation
-  argument :id, Integer, required: true
+  argument :id, ID, required: true
   field :author, Types::AuthorType, null: false
   def resolve(id:)
     author = Author.find(id)

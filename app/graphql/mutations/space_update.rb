@@ -1,6 +1,7 @@
 class Mutations::SpaceUpdate < Mutations::BaseMutation
   argument :city, String, required: false
   argument :id, ID, required: true
+  argument :logo, String, required: false
   argument :missionStatement, String, required: false
   argument :name, String, required: true
   argument :phoneNumber, String, required: false
@@ -16,6 +17,7 @@ class Mutations::SpaceUpdate < Mutations::BaseMutation
   def resolve(
     city: nil,
     id:,
+    logo: nil,
     missionStatement: nil,
     name: nil,
     phoneNumber: nil,
@@ -28,6 +30,7 @@ class Mutations::SpaceUpdate < Mutations::BaseMutation
       space = Space.find(id)
       space.update(
         city: city ? city : space.city,
+        logo: logo ? logo : space.logo,
         mission_statement: missionStatement ? missionStatement : space.mission_statement,
         name: name ? name : space.name,
         phone_number: phoneNumber ? phoneNumber : space.phone_number,

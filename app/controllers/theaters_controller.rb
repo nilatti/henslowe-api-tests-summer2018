@@ -47,7 +47,19 @@ class TheatersController < ApiController
 
   # Only allow a trusted parameter "white list" through.
   def theater_params
-    params.require(:theater).permit(:calendar_url, :city, :id, :mission_statement, :name, :phone_number, :state, :street_address, :website, :zip, space_ids: [])
+    params.require(:theater).permit(
+      :calendar_url,
+      :city,
+      :id,
+      :logo,
+      :mission_statement,
+      :name,
+      :phone_number,
+      :state,
+      :street_address,
+      :website,
+      :zip,
+      space_ids: [])
   end
 
   # Use callbacks to share common setup or constraints between actions.
