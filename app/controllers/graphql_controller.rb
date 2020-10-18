@@ -8,9 +8,9 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
+    current_user = get_logged_in_user(request)
     context = {
-      # Query context goes here, for example:
-      # current_user: current_user,
+      current_user: current_user,
     }
     result = June20Schema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
@@ -37,6 +37,10 @@ class GraphqlController < ApplicationController
     else
       raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
     end
+  end
+
+  def get_logged_in_user(request)
+    return current_user
   end
 
   def handle_error_in_development(e)

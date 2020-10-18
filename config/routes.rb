@@ -3,19 +3,19 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
-  # devise_for :admin_users, ActiveAdmin::Devise.config
+  # devise_for :admin_Ss, ActiveAdmin::Devise.config
 
   # ActiveAdmin.routes(self)
   scope 'api' do
     post "/graphql", to: "graphql#execute"
+    devise_for :users, skip: :sessions
+    # devise_for :users, skip: :sessions
+    #            path: '',
+    #            controllers: {
+    #              sessions: 'sessions',
+    #              registrations: 'registrations'
+    #            }
 
-  # devise_for :users,
-  #            path: '',
-  #            controllers: {
-  #              sessions: 'sessions',
-  #              registrations: 'registrations'
-  #            }
-  #
   #   resources :users, only: [:index, :show, :update, :destroy] do
   #     resources :conflicts
   #   end

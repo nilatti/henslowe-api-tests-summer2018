@@ -24,6 +24,7 @@ gem 'redis', '~> 4.0'
 gem 'bcrypt', '~> 3.1.7'
 #Active Admin
 gem 'devise'
+gem 'devise-token_authenticatable'
 gem 'devise-jwt'
 gem 'sidekiq'
 gem 'activeadmin'

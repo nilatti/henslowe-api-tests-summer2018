@@ -22,11 +22,12 @@ module June20
     # Initialize configuration defaults for originally generated Rails version.
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'localhost:7777'
+        origins 'http://localhost:7777'
         resource(
           '*',
           headers: :any,
-          methods: [:get, :patch, :put, :delete, :post, :options],
+          methods: [:get, :patch, :put, :delete, :post, :options, :show],
+          expose: %w(Authorization),
           credentials: true
           )
       end

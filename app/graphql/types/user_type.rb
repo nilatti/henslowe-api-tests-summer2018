@@ -23,5 +23,16 @@ module Types
     field :timezone, String, null: true
     field :website, String, null: true
     field :zip, String, null: true
+
+    field :authentication_token, String, null: true
+    def authentication_token
+
+      puts "inside of token creator"
+      token = Warden::JWTAuth::UserEncoder
+          .new
+          .call(context[:current_user], :user, nil)
+      puts token
+    return token
+    end
   end
 end

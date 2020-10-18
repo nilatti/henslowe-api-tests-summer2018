@@ -17,8 +17,10 @@ class Mutations::AuthorCreate < Mutations::BaseMutation
     gender: nil,
     lastName:,
     middleName: nil,
-    nationality: nil
+    nationality: nil,
+    **args
   )
+  authorize_user
       author = Author.new(
         birthdate: birthdate,
         deathdate: deathdate,

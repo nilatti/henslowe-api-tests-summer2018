@@ -15,5 +15,9 @@ module Types
     field :user_create, mutation: Mutations::UserCreate
     field :user_destroy, mutation: Mutations::UserDestroy
     field :user_update, mutation: Mutations::UserUpdate
+    field :register_user, mutation: Mutations::RegisterUser
+    field :sign_in, mutation: Mutations::SignIn
+    field :sign_out, mutation: Mutations::SignOut
+    field :sign_up, mutation: Mutations::RegisterUser
   end
 end

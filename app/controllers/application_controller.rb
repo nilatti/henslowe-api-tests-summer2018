@@ -52,13 +52,55 @@ class ApplicationController < ActionController::Base
     ])
   end
 
-    def render_resource(resource)
-      if resource.errors.empty?
-        render json: resource
-      else
-        validation_error(resource)
+
+  def encode_token(payload)
+    JWT.encode(payload, ENV['DEVISE_JWT_SECRET_KEY'])
+  end
+
+  def auth_header
+    if request.headers['Authorization'].length > 0
+      return request.headers['Authorization']
+    end
+  end
+
+  def current_user
+    if auth_header
+    token = auth_header.split(' ')[1]
+    token.gsub!('[','')
+    token.gsub!(']','')
+    token.gsub!(',','')
+    token.gsub!('"','')
+    Warden::JWTAuth::UserDecoder.new
+    .call(token, :user, nil)
+    else
+      return nil
+    end
+  end
+
+  def decoded_token
+    if auth_header
+      token = auth_header.split(' ')[1]
+      token.gsub!('[','')
+      token.gsub!(']','')
+      token.gsub!(',','')
+      token.gsub!('"','')
+      begin
+        JWT.decode(token, ENV['DEVISE_JWT_SECRET_KEY'], true)
+      rescue JWT::DecodeError => e
+        puts "error"
+        puts "#{e.class}: #{e.message}"
+        nil
       end
     end
+  end
+
+  def render_resource(resource)
+    if resource.errors.empty?
+      render json: resource
+    else
+      validation_error(resource)
+    end
+  end
 
   def validation_error(resource)
     render json: {
