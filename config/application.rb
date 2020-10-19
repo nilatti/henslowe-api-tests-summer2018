@@ -7,7 +7,7 @@ require "active_job/railtie"
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
-require "action_view/railtie"
+# require "action_view/railtie"
 require "action_cable/engine"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
@@ -38,6 +38,7 @@ module June20
     config.middleware.use ActionDispatch::Flash
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
+    # config.middleware.use Warden::JWTAuth::Middleware
     config.app_generators.scaffold_controller = :scaffold_controller
     config.x.cors_allowed_origins
 

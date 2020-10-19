@@ -20,8 +20,7 @@ module Types
       [Types::JobType],
       null: false,
       description: "returns a list of jobs"
-
-    field :me, Types::UserType, null: true
+    field :me, Types::MeType, null: true
     field :play,
       Types::PlayType,
       null: false,
@@ -106,7 +105,14 @@ module Types
       Job.all
     end
     def me
-      context[:current_user]
+      if context[:current_user]
+        puts "current user"
+        puts context[:current_user].id
+        return context[:current_user]
+      else
+        puts "no current user"
+        return
+      end
     end
     def play(id:)
       Play.find(id)

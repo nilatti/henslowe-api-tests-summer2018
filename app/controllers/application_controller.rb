@@ -65,32 +65,18 @@ class ApplicationController < ActionController::Base
 
   def current_user
     if auth_header
-    token = auth_header.split(' ')[1]
-    token.gsub!('[','')
-    token.gsub!(']','')
-    token.gsub!(',','')
-    token.gsub!('"','')
-    Warden::JWTAuth::UserDecoder.new
-    .call(token, :user, nil)
-    else
-      return nil
-    end
-  end
-
-  def decoded_token
-    if auth_header
       token = auth_header.split(' ')[1]
       token.gsub!('[','')
       token.gsub!(']','')
       token.gsub!(',','')
       token.gsub!('"','')
-      begin
-        JWT.decode(token, ENV['DEVISE_JWT_SECRET_KEY'], true)
-      rescue JWT::DecodeError => e
-        puts "error"
-        puts "#{e.class}: #{e.message}"
-        nil
-      end
+      decode_user(token)
+    end
+  end
+
+  def decode_user(token)
+    if token
+      Warden::JWTAuth::UserDecoder.new.call(token, :user, nil)
     end
   end
 
