@@ -33,12 +33,13 @@ module June20
       end
     end
     config.load_defaults 6.0
+    config.autoload_paths += %W( lib/ )
 
     config.middleware.use Rack::MethodOverride
     config.middleware.use ActionDispatch::Flash
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
-    # config.middleware.use Warden::JWTAuth::Middleware
+    config.middleware.use Warden::JWTAuth::Middleware
     config.app_generators.scaffold_controller = :scaffold_controller
     config.x.cors_allowed_origins
 

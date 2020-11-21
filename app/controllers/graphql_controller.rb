@@ -3,7 +3,6 @@ class GraphqlController < ApplicationController
   # This allows for outside API access while preventing CSRF attacks,
   # but you'll have to authenticate your user separately
   # protect_from_forgery with: :null_session
-
   def execute
     variables = ensure_hash(params[:variables])
     query = params[:query]
@@ -40,6 +39,8 @@ class GraphqlController < ApplicationController
   end
 
   def get_logged_in_user(request)
+    puts "get logged in user called"
+    puts current_user
     return current_user
   end
 
@@ -48,5 +49,35 @@ class GraphqlController < ApplicationController
     logger.error e.backtrace.join("\n")
 
     render json: { errors: [{ message: e.message, backtrace: e.backtrace }], data: {} }, status: 500
+  end
+
+  def sign_out
+    user = current_user
+    if user
+      cookies.delete(:jwt)
+      render json: {status: 'OK', code: 200}
+    else
+      render json: {status: 'session not found', code: 404}
+    end
+  end
+
+  def sign_in
+    puts "CREATE SESSION CALLED"
+    email = params["email"]
+    password = params["password"]
+    if email && password
+      login_hash = User.handle_login(email, password)
+      if login_hash
+        cookies.signed[:jwt] = {value:  login_hash[:token], httponly: true}
+        render json: {
+          user_id: login_hash[:user_id],
+          name: login_hash[:name],
+        }
+      else
+        render json: {status: 'incorrect email or password', code: 422}
+      end
+    else
+      render json: {status: 'specify email address and password', code: 422}
+    end
   end
 end

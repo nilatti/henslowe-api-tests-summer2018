@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::Base
   # protect_from_forgery unless: -> { request.format.json? }
+  include ActionController::Cookies
   skip_forgery_protection
   # before_action :configure_permitted_parameters, if: :devise_controller?
-
   protected
 
   def configure_permitted_parameters
@@ -52,6 +52,16 @@ class ApplicationController < ActionController::Base
     ])
   end
 
+  def authenticate_cookie
+    puts "AUTH COOKIE CALLED 56"
+    token = cookies.signed[:jwt]
+    decoded_token = CoreModules::JsonWebToken.decode(token)
+    if decoded_token
+      user = User.find_by(id: decoded_token["user_id"])
+    end
+    if user then return true else render json: {status: 'unauthorized', code: 401} end
+  end
+
 
   def encode_token(payload)
     JWT.encode(payload, ENV['DEVISE_JWT_SECRET_KEY'])
@@ -64,14 +74,15 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    if auth_header
-      token = auth_header.split(' ')[1]
-      token.gsub!('[','')
-      token.gsub!(']','')
-      token.gsub!(',','')
-      token.gsub!('"','')
-      decode_user(token)
+    puts "current user called 77"
+    puts cookies.signed[:jwt]
+    puts cookies[:jwt]
+    token = cookies.signed[:jwt]
+    decoded_token = CoreModules::JsonWebToken.decode(token)
+    if decoded_token
+      user = User.find_by(id: decoded_token["user_id"])
     end
+    if user then return user else return false end
   end
 
   def decode_user(token)

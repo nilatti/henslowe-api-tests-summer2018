@@ -12,7 +12,10 @@ module Mutations
       if user.present?
         if user.valid_password?(args[:password])
           context[:current_user] = user
-          return {user: user, success: true, errors: user.errors}
+          context[:token] = 'test'
+          # cookie = response.cookie('token', 'test')
+
+          return {user: user, success: true, errors: user.errors, context: context}
         else
           GraphQL::ExecutionError.new("Incorrect Email/Password")
         end
