@@ -3,8 +3,13 @@ class CountLines
   def initialize(line_id: nil, lines: nil, play: nil)
     @characters = []
     @character_groups = []
-    @lines = lines
-    @line_id = line_id
+    if lines
+      @lines = lines
+    elsif line_id
+      @line_id = line_id
+      @line = Line.find(@line_id)
+      @lines = [@line]
+    end
     @updated_lines = []
     if play
       @play = play
@@ -14,9 +19,6 @@ class CountLines
   end
 
   def run
-    if @line_id
-      @line = Line.find(@line_id)
-    end
     get_line_lengths(lines: @lines)
     import_line_counts(updated_lines: @updated_lines)
     if @play

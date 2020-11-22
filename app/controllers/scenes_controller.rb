@@ -53,7 +53,8 @@ class ScenesController < ApiController
               }
             ]
           }
-        ]
+        ],
+        methods: :pretty_name
       )
   end
 
