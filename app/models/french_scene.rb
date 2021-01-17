@@ -6,6 +6,7 @@ class FrenchScene < ApplicationRecord
   has_many :sound_cues, dependent: :destroy
   has_many :on_stages, dependent: :destroy
   accepts_nested_attributes_for :on_stages, reject_if: :all_blank, allow_destroy: :true
+  validates_associated :on_stages
   has_many :characters, through: :on_stages
   has_many :character_groups, through: :on_stages
   has_many :users, through: :on_stages

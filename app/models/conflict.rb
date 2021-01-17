@@ -1,16 +1,15 @@
 class Conflict < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :space, optional: true
-  validate :must_have_user_or_space
-  validates :start_time, presence: true
-  validates :end_time, presence: true
+  validate :check_for_space_and_user
+  validates_presence_of :start_time, :end_time
 
-  def must_have_user_or_space
-    if !user && !space
-      errors.add(:user, "Must have either user or space")
+  def check_for_space_and_user
+    if !space && !user
+      errors.add(:conflict, "Must have either user or space")
     end
-    if user && space
-      errors.add(:user, "Can't have both user and space")
+    if space && user
+      errors.add(:conflict, "You can only have a space OR a user, not both.")
     end
   end
 end

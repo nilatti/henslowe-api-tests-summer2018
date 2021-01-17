@@ -16,7 +16,9 @@ class Play < ApplicationRecord
   validates :title, presence: true
 
   def find_on_stages
-    on_stages = self.on_stages.uniq {|o| o.character_id}
+    on_stages = {}
+    on_stages[:characters] = self.on_stages.uniq {|o| o.character_id}
+    on_stages[:character_groups] = self.on_stages.uniq {|o| o.character_group_id}
     return on_stages
   end
 

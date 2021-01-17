@@ -1,10 +1,18 @@
 require 'rails_helper'
 
-RSpec.describe Author, type: :model do
-  # Association test
-  # ensure Author model has a 1:m relationship with the Play model
-  it { should have_many(:plays).dependent(:destroy) }
-  # Validation tests
-  # ensure columns title and created_by are present before saving
-  it { should validate_presence_of(:last_name) }
+describe Author do
+
+  it "has a valid factory" do
+    expect(build(:author)).to be_valid
+  end
+
+  let(:author) { build(:author) }
+
+  describe "ActiveModel validations" do
+    it { expect(author).to validate_presence_of(:last_name) }
+  end
+
+  describe "ActiveRecord associations" do
+      it { expect(author).to have_many(:plays).dependent(:destroy) }
+  end
 end

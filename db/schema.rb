@@ -2,17 +2,17 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_18_105605) do
+ActiveRecord::Schema.define(version: 2021_01_01_153420) do
 
-  create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "active_admin_comments", charset: "utf8", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
     t.string "resource_type"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
 
-  create_table "acts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "acts", charset: "utf8", force: :cascade do |t|
     t.integer "number"
     t.bigint "play_id"
     t.text "summary"
@@ -40,12 +40,12 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["play_id"], name: "index_acts_on_play_id"
   end
 
-  create_table "acts_rehearsals", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "acts_rehearsals", id: false, charset: "latin1", force: :cascade do |t|
     t.bigint "act_id", null: false
     t.bigint "rehearsal_id", null: false
   end
 
-  create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "admin_users", charset: "utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
-  create_table "authors", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "authors", charset: "utf8", force: :cascade do |t|
     t.date "birthdate"
     t.date "deathdate"
     t.string "nationality"
@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "character_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "character_groups", charset: "latin1", force: :cascade do |t|
     t.string "name"
     t.string "xml_id"
     t.string "corresp"
@@ -84,19 +84,19 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["play_id"], name: "index_character_groups_on_play_id"
   end
 
-  create_table "character_groups_entrance_exits", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "character_groups_entrance_exits", id: false, charset: "latin1", force: :cascade do |t|
     t.bigint "character_group_id", null: false
     t.bigint "entrance_exit_id", null: false
     t.index ["character_group_id", "entrance_exit_id"], name: "index_character_groups_entrance_exits"
   end
 
-  create_table "character_groups_stage_directions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "character_groups_stage_directions", id: false, charset: "latin1", force: :cascade do |t|
     t.bigint "character_group_id", null: false
     t.bigint "stage_direction_id", null: false
     t.index ["character_group_id", "stage_direction_id"], name: "index_character_groups_stage_directions"
   end
 
-  create_table "characters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "characters", charset: "utf8", force: :cascade do |t|
     t.string "name"
     t.string "age"
     t.string "gender"
@@ -113,19 +113,19 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["play_id"], name: "index_characters_on_play_id"
   end
 
-  create_table "characters_entrance_exits", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "characters_entrance_exits", id: false, charset: "latin1", force: :cascade do |t|
     t.bigint "character_id", null: false
     t.bigint "entrance_exit_id", null: false
   end
 
-  create_table "characters_stage_directions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "characters_stage_directions", id: false, charset: "latin1", force: :cascade do |t|
     t.bigint "character_id", null: false
     t.bigint "stage_direction_id", null: false
     t.index ["character_id", "stage_direction_id"], name: "index_characters_stage_directions"
   end
 
-  create_table "conflicts", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
-    t.bigint "user_id", null: false
+  create_table "conflicts", charset: "latin1", force: :cascade do |t|
+    t.bigint "user_id"
     t.datetime "start_time"
     t.datetime "end_time"
     t.string "category"
@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["user_id"], name: "index_conflicts_on_user_id"
   end
 
-  create_table "entrance_exits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "entrance_exits", charset: "utf8", force: :cascade do |t|
     t.bigint "french_scene_id"
     t.integer "page"
     t.integer "line"
@@ -150,7 +150,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["stage_exit_id"], name: "index_entrance_exits_on_stage_exit_id"
   end
 
-  create_table "french_scenes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "french_scenes", charset: "utf8", force: :cascade do |t|
     t.bigint "scene_id"
     t.string "number"
     t.text "summary"
@@ -163,12 +163,12 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["scene_id"], name: "index_french_scenes_on_scene_id"
   end
 
-  create_table "french_scenes_rehearsals", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "french_scenes_rehearsals", id: false, charset: "latin1", force: :cascade do |t|
     t.bigint "french_scene_id", null: false
     t.bigint "rehearsal_id", null: false
   end
 
-  create_table "jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "jobs", charset: "utf8", force: :cascade do |t|
     t.bigint "production_id"
     t.bigint "specialization_id"
     t.bigint "user_id"
@@ -185,12 +185,12 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["user_id"], name: "index_jobs_on_user_id"
   end
 
-  create_table "jwt_blacklist", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "jwt_blacklist", charset: "utf8", force: :cascade do |t|
     t.string "jti", null: false
     t.index ["jti"], name: "index_jwt_blacklist_on_jti"
   end
 
-  create_table "labels", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "labels", charset: "latin1", force: :cascade do |t|
     t.string "xml_id"
     t.string "line_number"
     t.string "content"
@@ -200,7 +200,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["french_scene_id"], name: "index_labels_on_french_scene_id"
   end
 
-  create_table "lines", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "lines", charset: "latin1", force: :cascade do |t|
     t.string "ana"
     t.bigint "character_id", null: false
     t.text "corresp"
@@ -222,7 +222,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["french_scene_id"], name: "index_lines_on_french_scene_id"
   end
 
-  create_table "on_stages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "on_stages", charset: "utf8", force: :cascade do |t|
     t.bigint "character_id"
     t.bigint "user_id"
     t.bigint "french_scene_id"
@@ -235,7 +235,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["character_group_id"], name: "index_on_stages_on_character_group_id"
   end
 
-  create_table "plays", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "plays", charset: "utf8", force: :cascade do |t|
     t.string "title"
     t.bigint "author_id"
     t.date "date"
@@ -253,7 +253,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["production_id"], name: "index_plays_on_production_id"
   end
 
-  create_table "productions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "productions", charset: "utf8", force: :cascade do |t|
     t.date "start_date"
     t.date "end_date"
     t.bigint "theater_id"
@@ -263,7 +263,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["theater_id"], name: "index_productions_on_theater_id"
   end
 
-  create_table "rehearsals", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "rehearsals", charset: "latin1", force: :cascade do |t|
     t.datetime "start_time"
     t.datetime "end_time"
     t.bigint "space_id"
@@ -276,17 +276,17 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["space_id"], name: "index_rehearsals_on_space_id"
   end
 
-  create_table "rehearsals_scenes", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "rehearsals_scenes", id: false, charset: "latin1", force: :cascade do |t|
     t.bigint "scene_id", null: false
     t.bigint "rehearsal_id", null: false
   end
 
-  create_table "rehearsals_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "rehearsals_users", id: false, charset: "latin1", force: :cascade do |t|
     t.bigint "rehearsal_id", null: false
     t.bigint "user_id", null: false
   end
 
-  create_table "scenes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "scenes", charset: "utf8", force: :cascade do |t|
     t.integer "number"
     t.text "summary"
     t.bigint "act_id"
@@ -300,7 +300,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["act_id"], name: "index_scenes_on_act_id"
   end
 
-  create_table "sound_cues", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "sound_cues", charset: "latin1", force: :cascade do |t|
     t.string "xml_id"
     t.string "line_number"
     t.string "kind"
@@ -313,7 +313,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["french_scene_id"], name: "index_sound_cues_on_french_scene_id"
   end
 
-  create_table "space_agreements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "space_agreements", charset: "utf8", force: :cascade do |t|
     t.bigint "theater_id"
     t.bigint "space_id"
     t.datetime "created_at", null: false
@@ -322,7 +322,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["theater_id"], name: "index_space_agreements_on_theater_id"
   end
 
-  create_table "spaces", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "spaces", charset: "utf8", force: :cascade do |t|
     t.string "name"
     t.string "street_address"
     t.string "city"
@@ -334,16 +334,17 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "mission_statement"
+    t.string "logo"
   end
 
-  create_table "specializations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "specializations", charset: "utf8", force: :cascade do |t|
     t.string "title"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "stage_directions", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "stage_directions", charset: "latin1", force: :cascade do |t|
     t.bigint "french_scene_id", null: false
     t.string "number"
     t.string "kind"
@@ -355,7 +356,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["french_scene_id"], name: "index_stage_directions_on_french_scene_id"
   end
 
-  create_table "stage_exits", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "stage_exits", charset: "utf8", force: :cascade do |t|
     t.bigint "production_id"
     t.string "name"
     t.datetime "created_at", null: false
@@ -363,7 +364,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.index ["production_id"], name: "index_stage_exits_on_production_id"
   end
 
-  create_table "theaters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "theaters", charset: "utf8", force: :cascade do |t|
     t.string "name"
     t.string "street_address"
     t.string "city"
@@ -375,9 +376,10 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.string "calendar_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "logo"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", charset: "utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -404,11 +406,14 @@ ActiveRecord::Schema.define(version: 2020_06_18_105605) do
     t.string "preferred_name"
     t.string "program_name"
     t.boolean "fake", default: false
+    t.text "authentication_token"
+    t.datetime "authentication_token_created_at"
+    t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true, length: 255
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "words", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "words", charset: "latin1", force: :cascade do |t|
     t.string "kind"
     t.string "content"
     t.string "xml_id"
