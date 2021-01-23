@@ -5,8 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
          # :jwt_authenticatable, jwt_revocation_strategy: Blacklist
 
-  validates_uniqueness_of :email, case_sensitive: true
-  # validates_presence_of :first_name, :last_name, :phone_number, :email
+  validates_uniqueness_of :email, case_sensitive: false
+  validates_presence_of :first_name, :last_name, :phone_number, :email
   has_many :conflicts
   has_many :entrance_exits
   has_many :jobs, dependent: :destroy

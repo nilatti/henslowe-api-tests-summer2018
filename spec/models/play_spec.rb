@@ -43,6 +43,5 @@ RSpec.describe Play, type: :model do
     create(:on_stage, french_scene: play.french_scenes.last, character_group: play.character_groups.last, character: nil)
     expect(play.find_on_stages[:characters].map(&:character_id).compact).to match_array(on_stages[:character_ids])
     expect(play.find_on_stages[:character_groups].map(&:character_group_id).compact).to match_array(on_stages[:character_group_ids])
-
   end
 end

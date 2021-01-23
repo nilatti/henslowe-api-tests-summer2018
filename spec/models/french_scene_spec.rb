@@ -31,8 +31,7 @@ RSpec.describe FrenchScene, type: :model do
   end
 
   it "has a pretty name" do
-    play = build(:play)
-    act = build(:act, play: play)
+    act = build(:act)
     scene = build(:scene, act: act)
     french_scene = build(:french_scene, scene: scene)
     expect(french_scene.pretty_name).to eq("#{act.number}.#{scene.number}.#{french_scene.number}")

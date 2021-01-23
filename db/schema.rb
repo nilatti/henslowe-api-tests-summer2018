@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_01_153420) do
+ActiveRecord::Schema.define(version: 2021_01_23_040052) do
 
   create_table "active_admin_comments", charset: "utf8", force: :cascade do |t|
     t.string "namespace"
@@ -146,8 +146,10 @@ ActiveRecord::Schema.define(version: 2021_01_01_153420) do
     t.datetime "updated_at", null: false
     t.string "category"
     t.text "notes"
+    t.bigint "user_id"
     t.index ["french_scene_id"], name: "index_entrance_exits_on_french_scene_id"
     t.index ["stage_exit_id"], name: "index_entrance_exits_on_stage_exit_id"
+    t.index ["user_id"], name: "index_entrance_exits_on_user_id"
   end
 
   create_table "french_scenes", charset: "utf8", force: :cascade do |t|

@@ -7,10 +7,11 @@ RSpec.describe 'Acts API' do
   let!(:play) { create(:play, author_id: author.id) }
   let!(:id) { play.acts.first.id }
 
+  # let(:auth_headers) { create(:user).create_new_auth_token }
   # Test suite for GET /plays/:play_id/characters
   describe 'GET api/plays/:play_id/acts' do
     before {
-      get "/api/plays/#{play.id}/acts", params: {play_id: play.id}
+      get "/api/plays/#{play.id}/acts", params: {play_id: play.id}#, headers: auth_headers
     }
 
     context 'when play exists' do
