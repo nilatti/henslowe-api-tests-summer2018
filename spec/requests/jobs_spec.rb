@@ -2,13 +2,15 @@ require 'rails_helper'
 
 RSpec.describe 'jobs API', type: :request do
   # initialize test data
+  include ApiHelper
+  let!(:user) { create(:user)}
   let!(:jobs) { create_list(:job, 10) }
   let(:job_id) { jobs.first.id }
 
   # Test suite for GET /jobs
   describe 'GET /jobs' do
     # make HTTP get request before each example
-    before { get '/api/jobs' }
+    before { get '/api/jobs', headers: authenticated_header(user), as: :json }
 
     it 'returns jobs' do
       # Note `json` is a custom helper to parse JSON responses
@@ -23,7 +25,7 @@ RSpec.describe 'jobs API', type: :request do
 
   # Test suite for GET /jobs/:id
   describe 'GET api/jobs/:id' do
-    before { get "/api/jobs/#{job_id}" }
+    before { get "/api/jobs/#{job_id}", headers: authenticated_header(user), as: :json }
     context 'when the record exists' do
       it 'returns the job' do
         expect(json).not_to be_empty
@@ -63,7 +65,7 @@ RSpec.describe 'jobs API', type: :request do
             start_date: test_job.start_date,
             user_id: test_job.user.id,
           } }
-        post '/api/jobs', params: valid_attributes
+        post '/api/jobs', params: valid_attributes, headers: authenticated_header(user), as: :json
         expect(json['user_id']).to eq(test_job.user.id)
       end
 
@@ -76,7 +78,7 @@ RSpec.describe 'jobs API', type: :request do
             start_date: test_job.start_date
           }
         }
-        post '/api/jobs', params: valid_attributes
+        post '/api/jobs', params: valid_attributes, headers: authenticated_header(user), as: :json
         expect(response).to have_http_status(201)
       end
 
@@ -88,13 +90,13 @@ RSpec.describe 'jobs API', type: :request do
             specialization_id: test_job.specialization.id,
           }
         }
-        post '/api/jobs', params: valid_attributes
+        post '/api/jobs', params: valid_attributes, headers: authenticated_header(user), as: :json
         expect(response).to have_http_status(201)
       end
     end
 
     context 'when the request is invalid' do
-      before { post '/api/jobs', params: { job: { end_date: '2001-09-01', start_date: '2002-11-01' } } }
+      before { post '/api/jobs', params: { job: { end_date: '2001-09-01', start_date: '2002-11-01' } }, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -120,7 +122,7 @@ RSpec.describe 'jobs API', type: :request do
             start_date: test_job.start_date,
             theater_id: test_job.theater.id,
             } }
-          put "/api/jobs/#{job_id}", params: valid_attributes
+          put "/api/jobs/#{job_id}", params: valid_attributes, headers: authenticated_header(user), as: :json
         expect(response).to have_http_status(200)
       end
     end
@@ -128,7 +130,7 @@ RSpec.describe 'jobs API', type: :request do
 
   # Test suite for DELETE /jobs/:id
   describe 'DELETE /jobs/:id' do
-    before { delete "/api/jobs/#{job_id}" }
+    before { delete "/api/jobs/#{job_id}", headers: authenticated_header(user), as: :json }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

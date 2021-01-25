@@ -3,6 +3,8 @@ require 'rails_helper'
 
 RSpec.describe 'Plays API' do
   # Initialize the test data
+  include ApiHelper
+  let!(:user) { create(:user)}
   let!(:author) { create(:author) }
   let!(:plays) { create_list(:play, 5, author_id: author.id) }
   let(:author_id) { author.id }
@@ -11,7 +13,7 @@ RSpec.describe 'Plays API' do
   # Test suite for GET /authors/:author_id/plays
   describe 'GET api/authors/:author_id/plays' do
     before {
-      get "/api/authors/#{author_id}/plays", params: {author_id: author_id}
+      get "/api/authors/#{author_id}/plays", params: {author_id: author_id}, headers: authenticated_header(user), as: :json
     }
 
     context 'when author exists' do
@@ -27,7 +29,7 @@ RSpec.describe 'Plays API' do
 
   # Test suite for GET /authors/:author_id/plays/:id
   describe 'GET /authors/:author_id/plays/:id' do
-    before { get "/api/authors/#{author_id}/plays/#{id}" }
+    before { get "/api/authors/#{author_id}/plays/#{id}", headers: authenticated_header(user), as: :json }
 
     context 'when play exists' do
       it 'returns status code 200' do
@@ -64,7 +66,7 @@ RSpec.describe 'Plays API' do
     let(:valid_attributes) { { play: { title: 'Give Us Good', author_id: author_id } } }
 
     context 'when request attributes are valid' do
-      before { post "/api/authors/#{author_id}/plays", params: valid_attributes }
+      before { post "/api/authors/#{author_id}/plays", params: valid_attributes, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -72,7 +74,7 @@ RSpec.describe 'Plays API' do
     end
 
     context 'when an invalid request' do
-      before { post "/api/authors/#{author_id}/plays", params: { play: { genre: 'failure' } } }
+      before { post "/api/authors/#{author_id}/plays", params: { play: { genre: 'failure' } }, headers: authenticated_header(user), as: :json, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -89,7 +91,7 @@ RSpec.describe 'Plays API' do
   describe 'PUT /api/authors/:author_id/plays/:id' do
     let(:valid_attributes) { { play: { title: 'The Magic Flute' } } }
 
-    before { put "/api/authors/#{author_id}/plays/#{id}", params: valid_attributes }
+    before { put "/api/authors/#{author_id}/plays/#{id}", params: valid_attributes, headers: authenticated_header(user), as: :json }
 
     context 'when play exists' do
       it 'returns status code 200' do
@@ -117,7 +119,7 @@ RSpec.describe 'Plays API' do
 
   # Test suite for DELETE /authors/:id
   describe 'DELETE /authors/:id' do
-    before { delete "/api/authors/#{author_id}/plays/#{id}" }
+    before { delete "/api/authors/#{author_id}/plays/#{id}", headers: authenticated_header(user), as: :json }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

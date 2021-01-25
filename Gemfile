@@ -22,7 +22,7 @@ gem 'redis', '~> 4.0'
 gem 'bcrypt', '~> 3.1.7'
 #Active Admin
 gem 'devise'
-gem 'devise-jwt'
+gem 'devise-jwt', '~> 0.7.0'
 gem 'sidekiq'
 gem 'activeadmin'
 

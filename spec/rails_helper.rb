@@ -9,6 +9,7 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 require 'rspec/rails'
 
 require 'devise'
+require 'devise/jwt/test_helpers'
 require_relative 'support/controller_macros'
 
 Dir['spec/support/**/*.rb'].each do |file|

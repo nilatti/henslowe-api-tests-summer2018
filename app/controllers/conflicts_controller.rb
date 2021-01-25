@@ -1,13 +1,12 @@
 class ConflictsController < ApiController
   before_action :set_conflict, only: [:show, :update, :destroy]
 
-  # GET /conflicts
-  # GET /conflicts.json
   def index
     if (params[:user_id])
-      @conflicts = Conflict.where(user_id == params[:user_id])
+      print(params[:user_id])
+      @conflicts = Conflict.where(user_id: params[:user_id])
     elsif (params[:space_id])
-      @conflicts = Conflict.where(space_id == params[:space_id])
+      @conflicts = Conflict.where(space_id: params[:space_id])
     end
 
     render json: @conflicts.as_json

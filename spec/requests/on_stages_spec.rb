@@ -3,6 +3,8 @@ require 'rails_helper'
 
 RSpec.describe 'OnStages API' do
   # Initialize the test data
+  include ApiHelper
+  let!(:user) { create(:user)}
   let!(:french_scene) { create(:french_scene) }
   let!(:french_scene_id) { french_scene.id}
   let!(:character) {create(:character)}
@@ -12,7 +14,7 @@ RSpec.describe 'OnStages API' do
   # Test suite for GET /french_scenes/:french_scene_id/on_stages
   describe 'GET api/french_scenes/:french_scene_id/on_stages' do
     before {
-      get "/api/french_scenes/#{french_scene_id}/on_stages", params: {on_stage: {french_scene_id: french_scene_id, character_id: character.id}}
+      get "/api/french_scenes/#{french_scene_id}/on_stages", params: {on_stage: {french_scene_id: french_scene_id, character_id: character.id}, headers: authenticated_header(user), as: :json}
     }
 
     context 'when french_scene exists' do
@@ -29,7 +31,7 @@ RSpec.describe 'OnStages API' do
   # Test suite for GET /french_scenes/:french_scene_id/on_stages/:id
   describe 'GET /french_scenes/:french_scene_id/on_stages/:id' do
     before {
-      get "/api/french_scenes/#{french_scene_id}/on_stages/#{id}"
+      get "/api/french_scenes/#{french_scene_id}/on_stages/#{id}", headers: authenticated_header(user), as: :json
     }
 
     context 'when entrance exit exists' do
@@ -57,35 +59,35 @@ RSpec.describe 'OnStages API' do
 
   # Test suite for POST /french_scenes/:french_scene_id/on_stages
   describe 'POST /french_scenes/:french_scene_id/on_stages' do
-    let(:valid_attributes) {{ on_stage: { character: character.id, french_scene_id: french_scene_id } }}
+    let(:valid_attributes) {{ on_stage: { character_id: character.id, french_scene_id: french_scene_id } }}
 
     context 'when request attributes are valid' do
-      before { post "/api/french_scenes/#{french_scene_id}/on_stages", params: valid_attributes }
+      before { post "/api/french_scenes/#{french_scene_id}/on_stages", params: valid_attributes, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
       end
     end
 
-    # context 'when an invalid request' do
-    #   before { post "/api/french_scenes/#{french_scene_id}/on_stages", params: { on_stage: { french_scene_id: french_scene_id } } }
-    #
-    #   it 'returns status code 422' do
-    #     expect(response).to have_http_status(422)
-    #   end
-    #
-    #   it 'returns a failure message' do
-    #     expected_response = "{\"number\":[\"can't be blank\"]}"
-    #     expect(response.body).to match(expected_response)
-    #   end
-    # end
+    context 'when an invalid request' do
+      before { post "/api/french_scenes/#{french_scene_id}/on_stages", params: { on_stage: { french_scene_id: french_scene_id } } }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a failure message' do
+        expected_response = "{\"on_stage\":[\"Must have character or character group\"]}"
+        expect(response.body).to match(expected_response)
+      end
+    end
   end
 
   # Test suite for PUT /on_stages/:id
   describe 'PUT /api/on_stages/:id' do
     let(:valid_attributes) { { on_stage: { character_id: character.id } } }
 
-    before { put "/api/on_stages/#{id}", params: valid_attributes }
+    before { put "/api/on_stages/#{id}", params: valid_attributes, headers: authenticated_header(user), as: :json }
 
     context 'when on_stages exists' do
       it 'returns status code 200' do
@@ -114,7 +116,7 @@ RSpec.describe 'OnStages API' do
   # Test suite for DELETE /on_stages/:id
   describe 'DELETE /on_stages/:id' do
     before {
-      delete "/api/on_stages/#{id}"
+      delete "/api/on_stages/#{id}", headers: authenticated_header(user), as: :json
     }
 
     it 'returns status code 204' do

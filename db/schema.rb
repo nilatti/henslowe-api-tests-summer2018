@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_23_040052) do
+ActiveRecord::Schema.define(version: 2021_01_24_210910) do
 
   create_table "active_admin_comments", charset: "utf8", force: :cascade do |t|
     t.string "namespace"
@@ -187,9 +187,10 @@ ActiveRecord::Schema.define(version: 2021_01_23_040052) do
     t.index ["user_id"], name: "index_jobs_on_user_id"
   end
 
-  create_table "jwt_blacklist", charset: "utf8", force: :cascade do |t|
+  create_table "jwt_denylist", charset: "utf8", force: :cascade do |t|
     t.string "jti", null: false
-    t.index ["jti"], name: "index_jwt_blacklist_on_jti"
+    t.datetime "exp", null: false
+    t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
   create_table "labels", charset: "latin1", force: :cascade do |t|

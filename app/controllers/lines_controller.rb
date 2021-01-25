@@ -62,7 +62,6 @@ class LinesController < ApiController
         :original_content,
         :original_line_count,
         :prev,
-        :type,
         :xml_id,
         words_attributes: [:content, :kind, :order_number, :xml_id]
       )

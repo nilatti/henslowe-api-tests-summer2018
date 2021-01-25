@@ -1,10 +1,12 @@
 class CharacterGroupsController < ApiController
   before_action :set_character_group, only: [:show, :update, :destroy]
-
+  before_action :set_play
   # GET /character_groups
   # GET /character_groups.json
   def index
-    @character_groups = CharacterGroup.all
+    @character_groups = CharacterGroup.where(play_id: @play.id)
+
+    render json: @character_groups.as_json
   end
 
   # GET /character_groups/1
@@ -44,6 +46,12 @@ class CharacterGroupsController < ApiController
     # Use callbacks to share common setup or constraints between actions.
     def set_character_group
       @character_group = CharacterGroup.find(params[:id])
+    end
+
+    def set_play
+      if params[:play_id]
+        @play = Play.find(params[:play_id])
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

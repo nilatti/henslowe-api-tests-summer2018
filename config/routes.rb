@@ -73,6 +73,7 @@ Rails.application.routes.draw do
         resources :scenes
       end
       resources :characters
+      resources :character_groups
     end
     resources :acts do
       member do
@@ -81,6 +82,7 @@ Rails.application.routes.draw do
       resources :scenes
     end
     resources :characters
+    resources :character_groups
     resources :scenes do
       collection do
         get :scene_script
@@ -94,7 +96,6 @@ Rails.application.routes.draw do
       resources :entrance_exits
       resources :on_stages
     end
-    resources :character_groups
     resources :conflicts
     resources :entrance_exits
     resources :labels

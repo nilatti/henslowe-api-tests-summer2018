@@ -1,5 +1,5 @@
 class ActsController < ApiController
-  # before_action :authenticate_user!
+  before_action :authenticate_user!
   before_action :set_act, only: [:show, :update, :destroy]
   before_action :set_play
   # GET /acts

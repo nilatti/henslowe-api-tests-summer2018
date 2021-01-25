@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'POST /sign_in', type: :request do
   let(:user) { create(:user) }
-  let(:url) { '/sign_in' }
+  let(:url) { '/api/sign_in' }
   let(:params) do
     {
       user: {
@@ -14,7 +14,7 @@ RSpec.describe 'POST /sign_in', type: :request do
 
   context 'when params are correct' do
     before do
-      post url, params: params
+      post url, params: params, as: :json
     end
 
     it 'returns 200' do
@@ -35,7 +35,7 @@ RSpec.describe 'POST /sign_in', type: :request do
   end
 
   context 'when login params are incorrect' do
-    before { post url }
+    before { post url, as: :json }
 
     it 'returns unathorized status' do
       expect(response.status).to eq 401
@@ -44,7 +44,7 @@ RSpec.describe 'POST /sign_in', type: :request do
 end
 
 RSpec.describe 'DELETE /logout', type: :request do
-  let(:url) { '/sign_out' }
+  let(:url) { '/api/sign_out' }
 
   it 'returns 204, no content' do
     delete url
