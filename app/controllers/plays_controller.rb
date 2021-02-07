@@ -176,8 +176,6 @@ class PlaysController < ApiController
   end
 
   def play_skeleton
-    puts "play_params"
-    puts params[:play]
     @play = Play.includes(acts: [scenes: [:french_scenes]]).find(params[:play])
 
     render json: @play.as_json(include: {

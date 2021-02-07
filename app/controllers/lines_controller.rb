@@ -5,11 +5,13 @@ class LinesController < ApiController
   # GET /lines.json
   def index
     @lines = Line.all
+    render json: @lines
   end
 
   # GET /lines/1
   # GET /lines/1.json
   def show
+    render json: @line
   end
 
   # POST /lines

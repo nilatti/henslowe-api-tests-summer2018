@@ -56,6 +56,7 @@ Rails.application.routes.draw do
       resources :plays
     end
     resources :plays do
+      resources :words
       collection do
         get :play_titles
       end
@@ -71,6 +72,7 @@ Rails.application.routes.draw do
       end
       resources :acts do
         resources :scenes
+        resources :rehearsals
       end
       resources :characters
       resources :character_groups
@@ -80,16 +82,20 @@ Rails.application.routes.draw do
         get :act_script
       end
       resources :scenes
+      resources :rehearsals
     end
     resources :characters
     resources :character_groups
     resources :scenes do
+      resources :rehearsals
       collection do
         get :scene_script
       end
       resources :french_scenes
     end
     resources :french_scenes do
+      resources :rehearsals
+      resources :lines
       collection do
         get :french_scene_script
       end
@@ -104,8 +110,5 @@ Rails.application.routes.draw do
     resources :rehearsals
     resources :sound_cues
     resources :stage_directions
-    resources :words
-    resources :rehearsals
-    resources :conflicts
   end
 end

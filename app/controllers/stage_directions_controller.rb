@@ -5,6 +5,7 @@ class StageDirectionsController < ApiController
   # GET /stage_directions.json
   def index
     @stage_directions = StageDirection.all
+    render json: @stage_directions
   end
 
   # GET /stage_directions/1

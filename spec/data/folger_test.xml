@@ -87,6 +87,21 @@
 <personGrp xml:id="LORDS.SENIOR_AYL" corresp="#LORDS_AYL"/>
 <personGrp xml:id="LORDS.FREDERICK_AYL" corresp="#LORDS_AYL"/>
 </listPerson>
+  <listPerson>
+    <person xml:id="CouldNotFindCharacter">
+      <persName>
+        <name>
+          Could Not Find Character
+        </name>
+      </persName>
+      <state>
+        <p>
+          Bogus person for lines that we can't attribute
+        </p>
+      </state>
+      <sex>neutral</sex>
+    </person>
+  </listPerson>
 </particDesc>
 </profileDesc>
 </header>

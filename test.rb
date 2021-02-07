@@ -17,7 +17,6 @@ def build_recurring_rehearsals(end_date:, start_date:, days_of_week:, start_time
       rehearsal_blocks << r
     end
   end
-  rehearsal_blocks.each {|r| puts "#{r.start_time} - #{r.end_time} #{r.notes}"}
 end
 
 def build_rehearsal_blocks(block_length:, break_length:, end_time:, start_time:)

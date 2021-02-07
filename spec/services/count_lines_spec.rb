@@ -55,8 +55,10 @@ describe CountLines do
 
   it 'updates onstages speaking or not' do
     @counter.update_on_stage_nonspeaking(on_stages: @first_scene.french_scenes.first.on_stages)
-    expect(@on_stage3.nonspeaking).to be true
-    expect(@on_stage2.nonspeaking).to be false
+    on_stage3 = OnStage.find(@on_stage3.id)
+    on_stage2 = OnStage.find(@on_stage2.id)
+    expect(on_stage3.nonspeaking).to be true
+    expect(on_stage2.nonspeaking).to be false
   end
 
   it 'updates play line counts' do

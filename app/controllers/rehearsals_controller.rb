@@ -1,10 +1,9 @@
 class RehearsalsController < ApiController
   before_action :set_rehearsal, only: [:show, :update, :destroy]
-  before_action :set_production
+  before_action :set_parent
   # GET /acts
   def index
-    @rehearsals = Rehearsal.where(production_id: @production.id)
-
+    @rehearsals = @parent.rehearsals
     render json: @rehearsals.as_json
   end
 
@@ -18,7 +17,7 @@ class RehearsalsController < ApiController
     @rehearsal = Rehearsal.new(rehearsal_params)
 
     if @rehearsal.save
-      render json: @rehearsal, status: :created, location: @production
+      render json: @rehearsal, status: :created, location: @parent
     else
       render json: @rehearsal.errors, status: :unprocessable_entity
     end
@@ -40,9 +39,19 @@ class RehearsalsController < ApiController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_production
+    def set_parent
       if params[:production_id]
-        @production = Production.find(params[:production_id])
+        @parent = Production.find(params[:production_id])
+        @parent_type = 'production'
+      elsif params[:act_id]
+        @parent = Act.find(params[:act_id])
+        @parent_type = 'act'
+      elsif params[:scene_id]
+        @parent = Scene.find(params[:scene_id])
+        @parent_type = 'scene'
+      elsif params[:french_scene_id]
+        @parent = FrenchScene.find(params[:french_scene_id])
+        @parent_type = 'french_scene'
       end
     end
 

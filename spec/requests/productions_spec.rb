@@ -53,7 +53,7 @@ RSpec.describe 'Productions API' do
     end
   end
 
-  # Test suite for PUT /authors/:author_id/productions
+  # Test suite for PUT /productions
   describe 'POST /productions' do
     let(:valid_attributes) { { production: attributes_for(:production, theater_id: theater.id) } }
 

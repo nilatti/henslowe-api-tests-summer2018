@@ -119,12 +119,13 @@ class CountLines
 
   def update_on_stage_nonspeaking(on_stages:)
     on_stages.each do |on_stage|
-      speaking_characters = on_stage.french_scene.lines.map {|line| line.character}
-      if !speaking_characters.include?(on_stage.character)
-        on_stage.nonspeaking == true
+      speaking_characters = on_stage.french_scene.lines.map {|line| line.character}.uniq
+      if speaking_characters.include?(on_stage.character)
+        on_stage.nonspeaking = false
       else
-        on_stage.nonspeaking == false
+        on_stage.nonspeaking = true
       end
+      on_stage.save
     end
   end
 

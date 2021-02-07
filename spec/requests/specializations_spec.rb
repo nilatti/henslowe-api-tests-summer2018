@@ -2,13 +2,15 @@ require 'rails_helper'
 
 RSpec.describe 'Specializations API', type: :request do
   # initialize test data
+  include ApiHelper
+  let!(:user) { create(:user)}
   let!(:specializations) { create_list(:specialization, 4) }
   let(:specialization_id) { specializations.first.id }
 
   # Test suite for GET /specializations
   describe 'GET /specializations' do
     # make HTTP get request before each example
-    before { get '/api/specializations' }
+    before { get '/api/specializations', headers: authenticated_header(user) }
 
     it 'returns specializations' do
       # Note `json` is a custom helper to parse JSON responses
@@ -23,7 +25,7 @@ RSpec.describe 'Specializations API', type: :request do
 
   # Test suite for GET /specializations/:id
   describe 'GET api/specializations/:id' do
-    before { get "/api/specializations/#{specialization_id}" }
+    before { get "/api/specializations/#{specialization_id}", headers: authenticated_header(user) }
     context 'when the record exists' do
       it 'returns the specialization' do
         expect(json).not_to be_empty
@@ -54,7 +56,7 @@ RSpec.describe 'Specializations API', type: :request do
     let(:valid_attributes) { { specialization: { title: 'Chief Whimsey Officer' } } }
 
     context 'when the request is valid' do
-      before { post '/api/specializations', params: valid_attributes }
+      before { post '/api/specializations', params: valid_attributes, headers: authenticated_header(user), as: :json }
 
       it 'creates a specialization' do
         expect(json['title']).to eq('Chief Whimsey Officer')
@@ -66,7 +68,7 @@ RSpec.describe 'Specializations API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/specializations', params: { specialization: { seating_capacity: 5 } } }
+      before { post '/api/specializations', params: { specialization: { seating_capacity: 5 } }, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -84,7 +86,7 @@ RSpec.describe 'Specializations API', type: :request do
     let(:valid_attributes) { { specialization: { title: 'Grand Vizier' } } }
 
     context 'when the record exists' do
-      before { put "/api/specializations/#{specialization_id}", params: valid_attributes }
+      before { put "/api/specializations/#{specialization_id}", params: valid_attributes, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
@@ -95,7 +97,7 @@ RSpec.describe 'Specializations API', type: :request do
   # Test suite for DELETE /specializations/:id
   describe 'DELETE /specializations/:id' do
     before {
-      delete "/api/specializations/#{specialization_id}"
+      delete "/api/specializations/#{specialization_id}", headers: authenticated_header(user)
     }
 
     it 'returns status code 204' do

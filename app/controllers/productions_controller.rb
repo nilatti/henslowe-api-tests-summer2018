@@ -299,7 +299,6 @@ class ProductionsController < ApiController
   end
 
   def build_rehearsal_schedule
-    puts "CALLED BUILD"
     set_production
     json_response(@production.as_json(include: [:theater]))
     rehearsal_schedule_pattern = params[:production][:rehearsal_schedule_pattern]

@@ -74,7 +74,7 @@ RSpec.describe 'Plays API' do
     end
 
     context 'when an invalid request' do
-      before { post "/api/authors/#{author_id}/plays", params: { play: { genre: 'failure' } }, headers: authenticated_header(user), as: :json, headers: authenticated_header(user), as: :json }
+      before { post "/api/authors/#{author_id}/plays", params: { play: { genre: 'failure' } }, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)

@@ -5,4 +5,5 @@ class Rehearsal < ApplicationRecord
   has_and_belongs_to_many :scenes
   has_and_belongs_to_many :french_scenes
   has_and_belongs_to_many :users
+  # add check on time start before end
 end

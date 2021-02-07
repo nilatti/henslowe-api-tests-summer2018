@@ -12,6 +12,7 @@ class CharacterGroupsController < ApiController
   # GET /character_groups/1
   # GET /character_groups/1.json
   def show
+    render json: @character_group.as_json
   end
 
   # POST /character_groups
@@ -20,7 +21,7 @@ class CharacterGroupsController < ApiController
     @character_group = CharacterGroup.new(character_group_params)
 
     if @character_group.save
-      render :show, status: :created, location: @character_group
+      render json: @character_group, status: :created, location: @play
     else
       render json: @character_group.errors, status: :unprocessable_entity
     end
@@ -30,7 +31,7 @@ class CharacterGroupsController < ApiController
   # PATCH/PUT /character_groups/1.json
   def update
     if @character_group.update(character_group_params)
-      render :show, status: :ok, location: @character_group
+      render json: @character_group
     else
       render json: @character_group.errors, status: :unprocessable_entity
     end

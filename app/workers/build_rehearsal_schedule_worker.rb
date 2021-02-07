@@ -2,8 +2,6 @@ class BuildRehearsalScheduleWorker
   include Sidekiq::Worker
 
   def perform(block_length, break_length, days_of_week, end_date, end_time, production_id, time_between_breaks, start_date, start_time)
-    puts block_length
-    puts start_time
     block_length = block_length.to_i
     break_length = break_length.to_i
     production_id = production_id.to_i

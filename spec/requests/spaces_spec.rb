@@ -2,13 +2,15 @@ require 'rails_helper'
 
 RSpec.describe 'Spaces API', type: :request do
   # initialize test data
+  include ApiHelper
   let!(:spaces) { create_list(:space, 4, :has_theaters) }
   let(:space_id) { spaces.first.id }
+  let!(:user) { create(:user)}
 
   # Test suite for GET /spaces
   describe 'GET /spaces' do
     # make HTTP get request before each example
-    before { get '/api/spaces' }
+    before { get '/api/spaces', headers: authenticated_header(user) }
 
     it 'returns spaces' do
       # Note `json` is a custom helper to parse JSON responses
@@ -23,7 +25,7 @@ RSpec.describe 'Spaces API', type: :request do
 
   # Test suite for GET /spaces/:id
   describe 'GET api/spaces/:id' do
-    before { get "/api/spaces/#{space_id}" }
+    before { get "/api/spaces/#{space_id}", headers: authenticated_header(user) }
     context 'when the record exists' do
       it 'returns the space' do
         expect(json).not_to be_empty
@@ -58,7 +60,7 @@ RSpec.describe 'Spaces API', type: :request do
     let(:valid_attributes) { { space: { name: 'The Vogelodeon' } } }
 
     context 'when the request is valid' do
-      before { post '/api/spaces', params: valid_attributes }
+      before { post '/api/spaces', params: valid_attributes, headers: authenticated_header(user), as: :json }
 
       it 'creates a space' do
         expect(json['name']).to eq('The Vogelodeon')
@@ -70,7 +72,7 @@ RSpec.describe 'Spaces API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/spaces', params: { space: { seating_capacity: 5 } } }
+      before { post '/api/spaces', params: { space: { seating_capacity: 5 } }, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -88,7 +90,7 @@ RSpec.describe 'Spaces API', type: :request do
     let(:valid_attributes) { { space: { name: 'Mandigo Arena' } } }
 
     context 'when the record exists' do
-      before { put "/api/spaces/#{space_id}", params: valid_attributes }
+      before { put "/api/spaces/#{space_id}", params: valid_attributes, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
@@ -99,7 +101,7 @@ RSpec.describe 'Spaces API', type: :request do
   # Test suite for DELETE /spaces/:id
   describe 'DELETE /spaces/:id' do
     before {
-      delete "/api/spaces/#{space_id}"
+      delete "/api/spaces/#{space_id}", headers: authenticated_header(user)
     }
 
     it 'returns status code 204' do
@@ -109,7 +111,7 @@ RSpec.describe 'Spaces API', type: :request do
 
   # Test suite for space_names
   describe 'GET /api/spaces/space_names' do
-    before { get '/api/spaces/space_names' }
+    before { get '/api/spaces/space_names', headers: authenticated_header(user), as: :json }
 
     it 'returns spaces ONLY NAMES' do
       # Note `json` is a custom helper to parse JSON responses

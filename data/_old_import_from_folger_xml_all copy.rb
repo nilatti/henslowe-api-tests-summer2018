@@ -1,6 +1,6 @@
 # before importing, you must remove the TEI tags from the xml document and replace them with <root> tags. Also, make a character called "Could Not Find Character" with xml_id: "CouldNotFindCharacter" in the xml document
 
-class ImportFromFolgerXmlAll
+class OldImportFromFolgerXmlAll
   attr_accessor :characters,
     :character_groups,
     :current_act,
@@ -34,7 +34,6 @@ class ImportFromFolgerXmlAll
     @words = []
   end
 
-
   def run
     puts "started run at #{Time.current()}"
     build_play
@@ -55,15 +54,7 @@ class ImportFromFolgerXmlAll
     check_on_stages(french_scenes: @play.french_scenes)
   end
 
-  def build_acts(
-    play:,
-    parsed_xml:,
-    global_tracking_of_current_act: @current_act,
-    global_tracking_of_play_characters: @db_characters,
-    global_tracking_of_play_character_groups: @db_character_groups,
-    global_tracking_of_current_scene: @current_scene,
-    global_tracking_of_current_french_scene: @current_french_scene
-  )
+  def build_acts(play:, parsed_xml:, global_tracking_of_current_act: @current_act)
     puts "build acts called"
     @parsed_xml.xpath('//div1').each do |act|
       puts "building act #{act.attr('xml:id')}"
@@ -90,30 +81,18 @@ class ImportFromFolgerXmlAll
               play_id: play.id
             )
           end
-          build_scene(
-            act: global_tracking_of_current_act,
-            scene: scene,
-            global_tracking_of_play_characters: global_tracking_of_play_characters,
-            global_tracking_of_play_character_groups: global_tracking_of_play_character_groups,
-            global_tracking_of_current_scene: global_tracking_of_current_scene,
-            global_tracking_of_current_french_scene: global_tracking_of_current_french_scene
-          )
+          build_scene(act: global_tracking_of_current_act, scene: scene)
         end
       end
     end
     return global_tracking_of_current_act
   end
 
-  def build_character(
-      character:,
-      play:,
-      global_tracking_of_play_character_groups: @character_groups,
-      global_tracking_of_play_characters: @characters
-    )
+  def build_character(character:, play:, global_tracking_of_character_groups: @character_groups)
     character_group = ''
     if character.attr('corresp')
       corresp_string = character.attr('corresp').to_s.sub('#','')
-      character_group = global_tracking_of_play_character_groups.find {|cg| cg.xml_id == corresp_string}
+      character_group = global_tracking_of_character_groups.find {|cg| cg.xml_id == corresp_string}
     end
     name = ''
     unless (character.xpath('persName/name').text).blank?
@@ -130,50 +109,39 @@ class ImportFromFolgerXmlAll
       xml_id: character.attr('xml:id')
     )
     if character_group.class == CharacterGroup
+      puts (" character group is #{character_group.xml_id}")
       character.character_group = character_group
     end
-    global_tracking_of_play_characters << character
+    @characters << character
     return character
   end
 
-  def build_character_group(character_group:, play:, global_tracking_of_play_character_groups: @character_groups)
+  def build_character_group(character_group:, play:, global_tracking_of_character_groups: @character_groups)
     character_group = CharacterGroup.new(
       corresp: character_group.attr('corresp'),
       play_id: play.id,
       xml_id: character_group.attr('xml:id')
     )
-    global_tracking_of_play_character_groups << character_group
+    global_tracking_of_character_groups << character_group
     return character_group
   end
 
-  def build_characters(
-      play:,
-      global_parsed_xml: @parsed_xml,
-      global_tracking_of_play_characters: @characters,
-      global_tracking_of_play_character_groups: @character_groups
-    )
-    character_groups = global_parsed_xml.xpath('//personGrp')
-    character_groups.each {|character_group| build_character_group(character_group: character_group, play: play, global_tracking_of_play_character_groups: global_tracking_of_play_character_groups)}
-    CharacterGroup.import global_tracking_of_play_character_groups
-    global_tracking_of_play_character_groups = play.character_groups
-    characters = global_parsed_xml.xpath('//person')
-    characters.each{|character| build_character(character: character, play: play, global_tracking_of_play_character_groups: global_tracking_of_play_character_groups, global_tracking_of_play_characters: global_tracking_of_play_characters)}
-    Character.import global_tracking_of_play_characters
-    global_tracking_of_play_characters = play.characters
+  def build_characters(play:, global_tracking_of_characters: @characters, global_tracking_of_character_groups: @character_groups)
+    character_groups = @parsed_xml.xpath('//personGrp')
+    character_groups.each {|character_group| build_character_group(character_group: character_group, play: play)}
+    CharacterGroup.import global_tracking_of_character_groups
+    global_tracking_of_character_groups = @play.character_groups
+    characters = @parsed_xml.xpath('//person')
+    characters.each{|character| build_character(character: character, play: play)}
+    Character.import global_tracking_of_characters
+    global_tracking_of_characters = @play.characters
   end
 
-  def build_french_scene(
-    french_scene_number:,
-    scene:,
-    play: @play,
-    global_tracking_of_current_french_scene: @current_french_scene
-  )
-    puts "building french scene!"
-    global_tracking_of_current_french_scene = FrenchScene.create(
+  def build_french_scene(french_scene_number:, scene:)
+    @current_french_scene = FrenchScene.create(
       number: french_scene_number,
       scene: scene
     )
-    return global_tracking_of_current_french_scene
   end
 
   def build_header(item:)
@@ -238,6 +206,48 @@ class ImportFromFolgerXmlAll
     end
   end
 
+  def build_play
+    synopsis = @parsed_xml.xpath('//div[@type="synopsis"]') || ''
+    title = @parsed_xml.xpath('//titleStmt/title').text
+    author = Author.find_by(last_name: 'Shakespeare') || ''
+    text_notes = "Adapted from the Folger Digital Texts, edited by "
+    editors = @parsed_xml.xpath('//titleStmt/editor').map(&:text).join(', ')
+    text_notes << editors
+    @play = Play.create(author: author, canonical: true, synopsis: synopsis, text_notes: text_notes, title: title)
+  end
+
+  def build_scene(
+      act:, 
+      scene:, 
+      global_tracking_of_current_characters_on_stage: @current_characters_onstage,
+      global_tracking_of_current_french_scene: @current_french_scene,
+      global_tracking_of_current_scene: @current_scene
+    )
+    global_tracking_of_current_characters_on_stage = []
+    scene_number = scene.attr('n') || 0
+    heading = build_header(item: scene.at_xpath('head'))
+    global_tracking_of_current_scene = Scene.create(
+      act: act,
+      heading: heading,
+      number: scene_number
+    )
+    build_french_scene(french_scene_number: 'a', scene: global_tracking_of_current_scene)
+    stage_directions = [] #need to grab all stage directions so that we don't make extra french scenes. The scene autocreates the first french scene and we don't want one made from the final exit.
+    scene.traverse do |node|
+      if node.matches?('stage')
+        stage_directions << node
+      end
+    end
+    scene.children.select(&:element?).each do |item|
+      if item.matches?('stage')
+        if (item != stage_directions.first && item != stage_directions.last) && (item.attr('type') === 'entrance' || item.attr('type') === 'exit') #if it's not the first or last entrance or exit, let's make a french scene!
+          build_french_scene(french_scene_number: global_tracking_of_current_french_scene.number.next, scene: global_tracking_of_current_scene)
+        end
+      end
+      process_item(item)
+    end
+    return global_tracking_of_current_scene
+  end
 
   def build_on_stages(french_scene:, characters:, global_tracking_of_on_stages: @on_stages) #expect characters from parser, so [0] = characters, [1] = character groups
     characters.flatten!(4)
@@ -254,72 +264,6 @@ class ImportFromFolgerXmlAll
     return global_tracking_of_on_stages
   end
 
-  def build_play(global_parsed_xml: @parsed_xml, global_play: @play)
-    synopsis = global_parsed_xml.xpath('//div[@type="synopsis"]') || ''
-    title = global_parsed_xml.xpath('//titleStmt/title').text
-    author = Author.find_by(last_name: 'Shakespeare') || ''
-    text_notes = "Adapted from the Folger Digital Texts, edited by "
-    editors = global_parsed_xml.xpath('//titleStmt/editor').map(&:text).join(', ')
-    text_notes << editors
-    global_play = Play.create(author: author, canonical: true, synopsis: synopsis, text_notes: text_notes, title: title)
-    return global_play
-  end
-
-  def build_scene(
-    act:,
-    scene:,
-    global_tracking_of_current_characters_on_stage: @current_characters_onstage,
-    global_tracking_of_current_french_scene: @current_french_scene,
-    global_tracking_of_current_scene: @current_scene,
-    global_tracking_of_play_characters: @db_characters,
-    global_tracking_of_play_character_groups: @db_character_groups,
-    play: @play
-    )
-    global_tracking_of_current_characters_on_stage = []
-    scene_number = scene.attr('n') || 0
-    heading = build_header(item: scene.at_xpath('head'))
-    puts "header is #{heading}"
-    global_tracking_of_current_scene = Scene.create(
-      act: act,
-      heading: heading,
-      number: scene_number
-    )
-    puts "current scene is #{global_tracking_of_current_scene.number}"
-    global_tracking_of_current_french_scene = build_french_scene(
-      french_scene_number: 'a',
-      scene: global_tracking_of_current_scene,
-      play: @play,
-      global_tracking_of_current_french_scene: global_tracking_of_current_french_scene
-    )
-    stage_directions = [] #need to grab all stage directions so that we don't make extra french scenes. The scene autocreates the first french scene and we don't want one made from the final exit.
-    scene.traverse do |node|
-      if node.matches?('stage')
-        stage_directions << node
-      end
-    end
-    scene.children.select(&:element?).each do |item|
-      if item.matches?('stage')
-        puts "item is stage direction"
-        if (item != stage_directions.first && item != stage_directions.last) && (item.attr('type') === 'entrance' || item.attr('type') === 'exit') #if it's not the first or last entrance or exit, let's make a french scene!
-          puts "it's not first or last and it's an entrance or exit, so let's make a french scene"
-          global_tracking_of_current_french_scene = build_french_scene(
-            french_scene_number: global_tracking_of_current_french_scene.number.next,
-            scene: global_tracking_of_current_scene, play: play
-          )
-        end
-      end
-      process_item(
-        item,
-        play: play,
-        global_tracking_of_play_characters: global_tracking_of_play_characters,
-        global_tracking_of_play_character_groups: global_tracking_of_play_character_groups,
-        global_tracking_of_current_french_scene: global_tracking_of_current_french_scene
-      )
-    end
-    return global_tracking_of_current_scene
-  end
-
-
   def build_sound_cue(french_scene:, item:)
     content = extract_content(item: item)
     SoundCue.create(
@@ -332,22 +276,19 @@ class ImportFromFolgerXmlAll
     )
   end
 
-  def build_speech(french_scene:, item:, global_tracking_of_current_character: @current_character, global_tracking_of_play_characters: @db_characters,
-    global_tracking_of_play_character_groups: @db_character_groups)
+  def build_speech(french_scene:, item:, global_tracking_of_current_character: @current_character)
     global_tracking_of_current_character = []
-    character_parser = extract_characters_from_xml_id_string(xml_ids: item.attr('who'), global_tracking_of_play_characters: global_tracking_of_play_characters, global_tracking_of_play_character_groups: global_tracking_of_play_character_groups)
+    character_parser = extract_characters_from_xml_id_string(xml_ids: item.attr('who'))
     global_tracking_of_current_character = character_parser.flatten!(3)
   end
 
   def build_stage_direction(
-    item:,
-    global_tracking_of_current_french_scene: @french_scene,
-    global_tracking_of_stage_directions: @stage_directions,
-    global_tracking_of_play_characters: @db_characters,
-    global_tracking_of_play_character_groups: @db_character_groups
+      item:, 
+      french_scene:, 
+      global_tracking_of_current_french_scene: @french_scene, 
+      global_tracking_of_stage_directions: @stage_directions
     )
-    character_parser = extract_characters_from_xml_id_string(xml_ids: item.attr('who'), global_tracking_of_play_characters: global_tracking_of_play_characters,
-    global_tracking_of_play_character_groups: global_tracking_of_play_character_groups).flatten!
+    character_parser = extract_characters_from_xml_id_string(xml_ids: item.attr('who')).flatten!
     content = extract_content(item: item)
     if item.attr('type') == 'entrance' || item.attr('type') == 'exit'
       track_onstage_characters(french_scene: global_tracking_of_current_french_scene, stage_direction: item, characters: character_parser)
@@ -357,11 +298,12 @@ class ImportFromFolgerXmlAll
     if character_parser && character_parser.size > 0
       character_parser.each {|char| char.is_a?(Character) ? characters << char : character_groups << char }
     end
+    
     stage_direction = StageDirection.new(
       characters: characters,
       character_groups: character_groups,
       original_content: content,
-      french_scene_id: global_tracking_of_current_french_scene.id,
+      french_scene_id: french_scene.id,
       number: item.attr('n'),
       kind: item.attr('type'),
       xml_id: item.attr('xml:id')
@@ -370,7 +312,7 @@ class ImportFromFolgerXmlAll
     return stage_direction
   end
 
-  def build_word(word:, global_tracking_of_words: @words, play: @play)
+  def build_word(word:, global_tracking_of_words: @words)
     kind = ''
     if word.matches?('w')
       kind = 'word'
@@ -383,7 +325,7 @@ class ImportFromFolgerXmlAll
       content: word.text,
       line_number: word.attr('n'),
       kind: kind,
-      play_id: play.id,
+      play_id: @play.id,
       xml_id: word.attr('xml:id')
     )
     global_tracking_of_words << new_word
@@ -441,22 +383,15 @@ class ImportFromFolgerXmlAll
   end
 
   def determine_type_of_item(
-      item:,
-      global_tracking_of_current_character: @current_character,
-      global_tracking_of_current_french_scene: @current_french_scene,
-      global_tracking_of_play_character_groups: @db_character_groups,
-      global_tracking_of_play_characters: @db_characters,
-      play: @play
-    )
+    french_scene:, 
+    item:, 
+    global_tracking_of_current_character: @current_character,
+    global_tracking_of_current_french_scene: @current_french_scene
+  )
     if item.matches?('sp')
       build_speech(french_scene: global_tracking_of_current_french_scene, item: item)
     elsif item.matches?('stage')
-      build_stage_direction(
-        global_tracking_of_current_french_scene: global_tracking_of_current_french_scene,
-        item: item,
-        global_tracking_of_play_characters: global_tracking_of_play_characters,
-        global_tracking_of_play_character_groups: global_tracking_of_play_character_groups
-      )
+      build_stage_direction(french_scene: global_tracking_of_current_french_scene, item: item)
     elsif item.matches?('sound')
       build_sound_cue(french_scene: global_tracking_of_current_french_scene, item: item)
     elsif item.matches?('head')
@@ -464,16 +399,15 @@ class ImportFromFolgerXmlAll
     elsif item.matches?('milestone') && (item.attr('unit') === 'ftln' || item.attr('unit') === 'line')
       build_line(character: global_tracking_of_current_character, french_scene: global_tracking_of_current_french_scene, line: item)
     elsif item.matches?('w') || item.matches?('c') || item.matches?('pc') || item.matches?('speaker')
-      build_word(word: item, play: play)
-    elsif item.matches?('lb') || item.matches?('q') || item.matches?('foreign') || item.matches?('ab') || item.matches?('seg')||item.matches?('label') #all junk we don't need to track, just get the children.
-      puts 'this is not one of those'
+      build_word(word: item)
+    elsif item.matches?('lb') || item.matches?('q') || item.matches?('foreign') || item.matches?('ab') ||     item.matches?('seg')||item.matches?('label') #all junk we don't need to track, just get the children.
     else
       puts "couldn't match item #{item}"
     end
   end
 
   def extract_characters_from_xml_id_string(
-    xml_ids:,
+    xml_ids:, 
     global_tracking_of_play_characters: @db_characters,
     global_tracking_of_play_character_groups: @db_character_groups
     ) #should return array that contains two arrays character_parser = [[characters], [character_groups]]
@@ -481,7 +415,7 @@ class ImportFromFolgerXmlAll
     characters = []
     character_groups = []
     xml_id_arr = xml_ids.to_s.split(' ')
-
+    
     xml_id_arr.each do |xml_id|
       xml_id.sub!('#', '')
       character = global_tracking_of_play_characters.find { |c| c.xml_id == xml_id }
@@ -495,7 +429,7 @@ class ImportFromFolgerXmlAll
         characters << global_tracking_of_play_characters.find { |character| character.xml_id == 'CouldNotFindCharacter' }
       end
     end
-    character_parser << characters
+    character_parser << characters 
     character_parser << character_groups
     return character_parser
   end
@@ -517,37 +451,20 @@ class ImportFromFolgerXmlAll
       xml_word = @parsed_xml.at_xpath("//*[@xml:id=\"#{corresp}\"]")
     end
   end
-  def process_item(
-    item,
-    global_tracking_of_current_french_scene: @current_french_scene,
-    play: @play,
-    global_tracking_of_play_characters: @db_characters,
-    global_tracking_of_play_character_groups: @db_character_groups
-  )
-    determine_type_of_item(
-      item: item,
-      play: play,
-      global_tracking_of_play_characters: global_tracking_of_play_characters,
-      global_tracking_of_play_character_groups: global_tracking_of_play_character_groups,
-      global_tracking_of_current_french_scene: global_tracking_of_current_french_scene
-    )
+
+  def process_item(item)
+    determine_type_of_item(french_scene: @current_french_scene, item: item)
     if verify_no_more_children(item)
       return
     else
-      item.children.select(&:element?).each {|child| process_item(
-        child,
-        play: play,
-        global_tracking_of_play_characters: global_tracking_of_play_characters,
-        global_tracking_of_play_character_groups: global_tracking_of_play_character_groups,
-        global_tracking_of_current_french_scene: global_tracking_of_current_french_scene
-      )}
+      item.children.select(&:element?).each {|child| process_item(child)}
     end
   end
 
   def track_onstage_characters(
-    french_scene:,
-    stage_direction:,
-    characters:,
+    french_scene:, 
+    stage_direction:, 
+    characters:, 
     global_tracking_of_current_characters_on_stage: @current_characters_onstage
   )
     if stage_direction.attr('type') == 'entrance'
@@ -562,7 +479,6 @@ class ImportFromFolgerXmlAll
     end
     global_tracking_of_current_characters_on_stage.uniq!
     build_on_stages(french_scene: french_scene, characters: global_tracking_of_current_characters_on_stage)
-    return global_tracking_of_current_characters_on_stage
   end
 
   def verify_no_more_children(item)

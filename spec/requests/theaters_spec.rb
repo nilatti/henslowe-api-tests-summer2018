@@ -2,13 +2,14 @@ require 'rails_helper'
 
 RSpec.describe 'theaters API', type: :request do
   # initialize test data
+  include ApiHelper
   let!(:theaters) { create_list(:theater, 10, :has_spaces) }
   let(:theater_id) { theaters.first.id }
-
+  let!(:user) { create(:user)}
   # Test suite for GET /theaters
   describe 'GET /theaters' do
     # make HTTP get request before each example
-    before { get '/api/theaters' }
+    before { get '/api/theaters', headers: authenticated_header(user) }
 
     it 'returns theaters' do
       # Note `json` is a custom helper to parse JSON responses
@@ -23,7 +24,7 @@ RSpec.describe 'theaters API', type: :request do
 
   # Test suite for GET /theaters/:id
   describe 'GET api/theaters/:id' do
-    before { get "/api/theaters/#{theater_id}" }
+    before { get "/api/theaters/#{theater_id}", headers: authenticated_header(user) }
     context 'when the record exists' do
       it 'returns the theater' do
         expect(json).not_to be_empty
@@ -58,7 +59,7 @@ RSpec.describe 'theaters API', type: :request do
     let(:valid_attributes) { { theater: { name: 'The Great American Theater Company' } } }
 
     context 'when the request is valid' do
-      before { post '/api/theaters', params: valid_attributes }
+      before { post '/api/theaters', params: valid_attributes, headers: authenticated_header(user), as: :json }
 
       it 'creates a theater' do
         expect(json['name']).to eq('The Great American Theater Company')
@@ -70,7 +71,7 @@ RSpec.describe 'theaters API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/theaters', params: { theater: { address: 'Failure' } } }
+      before { post '/api/theaters', params: { theater: { address: 'Failure' } }, headers: authenticated_header(user), as: :json }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -88,7 +89,7 @@ RSpec.describe 'theaters API', type: :request do
     let(:valid_attributes) { { theater: { name: 'The Great American Theater Company' } } }
 
     context 'when the record exists' do
-      before { put "/api/theaters/#{theater_id}", params: valid_attributes }
+      before { put "/api/theaters/#{theater_id}", params: valid_attributes, headers: authenticated_header(user), as: :json}
 
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
@@ -107,7 +108,7 @@ RSpec.describe 'theaters API', type: :request do
 
   # Test suite for theater_names
   describe 'GET /api/theaters/theater_names' do
-    before { get '/api/theaters/theater_names' }
+    before { get '/api/theaters/theater_names', headers: authenticated_header(user) }
 
     it 'returns theaters ONLY NAMES' do
       # Note `json` is a custom helper to parse JSON responses

@@ -5,11 +5,13 @@ class SoundCuesController < ApiController
   # GET /sound_cues.json
   def index
     @sound_cues = SoundCue.all
+    render json: @sound_cues
   end
 
   # GET /sound_cues/1
   # GET /sound_cues/1.json
   def show
+    render json: @sound_cue
   end
 
   # POST /sound_cues
@@ -48,6 +50,6 @@ class SoundCuesController < ApiController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def sound_cue_params
-      params.require(:sound_cue).permit(:xml_id, :line_number, :type, :french_scene_id, :notes)
+      params.require(:sound_cue).permit(:xml_id, :line_number, :french_scene_id, :notes, :original_content, :new_content, :kind,)
     end
 end
