@@ -83,7 +83,7 @@ class CountLines
   def import_line_counts(updated_lines:)
     begin Line.upsert_all(updated_lines)
     rescue
-      print 'problem upserting lines'
+      puts 'problem upserting lines'
     end
   end
 

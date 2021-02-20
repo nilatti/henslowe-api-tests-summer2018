@@ -5,7 +5,12 @@ FactoryBot.define do
     act
 
     after(:create) do |scene|
-      create_list(:french_scene, 3, scene: scene)
+      fs_number = 'a'
+      create_list(:french_scene, 3, scene: scene) do |french_scene|
+        french_scene.number = fs_number 
+        fs_number.next!
+        french_scene.save
+      end
     end
   end
 end

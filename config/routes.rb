@@ -88,7 +88,7 @@ Rails.application.routes.draw do
     resources :character_groups
     resources :scenes do
       resources :rehearsals
-      collection do
+      member do
         get :scene_script
       end
       resources :french_scenes
@@ -96,7 +96,7 @@ Rails.application.routes.draw do
     resources :french_scenes do
       resources :rehearsals
       resources :lines
-      collection do
+      member do
         get :french_scene_script
       end
       resources :entrance_exits

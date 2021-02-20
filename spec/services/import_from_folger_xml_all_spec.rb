@@ -208,7 +208,6 @@ RSpec.describe ImportFromFolgerXmlAll, type: :service do
     act = build(:act)
     scene = @xml.xpath('//div2')[1]
     test_scene = @import.build_scene(act: act, scene: scene, play: @play, global_tracking_of_play_characters: @characters, global_tracking_of_play_character_groups: @character_groups)
-    puts test_scene
     expect(test_scene.act_id).to eq(act.id)
     expect(test_scene.heading).to eq('Scene 2')
     expect(test_scene.french_scenes.size).to eq(3)

@@ -169,6 +169,7 @@ RSpec.describe 'Rehearsals API' do
 
   # Test suite for DELETE /rehearsals/:id
   describe 'DELETE /rehearsals/:id' do
+    
     before { delete "/api/productions/#{production.id}/rehearsals/#{id}", headers: authenticated_header(user) }
 
     it 'returns status code 204' do
@@ -176,3 +177,4 @@ RSpec.describe 'Rehearsals API' do
     end
   end
 end
+

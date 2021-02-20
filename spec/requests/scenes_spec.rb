@@ -9,6 +9,11 @@ RSpec.describe 'Scenes API' do
   let!(:act_id) { play.acts.first.id }
   let!(:id) { play.acts.first.scenes.first.id }
 
+  let!(:french_scene) { play.acts.first.scenes.first.french_scenes.first }
+  let!(:sound_cues) {create_list(:sound_cue, 3, french_scene: french_scene)}
+  let!(:lines) {create_list(:line, 10, french_scene: french_scene)}
+  let!(:stage_directions) {create_list(:stage_direction, 9, french_scene: french_scene)}
+
   # Test suite for GET /acts/:act_id/scenes
   describe 'GET api/acts/:act_id/scenes' do
     before {
@@ -123,6 +128,20 @@ RSpec.describe 'Scenes API' do
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
+    end
+  end
+  describe 'gets scene script' do
+    before { get "/api/scenes/#{id}/scene_script", headers: authenticated_header(user), params: {scene: id} }
+    it 'returns status 200' do
+      expect(response).to have_http_status(200)
+    end
+    it 'returns all the info' do
+      expect(json['french_scenes'].size).to eq(3)
+      expect(json['french_scenes'][0]['id']).to eq(french_scene.id)
+      expect(json['french_scenes'][0]['sound_cues'].size).to eq(3)
+      expect(json['french_scenes'][0]['lines'].size).to eq(10)
+      expect(json['french_scenes'][0]['stage_directions'].size).to eq(9)
+      expect(json['french_scenes'][0]['lines'][0]['character']).not_to be_empty
     end
   end
 end

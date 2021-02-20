@@ -1,5 +1,5 @@
 class FrenchScenesController < ApiController
-  before_action :set_french_scene, only: [:show, :update, :destroy]
+  before_action :set_french_scene, only: [:show, :update, :destroy, :french_scene_script]
   before_action :set_scene
 
   # GET /scenes
@@ -75,16 +75,21 @@ class FrenchScenesController < ApiController
   end
 
   def french_scene_script
-    @french_scene = FrenchScene.includes(:sound_cues, lines: [:character], stage_directions: [:characters, :character_groups]).find(params[:french_scene])
-
-    render json: @french_scene.as_json(include:
-      [ :sound_cues,
-        stage_directions: {
-          include: [:characters, :character_groups]
-        },
+    render json: @french_scene.as_json(
+      include: [
+        :sound_cues,
         lines: {
-          include: [:character, :words]
+          include: [
+            :character,
+            :character_group
+          ]
         },
+        stage_directions: {
+          include: [
+            :characters,
+            :character_groups
+          ]
+        }
       ],
       methods: :pretty_name
       )

@@ -1,6 +1,6 @@
 class ActsController < ApiController
   before_action :authenticate_user!
-  before_action :set_act, only: [:show, :update, :destroy]
+  before_action :set_act, only: [:show, :update, :destroy, :act_script]
   before_action :set_play
   # GET /acts
   def index
@@ -44,25 +44,23 @@ class ActsController < ApiController
   end
 
   def act_script
-    @act = Act.includes(scenes: [french_scenes: [:stage_directions, :sound_cues, lines: [:character, :words]]]).find(params[:act])
-
     render json: @act.as_json(include:
       [
         scenes: {
-            include: {
-              french_scenes: {
-                include: [
-                  :stage_directions,
-                  :sound_cues,
-                  lines: {
-                    include: [:character, :words]
-                  }
-                ]
-              }
+          include: [
+            french_scenes: {
+              include: [
+                :stage_directions,
+                :sound_cues,
+                lines: {
+                  include: [:character, :words]
+                }
+              ]
             }
-          }
-        ]
-      )
+          ]
+        }
+      ]
+    )
   end
 
   private

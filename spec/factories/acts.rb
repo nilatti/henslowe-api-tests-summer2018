@@ -5,7 +5,10 @@ FactoryBot.define do
     play
 
     after(:create) do |act|
-      create_list(:scene, 3, act: act)
+      create_list(:scene, 3, act: act) do |scene, i|
+        scene.number = (i + 1)
+        scene.save
+      end
     end
   end
 end

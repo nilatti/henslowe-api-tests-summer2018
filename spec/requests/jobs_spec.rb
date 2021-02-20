@@ -4,8 +4,9 @@ RSpec.describe 'jobs API', type: :request do
   # initialize test data
   include ApiHelper
   let!(:user) { create(:user)}
-  let!(:jobs) { create_list(:job, 10) }
-  let(:job_id) { jobs.first.id }
+  let!(:jobs) { create_list(:job, 8) }
+  let!(:job_id) { jobs.first.id }
+  let!(:production) { create(:production)}
 
   # Test suite for GET /jobs
   describe 'GET /jobs' do
@@ -13,9 +14,10 @@ RSpec.describe 'jobs API', type: :request do
     before { get '/api/jobs', headers: authenticated_header(user), as: :json }
 
     it 'returns jobs' do
+      puts(Job.all.size)
       # Note `json` is a custom helper to parse JSON responses
       expect(json).not_to be_empty
-      expect(json.size).to eq(10)
+      expect(json.size).to eq(19)
     end
 
     it 'returns status code 200' do
@@ -134,6 +136,59 @@ RSpec.describe 'jobs API', type: :request do
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
+    end
+  end
+
+  describe 'get actors for production' do
+    before { 
+      create_list(:job, 2, :actor_job, production: production)
+      # let!(:production_auditioner_jobs) {create_list(:job, 3, :auditioner_job, production: production)}
+      # let!(:theater) { create(:theater)}
+      # let!(:production_actor_jobs) {create_list(:job, 3, :actor_job, theater: theater)}
+      # let!(:production_auditioner_jobs) {create_list(:job, 3, :auditioner_job, theater: theater)}
+      get '/api/jobs/get_actors_for_production',headers: authenticated_header(user), as: :json, params: { production: production.id}
+    }
+    it 'returns successfully' do 
+      expect(response).to have_http_status(200)
+    end
+    it 'returns all the relevant jobs' do 
+      # puts(Production.find(production.id).jobs.size)
+      puts(production.id)
+      # production_actor_jobs.each {|p| puts ("#{p.production_id}\t#{p.specialization_id}") }
+      expect(json.size).to eq(2)
+      job = json[0]
+      expect(job['production_id']).to eq(production.id)
+      expect(Specialization.find(job['specialization_id']).title).to eq('Actor')
+    end
+  end
+
+  describe 'get actors and auditioners for production' do
+    before { get '/api/jobs/get_actors_and_auditioners_for_production',headers: authenticated_header(user), as: :json, params: { production: production.id}}
+    it 'returns successfully' do 
+      expect(response).to have_http_status(200)
+    end
+    it 'returns all the relevant jobs' do 
+      expect(json.size).to eq(5)
+      expect(json[0]['production_id']).to eq(production.id)
+      expect(Specialization.find(json[0]['specialization_id']).title).to eq('Actor')
+      expect(Specialization.find(json[4]['specialization_id']).title).to eq('Auditioner')
+    end
+  end
+
+
+  describe 'gets actors and auditioners for theater' do
+    
+    before { 
+      get '/api/jobs/get_actors_and_auditioners_for_theater',headers: authenticated_header(user), as: :json, params: { theater: theater.id}}
+    it 'returns successfully' do 
+      expect(response).to have_http_status(200)
+    end
+    it 'returns all the relevant jobs' do 
+      expect(json.size).to eq(6)
+      job = json[0]
+      expect(job['theater_id']).to eq(theater.id)
+      expect(Specialization.find(job['specialization_id']).title).to eq('Actor')
+      expect(Specialization.find(json[5]['specialization_id']).title).to eq('Auditioner')
     end
   end
 end

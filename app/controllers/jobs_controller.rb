@@ -81,7 +81,13 @@ class JobsController < ApiController
     json_response(
       @jobs.as_json(
         include: [
-          :user,
+          user: {
+            only: [
+              :first_name,
+              :last_name,
+              :preferred_name
+            ]
+          },
         ]
       )
     )
@@ -92,7 +98,13 @@ class JobsController < ApiController
     json_response(
       @jobs.as_json(
         include: [
-          :user,
+          user: {
+            only: [
+              :first_name,
+              :last_name,
+              :preferred_name
+            ]
+          },
         ]
       )
     )
@@ -103,7 +115,13 @@ class JobsController < ApiController
     json_response(
       @jobs.as_json(
         include: [
-          :user,
+          user: {
+            only: [
+              :first_name,
+              :last_name,
+              :preferred_name
+            ]
+          },
         ]
       )
     )
