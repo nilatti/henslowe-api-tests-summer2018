@@ -28,10 +28,7 @@ class FrenchScenesController < ApiController
   def create
     @french_scene = FrenchScene.new(french_scene_params)
     if @french_scene.save
-      if params[:character_ids]
-        build_on_stages(character_ids: params[:character_ids], french_scene: @french_scene)
-      end
-      json_response(@french_scene.as_json(
+        json_response(@french_scene.as_json(
           include: [
             :characters,
             on_stages: {
@@ -49,9 +46,6 @@ class FrenchScenesController < ApiController
 
   # PATCH/PUT /french_scenes/1
   def update
-    if french_scene_params[:character_ids]
-      build_on_stages(character_ids: french_scene_params[:character_ids], french_scene: @french_scene)
-    end
     if @french_scene.update(french_scene_params)
       json_response(@french_scene.as_json(
           include: [
@@ -97,12 +91,16 @@ class FrenchScenesController < ApiController
 
   private
 
-    def build_on_stages(character_ids:, french_scene:)
-      character_ids.each do |character_id|
-        on_stage = OnStage.new(character_id: character_id, french_scene_id: french_scene.id)
-        on_stage.save
-      end
-    end
+    # def build_on_stages(character_ids: [], french_scene:, character_group_ids: [])
+    #   character_ids && character_ids.each do |character_id|
+    #     on_stage = OnStage.new(character_id: character_id, french_scene_id: french_scene.id)
+    #     on_stage.save
+    #   end
+    #   character_group_ids && character_group_ids.each do |character_group_id|
+    #     on_stage = OnStage.new(character_group_id: character_group_id, french_scene_id: french_scene.id)
+    #     on_stage.save
+    #   end
+    # end
     # Use callbacks to share common setup or constraints between actions.
     def set_scene
       if params[:scene_id]
@@ -126,6 +124,7 @@ class FrenchScenesController < ApiController
         :start_page,
         :summary,
         character_ids: [],
+        character_group_ids: [],
         entrance_exits_attributes: [
           :french_scene_id,
           :page,

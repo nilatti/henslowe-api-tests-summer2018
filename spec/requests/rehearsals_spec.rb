@@ -67,7 +67,7 @@ RSpec.describe 'Rehearsals API' do
     end
   end
 
-  describe 'GET api/acts/:ActiveAdmin_id/rehearsals' do
+  describe 'GET api/acts/:act_id/rehearsals' do
     before {
       act_id = acts.first.id
       get "/api/acts/#{act_id}/rehearsals", headers: authenticated_header(user)

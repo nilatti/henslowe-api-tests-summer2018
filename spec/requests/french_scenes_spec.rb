@@ -11,6 +11,7 @@ RSpec.describe 'French Scenes API' do
   let!(:id) { play.acts.first.scenes.first.french_scenes.first.id }
   let!(:french_scene) { play.acts.first.scenes.first.french_scenes.first }
   let!(:character) {play.characters.first}
+  let!(:character_group) {play.character_groups.first}
   let!(:on_stage) { create(:on_stage, french_scene: french_scene, character_id: character.id)}
   let!(:sound_cues) {create_list(:sound_cue, 3, french_scene: french_scene)}
   let!(:lines) {create_list(:line, 10, french_scene: french_scene)}
@@ -71,13 +72,18 @@ RSpec.describe 'French Scenes API' do
 
   # Test suite for POST /scenes/:scene_id/french_scenes
   describe 'POST /scenes/:scene_id/french_scenes' do
-    let(:valid_attributes) { { french_scene: { number: 1, scene_id: scene_id } } }
+    let(:valid_attributes) { { french_scene: { number: 1, scene_id: scene_id, character_ids: [ character.id ] } } }
 
     context 'when request attributes are valid' do
       before { post "/api/scenes/#{scene_id}/french_scenes", params: valid_attributes, headers: authenticated_header(user), as: :json}
 
       it 'returns status code 201' do
         expect(response).to have_http_status(200)
+      end
+      it 'creates an on_stage for character' do 
+        french_scene = FrenchScene.find(json['id'])
+        expect(french_scene.on_stages.size).to eq(1)
+        expect(french_scene.on_stages.last.character.id).to eq(character.id)
       end
     end
 
@@ -97,7 +103,7 @@ RSpec.describe 'French Scenes API' do
 
   # Test suite for PUT /french_scenes/:id
   describe 'PUT /api/french_scenes/:id' do
-    let(:valid_attributes) { { french_scene: { number: 'a' } } }
+    let(:valid_attributes) { { french_scene: { number: 'a', character_ids: [ character.id ], character_group_ids: [character_group.id] } } }
 
     before { put "/api/french_scenes/#{id}", params: valid_attributes, headers: authenticated_header(user), as: :json }
 
@@ -109,6 +115,15 @@ RSpec.describe 'French Scenes API' do
       it 'updates the french scene' do
         updated_french_scene = FrenchScene.find(id)
         expect(updated_french_scene.number).to match('a')
+        expect(updated_french_scene.characters.size).to eq(1)
+        expect(updated_french_scene.character_groups.size).to eq(1)
+      end
+
+      it 'updates the french scene to delete a character' do
+        put "/api/french_scenes/#{id}", params: { french_scene: { character_ids: [], character_group_ids: [character_group.id]}}, headers: authenticated_header(user), as: :json 
+        updated_french_scene = FrenchScene.find(id)
+        expect(updated_french_scene.characters).to be_empty
+        expect(updated_french_scene.character_groups.size).to eq(1)
       end
     end
 

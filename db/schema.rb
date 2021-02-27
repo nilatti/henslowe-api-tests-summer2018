@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_24_210910) do
+ActiveRecord::Schema.define(version: 2021_02_20_162557) do
 
   create_table "active_admin_comments", charset: "utf8", force: :cascade do |t|
     t.string "namespace"
@@ -236,6 +236,8 @@ ActiveRecord::Schema.define(version: 2021_01_24_210910) do
     t.boolean "nonspeaking", default: false
     t.bigint "character_group_id"
     t.index ["character_group_id"], name: "index_on_stages_on_character_group_id"
+    t.index ["french_scene_id", "character_group_id"], name: "index_on_stages_on_french_scene_id_and_character_group_id", unique: true
+    t.index ["french_scene_id", "character_id"], name: "index_on_stages_on_french_scene_id_and_character_id", unique: true
   end
 
   create_table "plays", charset: "utf8", force: :cascade do |t|

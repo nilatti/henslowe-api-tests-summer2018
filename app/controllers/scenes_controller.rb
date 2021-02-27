@@ -1,5 +1,5 @@
 class ScenesController < ApiController
-  before_action :set_scene, only: [:show, :update, :destroy]
+  before_action :set_scene, only: [:show, :update, :destroy, :scene_script]
   before_action :set_act
 
   # GET /scenes
@@ -40,8 +40,6 @@ class ScenesController < ApiController
   end
 
   def scene_script
-    @scene = Scene.includes(french_scenes: [:stage_directions, :sound_cues, lines: [:character, :words]]).find(params[:scene])
-
     render json: @scene.as_json(include:
       [
           french_scenes: {

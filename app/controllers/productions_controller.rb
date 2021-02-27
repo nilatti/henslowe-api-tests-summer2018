@@ -11,49 +11,6 @@ class ProductionsController < ApiController
 
   # GET /productions/1
   def show
-    @production = Production.includes(
-      :theater,
-      :stage_exits,
-      [
-        rehearsals:
-        [
-          :acts,
-          :french_scenes,
-          :scenes,
-          :users
-        ],
-        play:
-        [
-          :characters,
-          :character_groups,
-        acts: [
-          scenes: [
-            french_scenes:
-              [
-                :characters,
-                :character_groups,
-                entrance_exits:
-                [
-                  :stage_exit,
-                  :characters,
-                  :character_groups
-                ],
-                on_stages: [
-                  :character, :character_group
-                ]
-              ]
-            ]
-          ]
-        ],
-        jobs: [
-          :specialization,
-          :theater,
-          :character,
-          user: [:conflicts],
-        ]
-      ]
-    ).find(params[:id])
-
     json_response(@production.as_json(include:
         [
           :theater,
@@ -177,61 +134,15 @@ class ProductionsController < ApiController
 
   def production_names
     @productions = Production.all
-    render json: @productions.as_json(only: %i[id name], include: [:theater, :play])
+    render json: @productions.as_json(only: [:id, :name], include: [play: { only: [:id, :title]}, theater: { only: [:name, :id]}])
   end
 
   def get_productions_for_theater
     @productions = Production.where(theater: params[:theater])
-    json_response(@productions.as_json(include: [:play, :theater]))
+    json_response(@productions.as_json(include: [play: { only: :title}, theater: { only: [:name, :id]}]))
   end
 
   def get_production_with_play_text
-    @production = Production.includes(
-      :theater,
-      :stage_exits,
-      [
-        rehearsals:
-        [
-          :acts,
-          :french_scenes,
-          :scenes,
-          :users
-        ],
-        play:
-        [
-          characters: [:lines],
-          character_groups: [:lines],
-        acts: [
-          scenes: [
-            french_scenes:
-              [
-                :characters,
-                :character_groups,
-                :lines,
-                entrance_exits:
-                [
-                  :stage_exit,
-                  :characters,
-                  :character_groups
-                ],
-                on_stages: [
-                  :character, :character_group
-                ]
-              ]
-            ]
-          ]
-        ],
-        jobs: [
-          :specialization,
-          :theater,
-          user: [:conflicts],
-          character: [
-            :lines
-          ]
-        ]
-      ]
-    ).find(params[:id])
-
     json_response(@production.as_json(include:
         [
           :theater,

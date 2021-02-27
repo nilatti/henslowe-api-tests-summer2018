@@ -7,20 +7,22 @@ RSpec.describe 'Productions API' do
   # Initialize the test data
   include ApiHelper
   let!(:user) { create(:user)}
-  let!(:productions) { create_list(:production, 5) }
   let!(:theater) {create(:theater)}
+  let!(:other_theater) {create(:theater)}
   let!(:id) { productions.first.id }
   let!(:rehearsal_schedule_pattern) {
-   { "block_length": "60", 
-    "break_length": "5",
-    "days_of_week": ['Monday', 'Wednesday'], 
-    "end_date": "2020-03-20", 
-    "end_time": "17:00:00",
-    "production_id": productions.first.id, 
-    "time_between_breaks": "55", 
-    "start_date": "2020-02-20", 
-    "start_time": "12:00:00"}
-  }
+    { "block_length": "60", 
+      "break_length": "5",
+      "days_of_week": ['Monday', 'Wednesday'], 
+      "end_date": "2020-03-20", 
+      "end_time": "17:00:00",
+      "production_id": productions.first.id, 
+      "time_between_breaks": "55", 
+      "start_date": "2020-02-20", 
+      "start_time": "12:00:00"}
+    }
+    let!(:productions) { create_list(:production, 5, theater: theater) }
+    let!(:other_productions) { create_list(:production, 5, theater: other_theater) }
 
   #8 days of rehearsal, 5 hours of rehearsal time, blocks of 1 hour. Should create...... 40 rehearsal blocks?
 
@@ -36,7 +38,7 @@ RSpec.describe 'Productions API' do
       end
 
       it 'returns all productions' do
-        expect(json.size).to eq(5)
+        expect(json.size).to eq(10)
       end
     end
   end
@@ -139,6 +141,37 @@ RSpec.describe 'Productions API' do
       expect(BuildRehearsalScheduleWorker.jobs.size).to eql(0)
       expect(Rehearsal.all.size).to eq(40)
       expect(Rehearsal.all.first.production.id).to eq(id)
+    end
+  end
+
+  describe 'get /api/productions/production_names' do
+    before { get "/api/productions/production_names"}
+    it "returns 200" do
+      expect(response).to have_http_status(200)
+    end
+    it 'returns all the productions, only names and ids' do
+      expect(json.size).to eq(10)
+      production = json[0]
+      expect(production['theater']).not_to be_empty 
+      expect(production['theater']).to include("name")
+      expect(production['theater']).to include("id")
+      expect(production['theater']).not_to include("address")
+      expect(production['play']).not_to be_empty 
+      expect(production['play']).to include("title")
+      expect(production['play']).to include("id")
+      expect(production['play']).not_to include("author")
+      expect(production['play']).not_to include("acts")
+    end
+  end
+
+  describe 'get /api/productions/get_productions_for_theater' do 
+    before { get "/api/productions/get_productions_for_theater", params: {theater: theater.id}, as: :json, headers: authenticated_header(user)}
+    it 'returns 200' do
+      expect(response).to have_http_status(200)
+    end
+    it 'returns all productions for this theater, but not for other theaters' do 
+      expect(json[0]['theater']['id']).to eq(theater.id)
+      expect(json).not_to include(other_theater.id)
     end
   end
 end

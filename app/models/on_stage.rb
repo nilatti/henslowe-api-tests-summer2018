@@ -6,6 +6,8 @@ class OnStage < ApplicationRecord
 
   before_save :set_category, if: :category_unset?
   validate :check_for_french_scene_and_at_least_one_character_or_group
+  validates :character, uniqueness: { scope: :french_scene_id }, allow_blank: true, allow_nil: true
+  validates :character_group, uniqueness: { scope: :french_scene_id }, allow_blank: true, allow_nil: true
 
   def check_for_french_scene_and_at_least_one_character_or_group
     if !french_scene

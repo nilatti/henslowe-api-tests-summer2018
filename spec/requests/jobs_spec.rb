@@ -7,6 +7,7 @@ RSpec.describe 'jobs API', type: :request do
   let!(:jobs) { create_list(:job, 8) }
   let!(:job_id) { jobs.first.id }
   let!(:production) { create(:production)}
+  let!(:theater) {create(:theater)}
 
   # Test suite for GET /jobs
   describe 'GET /jobs' do
@@ -17,7 +18,7 @@ RSpec.describe 'jobs API', type: :request do
       puts(Job.all.size)
       # Note `json` is a custom helper to parse JSON responses
       expect(json).not_to be_empty
-      expect(json.size).to eq(19)
+      expect(json.size).to eq(8)
     end
 
     it 'returns status code 200' do
@@ -142,19 +143,12 @@ RSpec.describe 'jobs API', type: :request do
   describe 'get actors for production' do
     before { 
       create_list(:job, 2, :actor_job, production: production)
-      # let!(:production_auditioner_jobs) {create_list(:job, 3, :auditioner_job, production: production)}
-      # let!(:theater) { create(:theater)}
-      # let!(:production_actor_jobs) {create_list(:job, 3, :actor_job, theater: theater)}
-      # let!(:production_auditioner_jobs) {create_list(:job, 3, :auditioner_job, theater: theater)}
       get '/api/jobs/get_actors_for_production',headers: authenticated_header(user), as: :json, params: { production: production.id}
     }
     it 'returns successfully' do 
       expect(response).to have_http_status(200)
     end
     it 'returns all the relevant jobs' do 
-      # puts(Production.find(production.id).jobs.size)
-      puts(production.id)
-      # production_actor_jobs.each {|p| puts ("#{p.production_id}\t#{p.specialization_id}") }
       expect(json.size).to eq(2)
       job = json[0]
       expect(job['production_id']).to eq(production.id)
@@ -163,7 +157,12 @@ RSpec.describe 'jobs API', type: :request do
   end
 
   describe 'get actors and auditioners for production' do
-    before { get '/api/jobs/get_actors_and_auditioners_for_production',headers: authenticated_header(user), as: :json, params: { production: production.id}}
+    
+    before { 
+      create_list(:job, 2, :actor_job, production: production)
+      create_list(:job, 3, :auditioner_job, production: production)
+      get '/api/jobs/get_actors_and_auditioners_for_production',headers: authenticated_header(user), as: :json, params: { production: production.id}
+    }
     it 'returns successfully' do 
       expect(response).to have_http_status(200)
     end
@@ -179,6 +178,8 @@ RSpec.describe 'jobs API', type: :request do
   describe 'gets actors and auditioners for theater' do
     
     before { 
+      create_list(:job, 3, :actor_job, theater: theater)
+      create_list(:job, 3, :auditioner_job, theater: theater)
       get '/api/jobs/get_actors_and_auditioners_for_theater',headers: authenticated_header(user), as: :json, params: { theater: theater.id}}
     it 'returns successfully' do 
       expect(response).to have_http_status(200)

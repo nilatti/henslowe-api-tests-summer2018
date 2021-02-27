@@ -144,4 +144,19 @@ RSpec.describe 'Scenes API' do
       expect(json['french_scenes'][0]['lines'][0]['character']).not_to be_empty
     end
   end
+
+  describe 'gets scene script' do
+    before { get "/api/scenes/#{id}/scene_script", headers: authenticated_header(user)}
+    it 'returns status 200' do
+      expect(response).to have_http_status(200)
+    end
+    it 'returns all the french scenes' do
+      expect(json['french_scenes'].size).to eq(3)
+      expect(json['french_scenes'][0]['id']).to eq(french_scene.id)
+      expect(json['french_scenes'][0]['sound_cues'].size).to eq(3)
+      expect(json['french_scenes'][0]['lines'].size).to eq(10)
+      expect(json['french_scenes'][0]['stage_directions'].size).to eq(9)
+      expect(json['french_scenes'][0]['lines'][0]['character']).not_to be_empty
+    end
+  end
 end

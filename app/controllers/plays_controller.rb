@@ -1,7 +1,17 @@
 class PlaysController < ApiController
   before_action :authenticate_user!
   before_action :set_author, only: %i[index, create]
-  before_action :set_play, only: %i[show update destroy]
+  before_action :set_play, only: %i[
+    show 
+    update 
+    destroy 
+    play_script 
+    play_skeleton 
+    play_act_on_stages 
+    play_french_scene_on_stages 
+    play_on_stages
+    play_scene_on_stages
+  ]
   # GET /plays
   def index
     if @author
@@ -13,31 +23,6 @@ class PlaysController < ApiController
 
   # GET /plays/1
   def show
-    @play = Play.includes(
-      :author,
-        [
-          :characters,
-          :character_groups,
-          acts: [
-            scenes: [
-              french_scenes:
-                [
-                  :characters,
-                  :character_groups,
-                  entrance_exits:
-                  [
-                    :stage_exit,
-                    :characters,
-                    :character_groups
-                  ],
-                  on_stages: [
-                    :character, :character_group
-                  ]
-                ]
-              ]
-            ]
-          ]
-        ).find(params[:id])
     render json: @play.as_json(include:
       [
         :author,
@@ -125,31 +110,25 @@ class PlaysController < ApiController
   end
 
   def play_act_on_stages
-    @play = Play.includes(acts: [scenes: [french_scenes: [:on_stages]]]).find(params[:play])
     @acts = Act.play_order(@play.acts)
-    render json: @acts.as_json(methods: :on_stages)
+    render json: @acts.as_json(methods: :find_on_stages)
   end
 
   def play_french_scene_on_stages
-    @play = Play.includes(french_scenes: [:on_stages]).find(params[:play])
     @french_scenes = FrenchScene.play_order(@play.french_scenes)
     render json: @french_scenes.as_json(include: :on_stages, methods: :pretty_name)
   end
 
   def play_on_stages
-    @play = Play.includes(acts: [scenes: [french_scenes: [:on_stages]]]).find(params[:play])
     render json: @play.as_json(methods: :find_on_stages)
   end
 
   def play_scene_on_stages
-    @play = Play.includes(scenes: [french_scenes: [:on_stages]]).find(params[:play])
     @scenes = Scene.play_order(@play.scenes)
-    render json: @scenes.as_json(methods: [:pretty_name, :on_stages])
+    render json: @scenes.as_json(methods: [:pretty_name, :find_on_stages])
   end
 
   def play_script
-    @play = Play.includes(:characters, :character_groups, acts: [scenes: [french_scenes: [:stage_directions, :sound_cues, lines: [:character, :words]]]]).find(params[:play])
-
     render json: @play.as_json(include:
       [
         :characters,
@@ -176,8 +155,6 @@ class PlaysController < ApiController
   end
 
   def play_skeleton
-    @play = Play.includes(acts: [scenes: [:french_scenes]]).find(params[:play])
-
     render json: @play.as_json(include: {
       production: {only: [:lines_per_minute]},
       characters: {only: [:name, :id]},

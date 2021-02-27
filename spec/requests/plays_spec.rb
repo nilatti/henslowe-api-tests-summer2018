@@ -6,10 +6,9 @@ RSpec.describe 'Plays API' do
   include ApiHelper
   let!(:user) { create(:user)}
   let!(:author) { create(:author) }
-  let!(:plays) { create_list(:play, 5, author_id: author.id) }
-  let(:author_id) { author.id }
-  let(:id) { plays.first.id }
-
+  let!(:plays) { create_list(:play, 5, author_id: author.id, canonical: true) }
+  let!(:author_id) { author.id }
+  let!(:id) { plays.first.id }
   # Test suite for GET /authors/:author_id/plays
   describe 'GET api/authors/:author_id/plays' do
     before {
@@ -57,6 +56,28 @@ RSpec.describe 'Plays API' do
 
       it 'returns a not found message' do
         expect(response.body).to match(/Couldn't find Play/)
+      end
+    end
+  end
+
+  # Test suite for GET /plays/:id
+  describe 'GET /plays/:id' do
+    before { get "/api/plays/#{id}", headers: authenticated_header(user), as: :json }
+
+    context 'when play exists' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns the play' do
+        expect(json['id']).to eq(id)
+      end
+
+      it 'has acts, scenes, characters, and french scenes' do
+        expect(json['characters'].size).to eq(3)
+        expect(json['acts'].size).to eq(3)
+        expect(json['acts'][0]['scenes'].size).to eq(3)
+        expect(json['acts'][0]['scenes'][0]['french_scenes'].size).to eq(3)
       end
     end
   end
@@ -117,7 +138,88 @@ RSpec.describe 'Plays API' do
     end
   end
 
-  # Test suite for DELETE /authors/:id
+  describe 'get play script and skeleton' do 
+    
+    before { 
+      french_scene = plays.first.acts.first.scenes.first.french_scenes.first 
+      create_list(:line, 3, french_scene: french_scene)
+      get "/api/plays/#{id}/play_script/", headers: authenticated_header(user), as: :json 
+    }
+    it 'returns a play script' do
+      expect(json['acts'].size).to eq(3)
+      expect(json['acts'][0]['scenes'].size).to eq(3)
+      expect(json['acts'][0]['scenes'][0]['french_scenes'].size).to eq(3)
+      expect(json['acts'][0]['scenes'][0]['french_scenes'][0]).to include('lines')
+      expect(json['acts'][0]['scenes'][0]['french_scenes'][0]['lines'].size).to eq(3)
+    end
+
+    it 'returns a play skeleton' do
+      get "/api/plays/#{id}/play_skeleton/", headers: authenticated_header(user), as: :json 
+      expect(json['acts'].size).to eq(3)
+      expect(json['acts'][0]['scenes'].size).to eq(3)
+      expect(json['acts'][0]['scenes'][0]['french_scenes'].size).to eq(3)
+      expect(json['acts'][0]['scenes'][0]['french_scenes'][0]).not_to include(['lines'])
+    end
+  end
+
+  describe 'get play titles' do 
+    before { get "/api/plays/play_titles", headers: authenticated_header(user), as: :json }
+    it 'returns play titles' do
+      expect(json.size).to eq(5)
+      expect(json[0]).to include('title')
+      expect(json[0]).to include('id')
+      expect(json[0]).not_to include('acts')
+    end
+  end
+
+  describe 'verify on-stages' do 
+    before {
+      character0 = plays[0].characters[0]
+      character1 = plays[0].characters[1]
+      character_group = plays[0].character_groups[0]
+      french_scene0 = plays[0].acts[0].scenes[0].french_scenes[0]
+      french_scene1 = plays[0].acts[0].scenes[0].french_scenes[1]
+      french_scene2 = plays[0].acts[0].scenes[1].french_scenes[0]
+      french_scene3 = plays[0].acts[1].scenes[0].french_scenes[0]
+      create(:on_stage, character: character0, french_scene: french_scene0)
+      create(:on_stage, character: character1, french_scene: french_scene0)
+      create(:on_stage, character_group: character_group, character: nil, french_scene: french_scene0)
+      create(:on_stage, character: character0, french_scene: french_scene1)
+      create(:on_stage, character: character1, french_scene: french_scene1)
+      create(:on_stage, character: character1, french_scene: french_scene2)
+      create(:on_stage, character_group: character_group, character: nil, french_scene: french_scene1)
+      create(:on_stage, character: character1, french_scene: french_scene3)
+    }
+
+    it 'returns on_stages organized by acts' do
+      get "/api/plays/#{id}/play_act_on_stages/", headers: authenticated_header(user), as: :json 
+      expect(json.size).to eq(3)
+      expect(json[0]['find_on_stages'].size).to eq(3)
+      expect(json[1]['find_on_stages'].size).to eq(1)
+      expect(json[0]['find_on_stages'][0]).to include('character_id')
+      expect(json[0]['find_on_stages'][0]).to include('french_scene_id')
+    end
+
+    it 'returns on_stages organized by french_scenes' do
+      get "/api/plays/#{id}/play_french_scene_on_stages/", headers: authenticated_header(user), as: :json 
+      expect(json.size).to eq(27)
+      expect(json[0]['on_stages'].size).to eq(3)
+      expect(json[1]['on_stages'].size).to eq(3)
+    end
+
+    it 'returns on_stages organized by scenes' do
+      get "/api/plays/#{id}/play_scene_on_stages/", headers: authenticated_header(user), as: :json 
+      expect(json.size).to eq(9)
+      expect(json[0]['find_on_stages'].size).to eq(3)
+    end
+
+    it 'returns on_stages for whole play' do
+      get "/api/plays/#{id}/play_on_stages/", headers: authenticated_header(user), as: :json 
+      expect(json.size).to eq(15)
+    end
+  end
+
+  # Test suite for DELETE /plays/:id
   describe 'DELETE /authors/:id' do
     before { delete "/api/authors/#{author_id}/plays/#{id}", headers: authenticated_header(user), as: :json }
 
