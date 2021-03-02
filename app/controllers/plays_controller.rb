@@ -1,6 +1,6 @@
 class PlaysController < ApiController
   before_action :authenticate_user!
-  before_action :set_author, only: %i[index, create]
+  before_action :set_author, only: [:index, :create]
   before_action :set_play, only: %i[
     show 
     update 
@@ -15,45 +15,15 @@ class PlaysController < ApiController
   # GET /plays
   def index
     if @author
-      json_response(@author.plays.as_json(only: %i[id title]))
+      render json: PlaySerializer.new(@author.plays).serializable_hash.to_json
     else
-      json_response(Play.all.as_json(only: %i[id title]))
+      render json: PlaySerializer.new(Play.all).serializable_hash.to_json
     end
   end
 
   # GET /plays/1
   def show
-    render json: @play.as_json(include:
-      [
-        :author,
-        characters: {include: :lines},
-        character_groups: {include: :lines},
-        acts: {
-          include: {
-            scenes: {
-              include: {
-                french_scenes: {
-                  include: [
-                    :characters,
-                    :character_groups,
-                    entrance_exits: {
-                      include: [
-                          :stage_exit,
-                          :characters,
-                          :character_groups,
-                        ]
-                    },
-                    on_stages: {
-                      include: [:character, :character_group]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-        ]
-      )
+    render json: PlaySerializer.new(@play, include: [:acts, :author, :words, :characters]).serializable_hash.to_json
   end
 
   # POST /plays
@@ -174,8 +144,10 @@ class PlaysController < ApiController
   # Use callbacks to share common setup or constraints between actions.
   def set_author
     if params[:play][:author_id]
+      puts('has play params with author id')
       @author = Author.find(params[:play][:author_id])
     elsif params[:author_id]
+      puts('has author id')
       @author = Author.find(params[:author_id])
     end
   end

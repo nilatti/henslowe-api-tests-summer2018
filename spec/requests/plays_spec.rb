@@ -7,6 +7,7 @@ RSpec.describe 'Plays API' do
   let!(:user) { create(:user)}
   let!(:author) { create(:author) }
   let!(:plays) { create_list(:play, 5, author_id: author.id, canonical: true) }
+  let!(:other_author_plays) { create_list(:play, 5, canonical: true)}
   let!(:author_id) { author.id }
   let!(:id) { plays.first.id }
   # Test suite for GET /authors/:author_id/plays
@@ -17,11 +18,29 @@ RSpec.describe 'Plays API' do
 
     context 'when author exists' do
       it 'returns status code 200' do
+        puts(response.body)
         expect(response).to have_http_status(200)
       end
 
       it 'returns all author plays' do
-        expect(json.size).to eq(8)
+        expect(json['data'].size).to eq(8)
+      end
+    end
+  end
+
+  describe 'GET api/plays' do
+    before {
+      get "/api/plays", headers: authenticated_header(user), as: :json
+    }
+
+    context 'when there are plays by multiple playwrights' do
+      it 'returns status code 200' do
+        puts(response.body)
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns all plays' do
+        expect(json['data'].size).to eq(13)
       end
     end
   end
@@ -32,18 +51,19 @@ RSpec.describe 'Plays API' do
 
     context 'when play exists' do
       it 'returns status code 200' do
+        puts(response.body)
         expect(response).to have_http_status(200)
       end
 
       it 'returns the play' do
-        expect(json['id']).to eq(id)
+        expect(json['data']['id'].to_i).to eq(id)
       end
 
       it 'has acts, scenes, characters, and french scenes' do
-        expect(json['characters'].size).to eq(3)
-        expect(json['acts'].size).to eq(3)
-        expect(json['acts'][0]['scenes'].size).to eq(3)
-        expect(json['acts'][0]['scenes'][0]['french_scenes'].size).to eq(3)
+        expect(json['data']['relationships']['characters']['data'].size).to eq(3)
+        expect(json['data']['attributes']['acts']['data'].size).to eq(3)
+        expect(json['data']['attributes']['acts']['data'][0]['attributes']['scenes']['data'].size).to eq(3)
+        expect(json['data']['attributes']['acts']['data'][0]['attributes']['scenes']['data'][0]['attributes']['french_scenes']['data'].size).to eq(3)
       end
     end
 
